@@ -1,0 +1,104 @@
+{
+  "type": "block",
+  "gutenbergBlock": {
+    "blockName": "etch/element",
+    "attrs": {
+      "metadata": { "name": "Section" },
+      "tag": "section",
+      "attributes": {
+        "data-etch-element": "section"
+      },
+      "styles": ["etch-section-style"]
+    },
+    "innerBlocks": [
+      {
+        "blockName": "etch/element",
+        "attrs": {
+          "metadata": { "name": "Container" },
+          "tag": "div",
+          "attributes": {
+            "data-etch-element": "container"
+          },
+          "styles": ["etch-container-style"]
+        },
+        "innerBlocks": [
+          {
+            "blockName": "etch/element",
+            "attrs": {
+              "metadata": { "name": "Flex Div" },
+              "tag": "div",
+              "attributes": {
+                "data-etch-element": "flex-div"
+              },
+              "styles": ["etch-flex-div-style"]
+            },
+            "innerBlocks": [
+              {
+                "blockName": "etch/element",
+                "attrs": {
+                  "metadata": { "name": "Heading" },
+                  "tag": "h2",
+                  "attributes": {
+                    "class": "section-heading"
+                  },
+                  "styles": ["q2fy3v0"]
+                },
+                "innerBlocks": [
+                  {
+                    "blockName": "etch/text",
+                    "attrs": {
+                      "metadata": { "name": "Text" },
+                      "content": "Welcome to Etch WP"
+                    },
+                    "innerBlocks": [],
+                    "innerHTML": "",
+                    "innerContent": []
+                  }
+                ],
+                "innerHTML": "\n\n",
+                "innerContent": ["\n", null, "\n"]
+              }
+            ],
+            "innerHTML": "\n\n",
+            "innerContent": ["\n", null, "\n"]
+          }
+        ],
+        "innerHTML": "\n\n",
+        "innerContent": ["\n", null, "\n"]
+      }
+    ],
+    "innerHTML": "\n\n",
+    "innerContent": ["\n", null, "\n"]
+  },
+  "version": 2,
+  "styles": {
+    "etch-section-style": {
+      "type": "element",
+      "selector": ":where([data-etch-element=\"section\"])",
+      "collection": "default",
+      "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;\n  align-items: center;",
+      "readonly": true
+    },
+    "etch-container-style": {
+      "type": "element",
+      "selector": ":where([data-etch-element=\"container\"])",
+      "collection": "default",
+      "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;\n  max-width: var(--content-width, 1366px);\n  align-self: center;",
+      "readonly": true
+    },
+    "etch-flex-div-style": {
+      "type": "element",
+      "selector": ":where([data-etch-element=\"flex-div\"])",
+      "collection": "default",
+      "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;",
+      "readonly": true
+    },
+    "q2fy3v0": {
+      "type": "class",
+      "selector": ".section-heading",
+      "collection": "default",
+      "css": "font-size: var(--h2);\n  color: var(--text-dark);\n  margin-bottom: var(--space-m);",
+      "readonly": false
+    }
+  }
+}

@@ -1,0 +1,177 @@
+{
+  "type": "block",
+  "gutenbergBlock": {
+    "blockName": "etch/component",
+    "attrs": {
+      "ref": 89,
+      "attributes": {
+        "title": "Dialog Title"
+      }
+    },
+    "innerBlocks": [
+      {
+        "blockName": "etch/slot-content",
+        "attrs": {
+          "name": "content"
+        },
+        "innerBlocks": [
+          {
+            "blockName": "etch/element",
+            "attrs": {
+              "tag": "p",
+              "attributes": {
+                "class": "dialog-text"
+              }
+            },
+            "innerBlocks": [
+              {
+                "blockName": "etch/text",
+                "attrs": {
+                  "content": "This is custom dialog content inserted via slot."
+                },
+                "innerBlocks": [],
+                "innerHTML": "",
+                "innerContent": []
+              }
+            ],
+            "innerHTML": "\n\n",
+            "innerContent": ["\n", null, "\n"]
+          }
+        ],
+        "innerHTML": "\n\n",
+        "innerContent": ["\n", null, "\n"]
+      }
+    ],
+    "innerHTML": "\n\n",
+    "innerContent": ["\n", null, "\n"]
+  },
+  "version": 2,
+  "styles": {
+    "x1y2z3a": {
+      "type": "class",
+      "selector": ".dialog",
+      "collection": "default",
+      "css": "background: var(--bg-light);\n  padding: var(--space-l);\n  border-radius: var(--radius-m);\n  box-shadow: var(--shadow-xl);\n  max-width: var(--width-600);",
+      "readonly": false
+    },
+    "b4c5d6e": {
+      "type": "class",
+      "selector": ".dialog__header",
+      "collection": "default",
+      "css": "display: flex;\n  justify-content: space-between;\n  align-items: center;\n  margin-bottom: var(--space-m);\n  padding-bottom: var(--space-s);\n  border-bottom: 1px solid var(--border-default);",
+      "readonly": false
+    },
+    "f7g8h9i": {
+      "type": "class",
+      "selector": ".dialog__title",
+      "collection": "default",
+      "css": "font-size: var(--h3);\n  color: var(--text-dark);\n  margin: 0;",
+      "readonly": false
+    },
+    "j0k1l2m": {
+      "type": "class",
+      "selector": ".dialog__content",
+      "collection": "default",
+      "css": "color: var(--text-medium);",
+      "readonly": false
+    }
+  },
+  "components": {
+    "89": {
+      "id": 89,
+      "name": "Dialog",
+      "key": "Dialog",
+      "description": "",
+      "legacyId": "",
+      "blocks": [
+        {
+          "blockName": "etch/element",
+          "attrs": {
+            "metadata": { "name": "Dialog" },
+            "tag": "div",
+            "attributes": {
+              "class": "dialog"
+            },
+            "styles": ["x1y2z3a"]
+          },
+          "innerBlocks": [
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": { "name": "Header" },
+                "tag": "div",
+                "attributes": {
+                  "class": "dialog__header"
+                },
+                "styles": ["b4c5d6e"]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": { "name": "Title" },
+                    "tag": "h3",
+                    "attributes": {
+                      "class": "dialog__title"
+                    },
+                    "styles": ["f7g8h9i"]
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/text",
+                      "attrs": {
+                        "content": "{props.title}"
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "",
+                      "innerContent": []
+                    }
+                  ],
+                  "innerHTML": "\n\n",
+                  "innerContent": ["\n", null, "\n"]
+                }
+              ],
+              "innerHTML": "\n\n",
+              "innerContent": ["\n", null, "\n"]
+            },
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": { "name": "Content" },
+                "tag": "div",
+                "attributes": {
+                  "class": "dialog__content"
+                },
+                "styles": ["j0k1l2m"]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/slot-placeholder",
+                  "attrs": {
+                    "name": "content"
+                  },
+                  "innerBlocks": [],
+                  "innerHTML": "\n\n",
+                  "innerContent": ["\n", "\n"]
+                }
+              ],
+              "innerHTML": "\n\n",
+              "innerContent": ["\n", null, "\n"]
+            }
+          ],
+          "innerHTML": "\n\n\n\n",
+          "innerContent": ["\n", null, "\n\n", null, "\n"]
+        }
+      ],
+      "properties": [
+        {
+          "key": "title",
+          "name": "Title",
+          "keyTouched": true,
+          "type": { "primitive": "string" },
+          "default": "Dialog Title"
+        }
+      ]
+    }
+  }
+}

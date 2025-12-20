@@ -1,0 +1,149 @@
+{
+  "type": "block",
+  "gutenbergBlock": {
+    "blockName": "etch/loop",
+    "attrs": {
+      "loopId": "posts123",
+      "itemId": "post"
+    },
+    "innerBlocks": [
+      {
+        "blockName": "etch/element",
+        "attrs": {
+          "metadata": { "name": "Post Card" },
+          "tag": "article",
+          "attributes": {
+            "class": "post-card"
+          },
+          "styles": ["n3o4p5q"]
+        },
+        "innerBlocks": [
+          {
+            "blockName": "etch/element",
+            "attrs": {
+              "metadata": { "name": "Title" },
+              "tag": "h3",
+              "attributes": {
+                "class": "post-card__title"
+              },
+              "styles": ["r6s7t8u"]
+            },
+            "innerBlocks": [
+              {
+                "blockName": "etch/text",
+                "attrs": {
+                  "content": "{post.title}"
+                },
+                "innerBlocks": [],
+                "innerHTML": "",
+                "innerContent": []
+              }
+            ],
+            "innerHTML": "\n\n",
+            "innerContent": ["\n", null, "\n"]
+          },
+          {
+            "blockName": "etch/element",
+            "attrs": {
+              "metadata": { "name": "Excerpt" },
+              "tag": "p",
+              "attributes": {
+                "class": "post-card__excerpt"
+              },
+              "styles": ["v9w0x1y"]
+            },
+            "innerBlocks": [
+              {
+                "blockName": "etch/text",
+                "attrs": {
+                  "content": "{post.excerpt}"
+                },
+                "innerBlocks": [],
+                "innerHTML": "",
+                "innerContent": []
+              }
+            ],
+            "innerHTML": "\n\n",
+            "innerContent": ["\n", null, "\n"]
+          },
+          {
+            "blockName": "etch/element",
+            "attrs": {
+              "metadata": { "name": "Read More" },
+              "tag": "a",
+              "attributes": {
+                "class": "post-card__link",
+                "href": "{post.permalink}"
+              },
+              "styles": ["z2a3b4c"]
+            },
+            "innerBlocks": [
+              {
+                "blockName": "etch/text",
+                "attrs": {
+                  "content": "Read More"
+                },
+                "innerBlocks": [],
+                "innerHTML": "",
+                "innerContent": []
+              }
+            ],
+            "innerHTML": "\n\n",
+            "innerContent": ["\n", null, "\n"]
+          }
+        ],
+        "innerHTML": "\n\n\n\n",
+        "innerContent": ["\n", null, "\n\n", null, "\n\n", null, "\n"]
+      }
+    ],
+    "innerHTML": "\n\n",
+    "innerContent": ["\n", null, "\n"]
+  },
+  "version": 2,
+  "styles": {
+    "n3o4p5q": {
+      "type": "class",
+      "selector": ".post-card",
+      "collection": "default",
+      "css": "background: var(--bg-light);\n  padding: var(--space-m);\n  border-radius: var(--radius-m);\n  box-shadow: var(--shadow-s);\n\n  @container (width >= 600px) {\n    display: grid;\n    grid-template-columns: 1fr auto;\n    gap: var(--space-m);\n  }",
+      "readonly": false
+    },
+    "r6s7t8u": {
+      "type": "class",
+      "selector": ".post-card__title",
+      "collection": "default",
+      "css": "font-size: var(--h4);\n  color: var(--text-dark);\n  margin-bottom: var(--space-xs);",
+      "readonly": false
+    },
+    "v9w0x1y": {
+      "type": "class",
+      "selector": ".post-card__excerpt",
+      "collection": "default",
+      "css": "color: var(--text-medium);\n  margin-bottom: var(--space-s);",
+      "readonly": false
+    },
+    "z2a3b4c": {
+      "type": "class",
+      "selector": ".post-card__link",
+      "collection": "default",
+      "css": "color: var(--primary);\n  text-decoration: none;\n  font-weight: 600;\n\n  &:hover {\n    text-decoration: underline;\n  }",
+      "readonly": false
+    }
+  },
+  "loops": {
+    "posts123": {
+      "name": "Recent Posts",
+      "key": "posts",
+      "global": true,
+      "config": {
+        "type": "wp-query",
+        "args": {
+          "post_type": "post",
+          "posts_per_page": 6,
+          "orderby": "date",
+          "order": "DESC"
+        }
+      }
+    }
+  }
+}
