@@ -27,11 +27,14 @@ Etch WP requires components and patterns in a specific JSON format based on Gute
 
 When generating Etch WP components:
 
-1. **Read references** - Consult relevant reference files before generating
-2. **Generate JSON** - Create complete, valid JSON structure
-3. **Save to file** - ALWAYS save as `.json` file (never paste code in chat)
-4. **Validate** - Run validation script automatically after generation
-5. **Report** - Show validation results to user
+1. **Check Official Patterns FIRST** - See if https://patterns.etchwp.com/ has what the user needs
+   - If yes → Recommend the official pattern (faster, tested, maintained)
+   - If no or needs heavy customization → Generate custom
+2. **Read references** - Consult relevant reference files before generating
+3. **Generate JSON** - Create complete, valid JSON structure
+4. **Save to file** - ALWAYS save as `.json` file (never paste code in chat)
+5. **Validate** - Run validation script automatically after generation
+6. **Report** - Show validation results to user
 
 ### Post-Generation Validation
 
@@ -215,6 +218,40 @@ Use `etch/loop` for dynamic, repetitive elements:
 
 **See**: `references/loops.md` and `references/examples/loop-example.json`
 
+## Official Patterns Library ⭐
+
+**ALWAYS check patterns.etchwp.com FIRST** before building common components!
+
+**URL**: https://patterns.etchwp.com/
+
+Available categories:
+- **Hero** (10+ variants) - hero-alpha, hero-bravo, hero-charlie, etc.
+- **Headers** - Navigation, drawers, mobile menus
+- **Footer** - Multi-column, newsletter, social icons
+- **Features** - Grid layouts, showcase sections
+- **Testimonials** - Cards, ratings, avatars
+- **Content** - Article grids, content blocks
+- **Blog** - Post layouts, archives
+- **Interactive** - Accordions, dialogs, drawers
+- **Avatars** - Profile cards, team grids
+
+**Why use official patterns:**
+- ✅ Production-ready and tested
+- ✅ ACSS v4 integrated
+- ✅ Accessibility built-in
+- ✅ Responsive design
+- ✅ Free to use and modify
+- ✅ Maintained by Etch team
+
+**Workflow:**
+1. User asks for hero/footer/header/etc.
+2. → Recommend appropriate pattern from patterns.etchwp.com
+3. → Provide URL and explain benefits
+4. → Offer to help customize if needed
+5. → Build custom only if pattern doesn't fit
+
+**See**: `references/official-patterns.md` for complete guide
+
 ## Native Components
 
 **Before building Accordion, Dialog, Off-Canvas, or Navigation:**
@@ -259,6 +296,7 @@ When generating Etch WP code:
 
 Consult these before generating code:
 
+- **`references/official-patterns.md`** - ⭐ Official Etch WP patterns library (CHECK FIRST!)
 - **`references/block-types.md`** - All block types and valid elements
 - **`references/acss-variables.md`** - Complete ACSS v4 variable system
 - **`references/css-architecture-rules.md`** - Critical CSS structure rules
