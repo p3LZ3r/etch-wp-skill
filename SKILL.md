@@ -1,13 +1,13 @@
 ---
 name: etch-wp
-description: Expert knowledge for Etch WP - a Unified Visual Development Environment for WordPress. Use when users ask to create Etch WP components, sections, patterns, or templates. Generates complete JSON in Gutenberg block format that can be directly imported/pasted into Etch WP. Handles blockName, attrs, innerBlocks, styles objects, component definitions with properties, and all Etch-specific block types (etch/element, etch/component, etch/text, etch/condition, etch/svg, etch/loop). All generated CSS uses Automatic.css (ACSS) v4 variables.
+description: Expert knowledge for Etch WP - a Unified Visual Development Environment for WordPress. Use when users ask to create Etch WP components, sections, patterns, or templates. Generates complete JSON in Gutenberg block format that can be directly imported/pasted into Etch WP. Handles blockName, attrs, innerBlocks, styles objects, component definitions with properties, and all Etch-specific block types (etch/element, etch/component, etch/text, etch/condition, etch/svg, etch/loop). All generated CSS uses Automatic.css (ACSS) v4 variables. Includes data modifiers, nested loops, gallery field integration, and conditional CSS classes.
 license: CC BY-NC-SA 4.0
 author: Torsten Linnecke
-version: 2.0.0
+version: 2.1.0
 metadata:
   creator: Torsten Linnecke
-  created: 2024-12-20
-  updated: 2024-12-20
+  created: 2025-12-20
+  updated: 2026-01-27
   category: wordpress
   tags: wordpress, gutenberg, etch-wp, acss, component-generator
   homepage: https://etchwp.com
@@ -79,7 +79,7 @@ Use the `mcp__context7__resolve-library-id` and `mcp__context7__get-library-docs
 
 ## Core Structure - The Golden Rule
 
-**EVERY layout/component starts with:**
+**USUALLY layouts/components are structured with:**
 
 ```
 section (data-etch-element="section")
@@ -93,7 +93,7 @@ section (data-etch-element="section")
 **ONLY these 4 use `data-etch-element`:**
 
 1. **`section`** - Full-width sections (tag: `section`, style: `etch-section-style`)
-2. **`container`** - Content containers (tag: `div` or `main`, style: `etch-container-style`)
+2. **`container`** - Content containers (tag: `div`, style: `etch-container-style`)
 3. **`flex-div`** - Flex containers (tag: `div`, style: `etch-flex-div-style`)
 4. **`iframe`** - iFrames (tag: `iframe`, style: `etch-iframe-style`)
 
@@ -105,6 +105,8 @@ All other HTML elements (`h1`, `p`, `a`, `button`, etc.) do NOT use `data-etch-e
 
 - **`etch/element`** - HTML elements (divs, headings, etc.)
 - **`etch/text`** - Text content with dynamic props
+- **`etch/svg`** - SVG icons and graphics
+- **`etch/dynamic-image`** - Image elements with dynamic props
 - **`etch/component`** - Component references
 - **`etch/loop`** - Loops for repetitive elements
 - **`etch/condition`** - Conditional rendering
@@ -126,6 +128,29 @@ All other HTML elements (`h1`, `p`, `a`, `button`, etc.) do NOT use `data-etch-e
 - Need flexible, complex content? → Slot
 
 **See**: `references/props-system.md` and `references/examples/component-with-*.json`
+
+## Data Modifiers
+
+Transform and manipulate dynamic values using modifiers:
+
+**Type Conversion:**
+- `.toInt()` - Convert to integer
+- `.toString()` - Convert to string
+- `.ceil()`, `.floor()`, `.round()` - Rounding
+
+**Comparison:**
+- `.equal()`, `.greater()`, `.less()` - Value comparisons
+- `.includes()` - String/array contains check
+- Return custom values: `{item.price.greater(10, 'expensive', 'affordable')}`
+
+**Usage in props:**
+```json
+"attributes": {
+  "class": "{product.price.greater(100, 'premium', 'standard')}"
+}
+```
+
+**See**: `references/data-modifiers.md` for complete reference
 
 ## CSS Architecture Rules
 
@@ -296,11 +321,12 @@ When generating Etch WP code:
 
 Consult these before generating code:
 
-- **`references/official-patterns.md`** - ⭐ Official Etch WP patterns library (CHECK FIRST!)
+- **`references/official-patterns.md`** - Official Etch WP patterns library (CHECK FIRST!)
 - **`references/block-types.md`** - All block types and valid elements
 - **`references/acss-variables.md`** - Complete ACSS v4 variable system
 - **`references/css-architecture-rules.md`** - Critical CSS structure rules
 - **`references/props-system.md`** - Component properties and slots
+- **`references/data-modifiers.md`** - Data transformation and comparison modifiers
 - **`references/loops.md`** - Loop implementations
 - **`references/json-structure.md`** - Detailed JSON format spec
 - **`references/component-examples.md`** - Annotated component examples
@@ -317,9 +343,3 @@ Quick reference examples are in `references/examples/`:
 - `loop-example.json` - WordPress posts loop
 
 For detailed, annotated examples, see `references/component-examples.md`.
-
----
-
-**License**: CC BY-NC-SA 4.0 (see LICENSE file)
-**Creator**: Torsten Linnecke
-**Documentation**: https://docs.etchwp.com

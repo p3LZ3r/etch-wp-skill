@@ -346,7 +346,9 @@ From post data:
 
 ## Using data-* Attributes with Props
 
-Props can be used in data attributes for styling:
+Props can be used in data attributes for styling variants and configurations. This is the **ONLY** way to use props for styling purposes.
+
+### Pattern: Props → Data Attributes → CSS Selectors
 
 ```json
 {
@@ -354,16 +356,73 @@ Props can be used in data attributes for styling:
   "attrs": {
     "tag": "div",
     "attributes": {
-      "data-intro-style": "{props.style}",
-      "data-variant": "{props.variant}"
+      "class": "sports-card",
+      "data-variant": "{props.variant}",
+      "data-size": "{props.size}"
     }
+  },
+  "styles": {
+    "desktop": "&[data-variant='primary' i] {\n    background: var(--highlight, #0066cc);\n    color: white;\n  }\n  &[data-variant='outline' i] {\n    background: transparent;\n    border: 2px solid var(--highlight, #0066cc);\n    color: var(--highlight, #0066cc);\n  }\n  &[data-variant='default' i] {\n    background: var(--base, #f5f5f5);\n    color: var(--text, #333);\n  }\n  &[data-size='large' i] {\n    padding: 2rem;\n    font-size: 1.25em;\n  }\n  &[data-size='small' i] {\n    padding: 0.75rem;\n    font-size: 0.875em;\n  }"
   }
 }
 ```
 
-Then in CSS:
+### Why Data Attributes?
+
+**✅ Data attributes work because:**
+- They're rendered in the HTML as actual attributes
+- CSS can select and style based on their values
+- Props are evaluated at render time and written to the DOM
+
+**❌ These DON'T work:**
+- `{props.variant}` in CSS files (CSS doesn't know about props)
+- `{props.bgImage}` in CSS `url()` functions
+- `{props.gradientFrom}` in CSS custom properties inline
+
+### Complete Example: Card with Variants
+
+**Component Properties:**
 ```json
-"css": "&[data-intro-style='center' i] {\n    text-align: center;\n  }\n  &[data-variant='large' i] {\n    font-size: 1.5em;\n  }"
+"properties": [
+  {
+    "key": "variant",
+    "name": "Card Variant",
+    "type": {
+      "primitive": "string",
+      "specialized": "select"
+    },
+    "selectOptionsString": "Primary\nOutline\nDefault",
+    "default": "Default"
+  },
+  {
+    "key": "size",
+    "name": "Card Size",
+    "type": {
+      "primitive": "string",
+      "specialized": "select"
+    },
+    "selectOptionsString": "Small\nMedium\nLarge",
+    "default": "Medium"
+  }
+]
+```
+
+**Component Definition:**
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "article",
+    "attributes": {
+      "class": "card",
+      "data-variant": "{props.variant}",
+      "data-size": "{props.size}"
+    }
+  },
+  "styles": {
+    "desktop": ".card {\n    border-radius: var(--radius, 0.5rem);\n    transition: all 0.2s ease;\n  }\n  .card[data-variant='primary' i] {\n    background: var(--primary, #0066cc);\n    color: white;\n    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);\n  }\n  .card[data-variant='outline' i] {\n    background: transparent;\n    border: 2px solid var(--primary, #0066cc);\n    color: var(--primary, #0066cc);\n  }\n  .card[data-variant='default' i] {\n    background: var(--base, #f5f5f5);\n    border: 1px solid var(--border, #ddd);\n    color: var(--text, #333);\n  }\n  .card[data-size='large' i] {\n    padding: var(--space-xl, 2rem);\n  }\n  .card[data-size='medium' i] {\n    padding: var(--space-md, 1.5rem);\n  }\n  .card[data-size='small' i] {\n    padding: var(--space-sm, 1rem);\n  }"
+  }
+}
 ```
 
 ## Best Practices
@@ -752,20 +811,121 @@ Use descriptive, semantic names:
 
 ### Complex Style Attributes
 
-**❌ AVOID: Props in complex style strings**
+**❌ AVOID: Props in style attributes or CSS files**
 ```json
 "attributes": {
   "style": "background: linear-gradient(135deg, {props.colorFrom} 0%, {props.colorTo} 100%)"
 }
 ```
 
-**✅ PREFER: CSS classes with CSS custom properties**
+**❌ AVOID: Props in CSS custom properties**
 ```json
 "attributes": {
-  "class": "gradient-card",
   "style": "--gradient-from: {props.colorFrom}; --gradient-to: {props.colorTo};"
 }
 ```
+This doesn't work because CSS cannot access prop values.
+
+**✅ CORRECT: Use data attributes for variant-based styling**
+```json
+"attributes": {
+  "class": "gradient-card",
+  "data-gradient-style": "{props.gradientStyle}"
+}
+```
+
+Then in CSS:
+```json
+"styles": {
+  "desktop": ".gradient-card[data-gradient-style='blue' i] {\n    background: linear-gradient(135deg, #0066cc 0%, #004499 100%);\n  }\n  .gradient-card[data-gradient-style='sunset' i] {\n    background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);\n  }\n  .gradient-card[data-gradient-style='forest' i] {\n    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);\n  }"
+}
+```
+
+**Key Pattern:**
+- Props control **which** variant to use (via data attributes)
+- CSS defines **how** each variant looks
+- Select props → choose variant → CSS matches on data attribute
+
+### Conditional CSS Classes with Modifiers
+
+Use comparison modifiers to apply CSS classes conditionally based on prop values.
+
+**Basic Pattern:**
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "div",
+    "attributes": {
+      "class": "{product.price.greater(10, 'product--expensive', 'product--affordable')}"
+    }
+  }
+}
+```
+
+**Usage in Loop:**
+```json
+{
+  "blockName": "etch/loop",
+  "attrs": {
+    "loopId": "products",
+    "itemId": "product"
+  },
+  "innerBlocks": [
+    {
+      "blockName": "etch/element",
+      "attrs": {
+        "tag": "div",
+        "attributes": {
+          "class": "{product.price.greater(10, 'product--expensive', 'product--affordable')} {product.stock.less(5, 'product--low-stock', 'product--in-stock')}"
+        }
+      },
+      "innerBlocks": [
+        {
+          "blockName": "etch/text",
+          "attrs": {
+            "content": "{product.title}"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Common Use Cases:**
+
+Price-based classes:
+```json
+"class": "{product.price.greater(100, 'product--premium', 'product--standard')}"
+```
+
+Stock status:
+```json
+"class": "{product.stock.less(10, 'product--limited', 'product--available')}"
+```
+
+Featured status:
+```json
+"class": "{product.featured.equal('true', 'product--featured', 'product--regular')}"
+```
+
+Role-based:
+```json
+"class": "{user.role.includes('administrator', 'admin--panel', 'user--panel')}"
+```
+
+Rating thresholds:
+```json
+"class": "{product.rating.greaterOrEqual(4, 'product--recommended', 'product--standard')}"
+```
+
+**Benefits:**
+- No conditional logic blocks needed
+- Cleaner template code
+- Multiple classes in one attribute
+- Type-safe comparisons with modifiers
+- Easy to maintain
 
 ### Working Component Pattern
 
@@ -808,17 +968,18 @@ Use descriptive, semantic names:
 **Props to AVOID (caused insertion failures):**
 - `icon` (SVG HTML string)
 - `gridArea` (complex CSS value)
-- `gradientFrom`/`gradientTo` (in inline styles)
+- `gradientFrom`/`gradientTo`/`gradientStyle` (these should be select props mapped to data attributes, NOT used in inline styles)
 - Complex `style` attributes with multiple props
+- Any prop intended for use in CSS `url()` functions or dynamic values
 
 ### Troubleshooting Checklist
 
 If your component fails to insert into Etch WP:
 
 1. **Check for `core/html` blocks** - Replace with structured `etch/element`
-2. **Simplify inline `style` attributes** - Move to CSS classes
+2. **Avoid props in inline styles** - Use data attributes + CSS selectors instead
 3. **Verify boolean prop format** - Must be `"{true}"` not `true`
 4. **Fixed SVG structure** - Use `etch/element` not HTML string props
 5. **Test with minimal props** - Start with simple text props, add complexity gradually
 
-**Remember:** Etch WP prefers structured block elements over HTML strings, and CSS classes over complex inline styles.
+**Remember:** Etch WP prefers structured block elements over HTML strings, data attributes over props in CSS, and CSS classes over inline styles.

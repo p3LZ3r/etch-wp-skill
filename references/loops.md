@@ -82,6 +82,82 @@ The loop configuration defines the data source and is placed in the `loops` obje
 
 ## Loop Types
 
+### Main Query
+
+The mainQuery loop type displays the current page's posts (for archive pages) or the current post's related content. You can override query parameters.
+
+**Basic Usage:**
+```json
+{
+  "blockName": "etch/loop",
+  "attrs": {
+    "metadata": {"name": "Main Query"},
+    "loopId": "main123",
+    "itemId": "post"
+  },
+  "innerBlocks": [
+    {
+      "blockName": "etch/element",
+      "attrs": {
+        "tag": "h2"
+      },
+      "innerBlocks": [
+        {
+          "blockName": "etch/text",
+          "attrs": {
+            "content": "{post.title}"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Loop Configuration:**
+```json
+"loops": {
+  "main123": {
+    "name": "Main Query",
+    "key": "mainQuery",
+    "global": true,
+    "config": {
+      "type": "main-query"
+    }
+  }
+}
+```
+
+**Parameter Overrides:**
+
+Override the number of items:
+```json
+{#loop mainQuery($count: 3) as post}
+  <h2>{post.title}</h2>
+{/loop}
+```
+
+Override ordering:
+```json
+{#loop mainQuery($orderby: "title", $order: "ASC") as post}
+  <h2>{post.title}</h2>
+{/loop}
+```
+
+Show all posts:
+```json
+{#loop mainQuery($count: -1) as post}
+  <h2>{post.title}</h2>
+{/loop}
+```
+
+Multiple overrides:
+```json
+{#loop mainQuery($count: 6, $orderby: "date", $order: "DESC") as post}
+  <h2>{post.title}</h2>
+{/loop}
+```
+
 ### WP Query (Posts)
 
 ```json
@@ -181,6 +257,233 @@ The loop configuration defines the data source and is placed in the `loops` obje
       "type": "api",
       "url": "https://api.example.com/data",
       "method": "GET"
+    }
+  }
+}
+```
+
+## Nested Loops
+
+Nested loops allow you to loop through related data, such as categories and their posts, or terms and their items.
+
+### Categories with Posts Pattern
+
+Display categories, then show posts within each category:
+
+**HTML Pattern:**
+```html
+{#loop categories as category}
+  <div class="category-section">
+    <h2>{category.name}</h2>
+    <ul>
+      {#loop posts($cat: category.id) as post}
+        <li>{post.title}</li>
+      {/loop}
+    </ul>
+  </div>
+{/loop}
+```
+
+**Loop Configuration:**
+```json
+"loops": {
+  "categoriesLoop": {
+    "name": "Categories",
+    "key": "categories",
+    "config": {
+      "type": "terms",
+      "args": {
+        "taxonomy": "category",
+        "hide_empty": false
+      }
+    }
+  },
+  "postsLoop": {
+    "name": "Posts",
+    "key": "posts",
+    "config": {
+      "type": "wp-query",
+      "args": {
+        "post_type": "post",
+        "posts_per_page": 5
+      }
+    }
+  }
+}
+```
+
+**Key Points:**
+- Outer loop uses `categories` data source
+- Inner loop passes `category.id` via `$cat` parameter
+- Parameter syntax: `{#loop posts($cat: category.id) as post}`
+- Inner loop only shows posts belonging to current category
+
+### Nested Loop with Custom Post Types
+
+```html
+{#loop taxonomies as taxonomy}
+  <div class="taxonomy-group">
+    <h3>{taxonomy.name}</h3>
+    {#loop posts($tax: taxonomy.slug, $taxonomy: taxonomy.taxonomy) as post}
+      <article>
+        <h4>{post.title}</h4>
+      </article>
+    {/loop}
+  </div>
+{/loop}
+```
+
+## Gallery Fields
+
+Gallery fields from ACF, Meta Box, and Jet Engine allow looping through multiple images.
+
+### ACF Gallery Field
+
+```html
+<ul class="gallery">
+  {#loop this.acf.gallery_field as image}
+    <li class="gallery-item">
+      <figure>
+        <img
+          src="{image.url}"
+          alt="{image.alt}"
+          width="{image.width}"
+          height="{image.height}"
+        />
+        {#if image.caption}
+          <figcaption>{image.caption}</figcaption>
+        {/if}
+      </figure>
+    </li>
+  {/loop}
+</ul>
+```
+
+**Available Fields:**
+- `{image.url}` - Image URL
+- `{image.alt}` - Alt text
+- `{image.width}` - Width in pixels
+- `{image.height}` - Height in pixels
+- `{image.caption}` - Image caption
+
+### Meta Box Gallery Field
+
+```html
+<ul class="gallery">
+  {#loop this.metabox.gallery_field as image}
+    <li class="gallery-item">
+      <figure>
+        <img
+          src="{image.url}"
+          alt="{image.alt}"
+          width="{image.width}"
+          height="{image.height}"
+        />
+        {#if image.caption}
+          <figcaption>{image.caption}</figcaption>
+        {/if}
+      </figure>
+    </li>
+  {/loop}
+</ul>
+```
+
+### Jet Engine Gallery Field
+
+```html
+<ul class="gallery">
+  {#loop this.jetengine.gallery_field as image}
+    <li class="gallery-item">
+      <figure>
+        <img
+          src="{image.url}"
+          alt="{image.alt}"
+          width="{image.width}"
+          height="{image.height}"
+        />
+        {#if image.caption}
+          <figcaption>{image.caption}</figcaption>
+        {/if}
+      </figure>
+    </li>
+  {/loop}
+</ul>
+```
+
+### JSON Block Structure for Gallery Loop
+
+```json
+{
+  "blockName": "etch/loop",
+  "attrs": {
+    "metadata": {"name": "Gallery Loop"},
+    "loopId": "gallery123",
+    "itemId": "image"
+  },
+  "innerBlocks": [
+    {
+      "blockName": "etch/element",
+      "attrs": {
+        "tag": "figure",
+        "attributes": {
+          "class": "gallery-item"
+        }
+      },
+      "innerBlocks": [
+        {
+          "blockName": "etch/element",
+          "attrs": {
+            "tag": "img",
+            "attributes": {
+              "src": "{image.url}",
+              "alt": "{image.alt}",
+              "width": "{image.width}",
+              "height": "{image.height}",
+              "class": "gallery-image"
+            }
+          }
+        },
+        {
+          "blockName": "etch/condition",
+          "attrs": {
+            "condition": {
+              "leftHand": "image.caption",
+              "operator": "isTruthy",
+              "rightHand": null
+            }
+          },
+          "innerBlocks": [
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "tag": "figcaption"
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/text",
+                  "attrs": {
+                    "content": "{image.caption}"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Loop Configuration:**
+```json
+"loops": {
+  "gallery123": {
+    "name": "Gallery",
+    "key": "this.acf.gallery_field",
+    "global": true,
+    "config": {
+      "type": "field"
     }
   }
 }

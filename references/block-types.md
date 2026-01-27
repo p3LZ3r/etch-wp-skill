@@ -23,6 +23,50 @@ Standard HTML element wrapper.
 }
 ```
 
+### Dynamic Tag Names
+
+Use props to dynamically set the HTML tag:
+
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "metadata": {"name": "Dynamic Heading"},
+    "tag": "{props.headingLevel}",
+    "attributes": {
+      "class": "heading"
+    }
+  },
+  "innerBlocks": [
+    {
+      "blockName": "etch/text",
+      "attrs": {
+        "content": "{props.title}"
+      }
+    }
+  ]
+}
+```
+
+**Usage:**
+```json
+{
+  "blockName": "etch/component",
+  "attrs": {
+    "ref": 123,
+    "attributes": {
+      "headingLevel": "h2",
+      "title": "Section Title"
+    }
+  }
+}
+```
+
+**Common Use Cases:**
+- Headings with dynamic levels (h1-h6)
+- Semantic elements based on context
+- Component props controlling element type
+
 ### Common html tags without data-etch-element data attribute
 - `div` - Generic containers
 - `article` - Article/card wrappers
@@ -156,14 +200,21 @@ Conditional rendering logic.
 
 ### Operators
 - `isTruthy` - Check if truthy
+- `isFalsy` - Check if falsy
 - `===` - Strict equality
-- `!==` - Not equal
+- `!==` - Not equal (strict)
+- `==` - Loose equality
+- `!=` - Not equal (loose)
 - `>` - Greater than
 - `<` - Less than
 - `>=` - Greater or equal
 - `<=` - Less or equal
 - `||` - OR
 - `&&` - AND
+- `!` - NOT
+- `in` - Array membership check
+- `contains` - String/array contains
+- `matches` - Regex pattern match
 
 ### Complex Condition (OR)
 ```json
