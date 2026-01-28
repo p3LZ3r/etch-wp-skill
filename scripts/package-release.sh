@@ -30,20 +30,25 @@ rm -f etch-wp-*.zip
 echo -e "${YELLOW}Preparing package...${NC}"
 mkdir -p dist/temp
 
-# Copy all skill files directly (no subfolder)
+# Copy main skill files
 echo -e "${YELLOW}Copying skill files...${NC}"
 cp SKILL.md dist/temp/
 cp LICENSE dist/temp/ 2>/dev/null || echo "No LICENSE file found"
 cp README.md dist/temp/ 2>/dev/null || echo "No README.md file found"
 
-# Copy directories
-cp -r scripts dist/temp/
+# Copy only necessary scripts (exclude dev/build scripts)
+mkdir -p dist/temp/scripts
+cp scripts/validate-component.js dist/temp/scripts/ 2>/dev/null || true
+cp scripts/collect-patterns.js dist/temp/scripts/ 2>/dev/null || true
+
+# Copy references
 cp -r references dist/temp/
-cp -r assets dist/temp/ 2>/dev/null || echo "No assets directory found"
+
+# Copy assets if exists
+cp -r assets dist/temp/ 2>/dev/null || true
 
 # Ensure scripts are executable
 chmod +x dist/temp/scripts/*.js 2>/dev/null || true
-chmod +x dist/temp/scripts/*.sh 2>/dev/null || true
 
 # Create the zip - directly from temp contents (no subfolder)
 echo -e "\n${YELLOW}Creating zip archive...${NC}"
@@ -65,8 +70,11 @@ echo -e "Size: ${GREEN}${FILESIZE}${NC}"
 echo -e "\n${YELLOW}Structure:${NC}"
 echo -e "  ✓ SKILL.md (on root level - ready for import)"
 echo -e "  ✓ references/"
-echo -e "  ✓ scripts/"
+echo -e "  ✓ scripts/ (user tools only)"
 echo -e "  ✓ assets/"
+echo -e "\n${YELLOW}Excluded (dev only):${NC}"
+echo -e "  ✗ scripts/package-release.sh"
+echo -e "  ✗ .github/workflows/"
 echo -e "\n${YELLOW}Import Instructions:${NC}"
 echo -e "  1. Claude Desktop: Settings > Skills > Install from File"
 echo -e "  2. Claude Code: Place in ~/.claude/skills/etch-wp/"

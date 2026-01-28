@@ -30,11 +30,17 @@ jobs:
         # Create temp directory
         mkdir -p temp_release
 
-        # Copy files directly (no subfolder)
+        # Copy main files directly (no subfolder)
         cp SKILL.md temp_release/
         cp LICENSE temp_release/ 2>/dev/null || true
         cp README.md temp_release/ 2>/dev/null || true
-        cp -r scripts temp_release/
+
+        # Copy only necessary scripts (exclude dev/build scripts)
+        mkdir -p temp_release/scripts
+        cp scripts/validate-component.js temp_release/scripts/ 2>/dev/null || true
+        cp scripts/collect-patterns.js temp_release/scripts/ 2>/dev/null || true
+
+        # Copy references and assets
         cp -r references temp_release/
         cp -r assets temp_release/ 2>/dev/null || true
 
