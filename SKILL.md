@@ -2,10 +2,9 @@
 name: etch-wp
 description: Expert knowledge for Etch WP - a Unified Visual Development Environment for WordPress. Use when users ask to create Etch WP components, sections, patterns, or templates. Generates complete JSON in Gutenberg block format that can be directly imported/pasted into Etch WP. Handles blockName, attrs, innerBlocks, styles objects, component definitions with properties, and all Etch-specific block types (etch/element, etch/component, etch/text, etch/condition, etch/svg, etch/loop). All generated CSS uses Automatic.css (ACSS) v4 variables. Includes data modifiers, nested loops, gallery field integration, and conditional CSS classes.
 license: CC BY-NC-SA 4.0
-author: Torsten Linnecke
-version: 2.1.0
 metadata:
-  creator: Torsten Linnecke
+  author: Torsten Linnecke
+  version: 2.1.0
   created: 2025-12-20
   updated: 2026-01-27
   category: wordpress

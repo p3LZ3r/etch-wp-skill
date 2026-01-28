@@ -1,255 +1,81 @@
-name: Create Release Package
+name: Release Etch WP Skill
 
 on:
-  release:
-    types: [created, published]
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to release (e.g., v2.0.0)'
-        required: true
-        default: 'v2.0.0'
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
 
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+    - name: Get version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
-      - name: Get version
-        id: get_version
-        run: |
-          if [ "${{ github.event_name }}" = "release" ]; then
-            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-          else
-            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
-          fi
+    - name: Update version in SKILL.md
+      run: |
+        VERSION=${{ steps.get_version.outputs.VERSION }}
+        sed -i "s/version: [0-9]\+\.[0-9]\+\.[0-9]\+/version: $VERSION/" SKILL.md
 
-      - name: Validate skill structure
-        run: |
-          echo "Validating skill structure..."
-          if [ ! -f "SKILL.md" ]; then
-            echo "Error: SKILL.md not found"
-            exit 1
-          fi
-          if [ ! -f "LICENSE" ]; then
-            echo "Error: LICENSE not found"
-            exit 1
-          fi
-          if [ ! -d "scripts" ]; then
-            echo "Error: scripts directory not found"
-            exit 1
-          fi
-          if [ ! -f "scripts/validate-component.js" ]; then
-            echo "Error: validate-component.js not found"
-            exit 1
-          fi
-          echo "✓ Skill structure is valid"
+    - name: Create release package
+      run: |
+        # Create temp directory
+        mkdir -p temp_release
 
-      - name: Run example validations
-        run: |
-          echo "Running validation tests..."
-          cd references/examples
-          for file in *.json; do
-            if [ -f "$file" ]; then
-              echo "Validating $file..."
-              node ../../scripts/validate-component.js "$file"
-            fi
-          done
-          echo "✓ All examples validated successfully"
+        # Copy files directly (no subfolder)
+        cp SKILL.md temp_release/
+        cp LICENSE temp_release/ 2>/dev/null || true
+        cp README.md temp_release/ 2>/dev/null || true
+        cp -r scripts temp_release/
+        cp -r references temp_release/
+        cp -r assets temp_release/ 2>/dev/null || true
 
-      - name: Create package directory
-        run: |
-          mkdir -p package/etch-wp
+        # Create zip with flat structure (SKILL.md on root level)
+        cd temp_release
+        zip -r ../etch-wp.zip .
+        cd ..
 
-      - name: Copy skill files
-        run: |
-          # Copy main files
-          cp SKILL.md package/etch-wp/
-          cp LICENSE package/etch-wp/
-          cp README.md package/etch-wp/
+        # Clean up
+        rm -rf temp_release
 
-          # Copy directories
-          cp -r scripts package/etch-wp/
-          cp -r references package/etch-wp/
-          cp -r assets package/etch-wp/
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: etch-wp.zip
+        name: Etch WP Skill ${{ github.ref_name }}
+        body: |
+          ## Etch WP Skill ${{ github.ref_name }}
 
-          # Ensure scripts are executable
-          chmod +x package/etch-wp/scripts/*.js
+          ### Installation
 
-      - name: Create installation instructions
-        run: |
-          cat > package/INSTALLATION.md << 'EOF'
-          # Installation Instructions
+          **Claude Desktop:**
+          1. Download `etch-wp.zip` from this release
+          2. Open Claude Desktop > Settings > Skills
+          3. Click "Install from File"
+          4. Select the downloaded `etch-wp.zip`
 
-          ## Automatic Installation
-
-          1. Download the `etch-wp-${{ steps.get_version.outputs.VERSION }}.zip` file
-          2. Extract the zip file
-          3. Move the `etch-wp` folder to your skills directory:
-             - **macOS/Linux**: `~/.claude/skills/`
-             - **Windows**: `%USERPROFILE%\.claude\skills\`
-
-          ## Manual Installation
-
+          **Claude Code CLI:**
           ```bash
-          # Navigate to your skills directory
-          cd ~/.claude/skills/
-
-          # Extract the downloaded zip
-          unzip etch-wp-${{ steps.get_version.outputs.VERSION }}.zip
-
-          # Verify installation
-          ls etch-wp/
+          # Create skill directory and extract
+          mkdir -p ~/.claude/skills/etch-wp
+          unzip etch-wp.zip -d ~/.claude/skills/etch-wp/
           ```
 
-          You should see:
-          - SKILL.md
-          - LICENSE
-          - README.md
-          - scripts/
-          - references/
-          - assets/
+          ### Contents
+          - SKILL.md (main skill definition - root level)
+          - references/ (documentation)
+          - scripts/ (validation tools)
+          - assets/ (templates)
 
-          ## Verify Installation
-
-          Test the validation script:
-
-          ```bash
-          cd ~/.claude/skills/etch-wp
-          node scripts/validate-component.js references/examples/basic-structure.json
-          ```
-
-          You should see: `✅ Component validation passed!`
-
-          ## Usage
-
-          Once installed, the skill will be automatically available to Claude Code. Simply ask Claude to create Etch WP components and it will use this skill.
-
-          ## Troubleshooting
-
-          **Skill not recognized:**
-          - Ensure the folder is named exactly `etch-wp`
-          - Restart Claude Code
-          - Check that SKILL.md exists in the folder
-
-          **Validation script not working:**
-          - Ensure Node.js is installed: `node --version`
-          - Make script executable: `chmod +x scripts/validate-component.js`
-
-          For more help, visit: https://github.com/torstenlinnecke/etch-wp-skill
-          EOF
-
-      - name: Create ZIP package
-        run: |
-          cd package
-          zip -r ../etch-wp-${{ steps.get_version.outputs.VERSION }}.zip etch-wp INSTALLATION.md
-          cd ..
-
-          # Verify zip contents
-          echo "ZIP contents:"
-          unzip -l etch-wp-${{ steps.get_version.outputs.VERSION }}.zip
-
-      - name: Generate release notes
-        id: release_notes
-        run: |
-          cat > release-notes.md << 'EOF'
-          ## Etch WP Agent Skill ${{ steps.get_version.outputs.VERSION }}
-
-          ### 📦 Installation
-
-          Download `etch-wp-${{ steps.get_version.outputs.VERSION }}.zip` and extract to your Claude Code skills directory.
-
-          **Quick Install:**
-          ```bash
-          cd ~/.claude/skills/
-          unzip ~/Downloads/etch-wp-${{ steps.get_version.outputs.VERSION }}.zip
-          ```
-
-          See `INSTALLATION.md` in the zip for detailed instructions.
-
-          ### ✨ What's Included
-
-          - **Streamlined SKILL.md** (9.2KB) - Fast loading, workflow-focused
-          - **Automatic validation script** - Catches errors before import
-          - **Working examples** - 4 validated JSON templates
-          - **Comprehensive docs** - Complete reference documentation
-          - **CC BY-NC-SA 4.0 license** - Open for non-commercial use
-
-          ### 📋 Requirements
-
-          - Claude Code CLI
-          - Node.js (for validation script)
-
-          ### 🚀 Features
-
-          - ✅ Generate Etch WP components in JSON format
-          - ✅ ACSS v4 variable integration
-          - ✅ Automatic post-generation validation
-          - ✅ Props and slots support
-          - ✅ Loop implementations for dynamic content
-          - ✅ Container query responsive patterns
-          - ✅ Accessibility-first components
-
-          ### 📚 Documentation
-
-          - **GitHub**: https://github.com/torstenlinnecke/etch-wp-skill
-          - **Etch WP Docs**: https://docs.etchwp.com
-          - **License**: CC BY-NC-SA 4.0
-
-          ### 👤 Creator
-
-          **Torsten Linnecke**
-
-          ---
-
-          For issues or questions, please open an issue on GitHub.
-          EOF
-
-          cat release-notes.md
-
-      - name: Upload release asset
-        if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            etch-wp-${{ steps.get_version.outputs.VERSION }}.zip
-          body_path: release-notes.md
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload artifact (for workflow_dispatch)
-        if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
-        with:
-          name: etch-wp-${{ steps.get_version.outputs.VERSION }}
-          path: etch-wp-${{ steps.get_version.outputs.VERSION }}.zip
-          retention-days: 30
-
-      - name: Job summary
-        run: |
-          echo "## Release Package Created Successfully! 🎉" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Version:** ${{ steps.get_version.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Package Contents:" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ etch-wp skill folder" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ INSTALLATION.md" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Validation:" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Skill structure validated" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ All examples validated" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          if [ "${{ github.event_name }}" = "release" ]; then
-            echo "**Status:** Uploaded to release" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "**Status:** Available as workflow artifact" >> $GITHUB_STEP_SUMMARY
-          fi
+          ### What's New
+          See commit history for details.
+        draft: false
+        prerelease: false
