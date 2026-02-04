@@ -1,0 +1,275 @@
+{
+  "type": "block",
+  "gutenbergBlock": {
+    "blockName": "etch/component",
+    "attrs": {
+      "ref": 2291,
+      "attributes": {
+        "show": "{true}"
+      }
+    },
+    "innerBlocks": [
+      {
+        "blockName": "etch/slot-content",
+        "attrs": {
+          "name": "noteContent"
+        },
+        "innerBlocks": [
+          {
+            "blockName": "etch/element",
+            "attrs": {
+              "metadata": {
+                "name": "Text"
+              },
+              "tag": "p",
+              "attributes": {}
+            },
+            "innerBlocks": [
+              {
+                "blockName": "etch/text",
+                "attrs": {
+                  "metadata": {
+                    "name": "Text"
+                  },
+                  "content": "Developer notes allow you to write notes to yourself, your team, or the client."
+                },
+                "innerBlocks": [],
+                "innerHTML": "",
+                "innerContent": []
+              }
+            ],
+            "innerHTML": "\n\n",
+            "innerContent": [
+              "\n",
+              null,
+              "\n"
+            ]
+          }
+        ],
+        "innerHTML": "\n\n",
+        "innerContent": [
+          "\n",
+          null,
+          "\n"
+        ]
+      }
+    ],
+    "innerHTML": "\n\n",
+    "innerContent": [
+      "\n",
+      null,
+      "\n"
+    ]
+  },
+  "version": 2,
+  "styles": {
+    "3aynbux": {
+      "type": "class",
+      "selector": ".dev-note",
+      "collection": "default",
+      "css": "--accent-color: #fff8dc;\n  display: var(--display, none);\n  flex-direction: column;\n  gap: calc(var(--content-gap, 1em) / 2);\n  background-color: var(--accent-color);\n  border-left: 4px solid oklch(from var(--accent-color) calc(l / 1.5) calc(c * 6) h / 1);\n  padding: 15px 20px;\n  border-radius: 4px;\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  inline-size: 100%;\n  max-inline-size: max-content;\n  margin: var(--margin-block) var(--margin-inline);\n  &[data-display='Etch Only' i].etch-builder-block {\n    --display: flex;\n  }\n  &[data-display='Gutenberg Only' i].wp-block {\n    --display: flex;\n  }\n  &[data-display='Etch and Gutenberg' i]:is(.wp-block, .etch-builder-block) {\n    --display: flex;\n  }\n  &[data-style=\"danger\" i] {\n    --accent-color: #f8d7d9;\n  }\n  &[data-style=\"info\" i] {\n    --accent-color: #d1edf0;\n  }\n  &::before {\n    content: attr(data-heading);\n    font-weight: bold;\n    font-size: 0.8rem;\n    text-transform: uppercase;\n    letter-spacing: 0.05em;\n  }",
+      "readonly": false
+    }
+  },
+  "components": {
+    "2291": {
+      "id": 2291,
+      "name": "Dev Note",
+      "key": "DevNote",
+      "properties": [
+        {
+          "key": "show",
+          "name": "Visibility",
+          "keyTouched": true,
+          "type": {
+            "primitive": "boolean"
+          },
+          "default": true
+        },
+        {
+          "key": "heading",
+          "name": "Heading",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "Developer Note"
+        },
+        {
+          "key": "display",
+          "name": "Display",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "Etch Only",
+          "selectOptionsString": "Etch Only\nEtch And Gutenberg\nGutenberg Only"
+        },
+        {
+          "key": "marginBlock",
+          "name": "Margin Block",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          }
+        },
+        {
+          "key": "marginInline",
+          "name": "Margin Inline",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          }
+        },
+        {
+          "key": "style",
+          "name": "Style",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "Warning",
+          "selectOptionsString": "Warning\nInfo\nDanger"
+        }
+      ],
+      "description": "",
+      "legacyId": "",
+      "blocks": [
+        {
+          "blockName": "etch/condition",
+          "attrs": {
+            "metadata": {
+              "name": "If (Condition)"
+            },
+            "condition": {
+              "leftHand": {
+                "leftHand": "user.loggedIn",
+                "operator": "isTruthy",
+                "rightHand": null
+              },
+              "operator": "&&",
+              "rightHand": {
+                "leftHand": "props.show",
+                "operator": "isTruthy",
+                "rightHand": null
+              }
+            },
+            "conditionString": "user.loggedIn && props.show"
+          },
+          "innerBlocks": [
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": {
+                  "name": "Dev Note"
+                },
+                "tag": "div",
+                "attributes": {
+                  "style": "--margin-block: {props.marginBlock}; --margin-inline: {props.marginInline};",
+                  "data-display": "{props.display}",
+                  "class": "dev-note",
+                  "data-heading": "{props.heading}",
+                  "data-style": "{props.style}"
+                },
+                "styles": [
+                  "3aynbux"
+                ]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/slot-placeholder",
+                  "attrs": {
+                    "name": "noteContent"
+                  },
+                  "innerBlocks": [],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    "\n"
+                  ]
+                },
+                {
+                  "blockName": "etch/condition",
+                  "attrs": {
+                    "metadata": {
+                      "name": "If (Condition)"
+                    },
+                    "condition": {
+                      "leftHand": "slots.noteContent.empty",
+                      "operator": "isTruthy",
+                      "rightHand": null
+                    },
+                    "conditionString": "slots.noteContent.empty"
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "Text"
+                        },
+                        "tag": "p",
+                        "attributes": {}
+                      },
+                      "innerBlocks": [
+                        {
+                          "blockName": "etch/text",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Text"
+                            },
+                            "content": "Insert your developer notes. They won't show up on the front end."
+                          },
+                          "innerBlocks": [],
+                          "innerHTML": "",
+                          "innerContent": []
+                        }
+                      ],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        null,
+                        "\n"
+                      ]
+                    }
+                  ],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n"
+                  ]
+                }
+              ],
+              "innerHTML": "\n\n\n\n",
+              "innerContent": [
+                "\n",
+                null,
+                "\n\n",
+                null,
+                "\n"
+              ]
+            }
+          ],
+          "innerHTML": "\n\n",
+          "innerContent": [
+            "\n",
+            null,
+            "\n"
+          ]
+        }
+      ]
+    }
+  },
+  "_metadata": {
+    "source": "patterns.etchwp.com",
+    "slug": "dev-note",
+    "title": "Dev Note",
+    "family": "interactive",
+    "link": "https://patterns.etchwp.com/layouts/dev-note/",
+    "modified": "2026-01-16T02:31:53",
+    "collected": "2026-01-31T17:07:50.957Z"
+  }
+}

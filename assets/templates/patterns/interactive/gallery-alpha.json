@@ -1,0 +1,393 @@
+{
+  "type": "block",
+  "gutenbergBlock": {
+    "blockName": "etch/component",
+    "attrs": {
+      "ref": 1930,
+      "attributes": {
+        "lightbox": "{true}"
+      }
+    },
+    "innerBlocks": [
+      {
+        "blockName": "etch/slot-content",
+        "attrs": {
+          "name": "media"
+        },
+        "innerBlocks": [
+          {
+            "blockName": "etch/element",
+            "attrs": {
+              "tag": "figure",
+              "attributes": {},
+              "styles": [
+                "s4gkacs"
+              ]
+            },
+            "innerBlocks": [
+              {
+                "blockName": "etch/element",
+                "attrs": {
+                  "tag": "img",
+                  "attributes": {
+                    "src": "https://placehold.co/800x1066",
+                    "alt": "Example Image 1",
+                    "loading": "lazy"
+                  }
+                },
+                "innerBlocks": [],
+                "innerHTML": "\n\n",
+                "innerContent": [
+                  "\n",
+                  "\n"
+                ]
+              }
+            ],
+            "innerHTML": "\n\n",
+            "innerContent": [
+              "\n",
+              null,
+              "\n"
+            ]
+          },
+          {
+            "blockName": "etch/element",
+            "attrs": {
+              "tag": "figure",
+              "attributes": {},
+              "styles": [
+                "s4gkacs"
+              ]
+            },
+            "innerBlocks": [
+              {
+                "blockName": "etch/element",
+                "attrs": {
+                  "tag": "img",
+                  "attributes": {
+                    "src": "https://placehold.co/800x450",
+                    "alt": "Example Image 2",
+                    "loading": "lazy"
+                  }
+                },
+                "innerBlocks": [],
+                "innerHTML": "\n\n",
+                "innerContent": [
+                  "\n",
+                  "\n"
+                ]
+              }
+            ],
+            "innerHTML": "\n\n",
+            "innerContent": [
+              "\n",
+              null,
+              "\n"
+            ]
+          },
+          {
+            "blockName": "etch/element",
+            "attrs": {
+              "tag": "figure",
+              "attributes": {},
+              "styles": [
+                "s4gkacs"
+              ]
+            },
+            "innerBlocks": [
+              {
+                "blockName": "etch/element",
+                "attrs": {
+                  "tag": "img",
+                  "attributes": {
+                    "src": "https://placehold.co/800x1200",
+                    "alt": "Example Image 3",
+                    "loading": "lazy"
+                  }
+                },
+                "innerBlocks": [],
+                "innerHTML": "\n\n",
+                "innerContent": [
+                  "\n",
+                  "\n"
+                ]
+              }
+            ],
+            "innerHTML": "\n\n",
+            "innerContent": [
+              "\n",
+              null,
+              "\n"
+            ]
+          },
+          {
+            "blockName": "etch/element",
+            "attrs": {
+              "tag": "figure",
+              "attributes": {},
+              "styles": [
+                "s4gkacs"
+              ]
+            },
+            "innerBlocks": [
+              {
+                "blockName": "etch/element",
+                "attrs": {
+                  "tag": "img",
+                  "attributes": {
+                    "src": "https://placehold.co/800x600",
+                    "alt": "Example Image 4",
+                    "loading": "lazy"
+                  }
+                },
+                "innerBlocks": [],
+                "innerHTML": "\n\n",
+                "innerContent": [
+                  "\n",
+                  "\n"
+                ]
+              }
+            ],
+            "innerHTML": "\n\n",
+            "innerContent": [
+              "\n",
+              null,
+              "\n"
+            ]
+          },
+          {
+            "blockName": "etch/element",
+            "attrs": {
+              "tag": "figure",
+              "attributes": {},
+              "styles": [
+                "s4gkacs"
+              ]
+            },
+            "innerBlocks": [
+              {
+                "blockName": "etch/element",
+                "attrs": {
+                  "tag": "img",
+                  "attributes": {
+                    "src": "https://placehold.co/800x800",
+                    "alt": "Example Image 5",
+                    "loading": "lazy"
+                  }
+                },
+                "innerBlocks": [],
+                "innerHTML": "\n\n",
+                "innerContent": [
+                  "\n",
+                  "\n"
+                ]
+              }
+            ],
+            "innerHTML": "\n\n",
+            "innerContent": [
+              "\n",
+              null,
+              "\n"
+            ]
+          },
+          {
+            "blockName": "etch/element",
+            "attrs": {
+              "tag": "figure",
+              "attributes": {},
+              "styles": [
+                "s4gkacs"
+              ]
+            },
+            "innerBlocks": [
+              {
+                "blockName": "etch/element",
+                "attrs": {
+                  "tag": "img",
+                  "attributes": {
+                    "src": "https://placehold.co/800x1422",
+                    "alt": "Example Image 6",
+                    "loading": "lazy"
+                  }
+                },
+                "innerBlocks": [],
+                "innerHTML": "\n\n",
+                "innerContent": [
+                  "\n",
+                  "\n"
+                ]
+              }
+            ],
+            "innerHTML": "\n\n",
+            "innerContent": [
+              "\n",
+              null,
+              "\n"
+            ]
+          }
+        ],
+        "innerHTML": "\n\n\n\n\n\n\n\n\n\n\n\n",
+        "innerContent": [
+          "\n",
+          null,
+          "\n\n",
+          null,
+          "\n\n",
+          null,
+          "\n\n",
+          null,
+          "\n\n",
+          null,
+          "\n\n",
+          null,
+          "\n"
+        ]
+      }
+    ],
+    "innerHTML": "\n\n",
+    "innerContent": [
+      "\n",
+      null,
+      "\n"
+    ]
+  },
+  "version": 2,
+  "styles": {
+    "etch-flex-div-style": {
+      "type": "element",
+      "selector": ":where([data-etch-element=\"flex-div\"])",
+      "collection": "default",
+      "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;",
+      "readonly": true
+    },
+    "56mi8g4": {
+      "type": "class",
+      "selector": ".gallery-alpha",
+      "collection": "default",
+      "css": "img {\n    aspect-ratio: var(--image-aspect-ratio);\n    object-fit: cover;\n  }\n  button {\n    padding: 0;\n  }\n  /* Begin Auto Grid */\n  & {\n    display: grid !important;\n    grid-template-columns: var(--grid-template-columns);\n    /* Don't touch the stuff below unless you have a PhD in CSS */\n    --gap-count: calc(var(--column-count) - 1);\n    --total-gap-width: calc(var(--gap-count) * var(--grid-gap));\n    --ideal-item-width: calc((100% - var(--total-gap-width)) / var(--column-count));\n    --grid-template-columns: repeat(auto-fit, minmax(max(var(--min-item-width), var(--ideal-item-width)), 1fr));\n    /* Special handling for children */\n    > * {\n      min-width: 0;\n      max-width: 100%;\n      overflow-wrap: break-word;\n    }\n    gap: var(--grid-gap); /* No touchey - redefine this variable if you want to change the gap, but don't replace the variable or your grid will break */\n  }\n  /* End Auto Grid */\n\n  &[data-layout='masonry' i] {\n    img {\n      --image-aspect-ratio: initial;\n    }\n    /* Auto-responsive columns */\n    --col-rule-style: none;\n    --col-rule-width: 1px;\n    --col-rule-color: black;\n\n    display: block !important;\n    columns: var(--column-count) var(--min-item-width);\n    gap: var(--grid-gap);\n\n    > * {\n      break-inside: avoid;\n      margin-block-end: var(--grid-gap);\n    }\n  }\n\n  /* Glightbox */\n .gslide-media {\n  width: auto !important;\n  max-width: 90vw !important;\n}\n\n.gslide-image img {\n  width: auto !important;\n  height: auto !important;\n  max-width: 90vw !important;\n  max-height: 90vh !important;\n  object-fit: contain !important;\n}",
+      "readonly": false
+    }
+  },
+  "components": {
+    "1930": {
+      "id": 1930,
+      "name": "Gallery Alpha",
+      "key": "GalleryAlpha",
+      "properties": [
+        {
+          "key": "layout",
+          "name": "Layout",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "Grid",
+          "selectOptionsString": "Grid\nMasonry"
+        },
+        {
+          "key": "lightbox",
+          "name": "Lightbox",
+          "keyTouched": false,
+          "type": {
+            "primitive": "boolean"
+          },
+          "default": true
+        },
+        {
+          "key": "columnCount",
+          "name": "Column Count (Loose)",
+          "keyTouched": true,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "3"
+        },
+        {
+          "key": "minItemWidth",
+          "name": "Min Item Width",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "260px"
+        },
+        {
+          "key": "imageAspectRatio",
+          "name": "Image Aspect Ratio (Grid)\n",
+          "keyTouched": true,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "1"
+        },
+        {
+          "key": "gap",
+          "name": "Gap",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "var(--content-gap, 1em)"
+        }
+      ],
+      "description": "",
+      "legacyId": "",
+      "blocks": [
+        {
+          "blockName": "etch/element",
+          "attrs": {
+            "metadata": {
+              "name": "Gallery Alpha"
+            },
+            "script": {
+              "code": "aWYgKGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoJy5nYWxsZXJ5LWFscGhhW2RhdGEtZ2xpZ2h0Ym94PSJ0cnVlIl0nKSkgewogIC8vIExvYWQgR0xpZ2h0Ym94IENTUwogIGNvbnN0IGxpbmsgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdsaW5rJyk7CiAgbGluay5yZWwgPSAnc3R5bGVzaGVldCc7CiAgbGluay5ocmVmID0gJ2h0dHBzOi8vY2RuLmpzZGVsaXZyLm5ldC9ucG0vZ2xpZ2h0Ym94L2Rpc3QvY3NzL2dsaWdodGJveC5taW4uY3NzJzsKICBkb2N1bWVudC5oZWFkLmFwcGVuZENoaWxkKGxpbmspOwoKICAvLyBXcmFwIGVhY2ggaW1hZ2UgaW4gYW4gYW5jaG9yCiAgZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbCgnLmdhbGxlcnktYWxwaGFbZGF0YS1nbGlnaHRib3g9InRydWUiXSBpbWcnKS5mb3JFYWNoKGltZyA9PiB7CiAgICBjb25zdCBhbmNob3IgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdhJyk7CiAgICBhbmNob3IuaHJlZiA9IGltZy5zcmM7CiAgICBhbmNob3IuY2xhc3NOYW1lID0gJ2dsaWdodGJveCc7CiAgICBhbmNob3Iuc2V0QXR0cmlidXRlKCdkYXRhLWdhbGxlcnknLCAnZ2FsbGVyeTEnKTsKICAgIGFuY2hvci5zZXRBdHRyaWJ1dGUoJ2RhdGEtdHlwZScsICdpbWFnZScpOwogICAgaW1nLnBhcmVudE5vZGUuaW5zZXJ0QmVmb3JlKGFuY2hvciwgaW1nKTsKICAgIGFuY2hvci5hcHBlbmRDaGlsZChpbWcpOwogIH0pOwoKICAvLyBMb2FkIEdMaWdodGJveCBKUyBhbmQgaW5pdGlhbGl6ZQogIGNvbnN0IHNjcmlwdCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ3NjcmlwdCcpOwogIHNjcmlwdC5zcmMgPSAnaHR0cHM6Ly9jZG4uanNkZWxpdnIubmV0L25wbS9nbGlnaHRib3gvZGlzdC9qcy9nbGlnaHRib3gubWluLmpzJzsKICBzY3JpcHQub25sb2FkID0gZnVuY3Rpb24oKSB7CiAgICBHTGlnaHRib3goewogICAgICBzZWxlY3RvcjogJy5nbGlnaHRib3gnLAogICAgICB0b3VjaE5hdmlnYXRpb246IHRydWUsCiAgICAgIGxvb3A6IHRydWUKICAgIH0pOwogIH07CiAgZG9jdW1lbnQuaGVhZC5hcHBlbmRDaGlsZChzY3JpcHQpOwp9",
+              "id": "pwfb29f"
+            },
+            "tag": "div",
+            "attributes": {
+              "data-etch-element": "flex-div",
+              "class": "gallery-alpha",
+              "style": "--grid-gap: {props.gap}; --image-aspect-ratio: {props.imageAspectRatio}; --min-item-width: {props.minItemWidth}; --column-count: {props.columnCount};",
+              "data-layout": "{props.layout}",
+              "data-glightbox": "{props.lightbox}"
+            },
+            "styles": [
+              "etch-flex-div-style",
+              "56mi8g4"
+            ]
+          },
+          "innerBlocks": [
+            {
+              "blockName": "etch/slot-placeholder",
+              "attrs": {
+                "name": "media"
+              },
+              "innerBlocks": [],
+              "innerHTML": "\n\n",
+              "innerContent": [
+                "\n",
+                "\n"
+              ]
+            }
+          ],
+          "innerHTML": "\n\n",
+          "innerContent": [
+            "\n",
+            null,
+            "\n"
+          ]
+        }
+      ]
+    }
+  },
+  "_metadata": {
+    "source": "patterns.etchwp.com",
+    "slug": "gallery-alpha",
+    "title": "Gallery Alpha",
+    "family": "interactive",
+    "link": "https://patterns.etchwp.com/layouts/gallery-alpha/",
+    "modified": "2026-01-28T19:10:01",
+    "collected": "2026-01-31T17:07:53.709Z"
+  }
+}

@@ -1,0 +1,300 @@
+{
+  "type": "block",
+  "gutenbergBlock": {
+    "blockName": "etch/component",
+    "attrs": {
+      "ref": 593,
+      "attributes": {}
+    },
+    "innerBlocks": [],
+    "innerHTML": "\n\n",
+    "innerContent": [
+      "\n",
+      "\n"
+    ]
+  },
+  "version": 2,
+  "styles": {
+    "etch-flex-div-style": {
+      "type": "element",
+      "selector": ":where([data-etch-element=\"flex-div\"])",
+      "collection": "default",
+      "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;",
+      "readonly": true
+    },
+    "wqsxr3a": {
+      "type": "class",
+      "selector": ".feature-card-alpha",
+      "collection": "default",
+      "css": "display: flex;\n  flex-direction: column;\n  gap: var(--card-gap, 0.5em);\n  &[data-icon-layout='inline' i] {\n    &__heading-wrapper {\n      display: flex;\n      flex-direction: row;\n      align-items: center;\n    }\n  }\n  &[data-icon-layout='adjacent' i] {\n    display: grid;\n    grid-template-columns: auto minmax(0, 1fr);\n    &__heading-wrapper {\n      display: contents;\n    }\n    &__heading {\n      grid-column: 2;\n    }\n    &__description {\n      grid-column: 2;\n    }\n  }",
+      "readonly": false
+    },
+    "6wfg4yh": {
+      "type": "class",
+      "selector": ".feature-card-alpha__heading-wrapper",
+      "collection": "default",
+      "css": "display: flex;\n  flex-direction: column;\n  gap: var(--card-gap, 1rem);",
+      "readonly": false
+    },
+    "vdz15sz": {
+      "type": "class",
+      "selector": ".feature-card-alpha__icon",
+      "collection": "default",
+      "css": "inline-size: var(--icon-size, 38px);",
+      "readonly": false
+    },
+    "yafaqwj": {
+      "type": "class",
+      "selector": ".feature-card-alpha__heading",
+      "collection": "default",
+      "css": "font-size: var(--h3, 22px);",
+      "readonly": false
+    },
+    "3sawohi": {
+      "type": "class",
+      "selector": ".feature-card-alpha__description",
+      "collection": "default",
+      "css": "",
+      "readonly": false
+    }
+  },
+  "components": {
+    "593": {
+      "id": 593,
+      "name": "Feature Card Alpha",
+      "key": "FeatureCardAlpha",
+      "properties": [
+        {
+          "key": "icon",
+          "name": "Icon\n",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "image"
+          },
+          "default": "https://patterns.etchwp.com/wp-content/uploads/copy-01-solid-standard.svg"
+        },
+        {
+          "key": "iconSize",
+          "name": "Icon Size",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "2rem"
+        },
+        {
+          "key": "iconLayout",
+          "name": "Icon Layout",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "Stacked",
+          "selectOptionsString": "Stacked\nInline\nAdjacent\nNone"
+        },
+        {
+          "key": "heading",
+          "name": "Heading",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "Feature heading"
+        },
+        {
+          "key": "description",
+          "name": "Description",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Error autem corporis incidunt harum obcaecati excepturi."
+        }
+      ],
+      "description": "",
+      "legacyId": "",
+      "blocks": [
+        {
+          "blockName": "etch/element",
+          "attrs": {
+            "metadata": {
+              "name": "Feature Card Alpha"
+            },
+            "tag": "article",
+            "attributes": {
+              "data-etch-element": "flex-div",
+              "class": "feature-card-alpha",
+              "data-icon-layout": "{props.iconLayout}"
+            },
+            "styles": [
+              "etch-flex-div-style",
+              "wqsxr3a"
+            ]
+          },
+          "innerBlocks": [
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": {
+                  "name": "Heading Wrapper"
+                },
+                "tag": "div",
+                "attributes": {
+                  "style": "--icon-size: {props.iconSize};",
+                  "class": "feature-card-alpha__heading-wrapper"
+                },
+                "styles": [
+                  "6wfg4yh"
+                ]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/condition",
+                  "attrs": {
+                    "metadata": {
+                      "name": "If (Condition)"
+                    },
+                    "condition": {
+                      "leftHand": "props.iconLayout",
+                      "operator": "!==",
+                      "rightHand": "\"None\""
+                    },
+                    "conditionString": "props.iconLayout !== \"None\""
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/svg",
+                      "attrs": {
+                        "metadata": {
+                          "name": "Icon"
+                        },
+                        "tag": "svg",
+                        "attributes": {
+                          "aria-hidden": "true",
+                          "src": "{props.icon}",
+                          "class": "feature-card-alpha__icon"
+                        },
+                        "styles": [
+                          "vdz15sz"
+                        ]
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        "\n"
+                      ]
+                    }
+                  ],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n"
+                  ]
+                },
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": {
+                      "name": "Heading"
+                    },
+                    "tag": "h2",
+                    "attributes": {
+                      "class": "feature-card-alpha__heading"
+                    },
+                    "styles": [
+                      "yafaqwj"
+                    ]
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/text",
+                      "attrs": {
+                        "metadata": {
+                          "name": "Text"
+                        },
+                        "content": "{props.heading}"
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "",
+                      "innerContent": []
+                    }
+                  ],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n"
+                  ]
+                }
+              ],
+              "innerHTML": "\n\n\n\n",
+              "innerContent": [
+                "\n",
+                null,
+                "\n\n",
+                null,
+                "\n"
+              ]
+            },
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": {
+                  "name": "Description"
+                },
+                "tag": "p",
+                "attributes": {
+                  "class": "feature-card-alpha__description"
+                },
+                "styles": [
+                  "3sawohi"
+                ]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/text",
+                  "attrs": {
+                    "metadata": {
+                      "name": "Text"
+                    },
+                    "content": "{props.description}"
+                  },
+                  "innerBlocks": [],
+                  "innerHTML": "",
+                  "innerContent": []
+                }
+              ],
+              "innerHTML": "\n\n",
+              "innerContent": [
+                "\n",
+                null,
+                "\n"
+              ]
+            }
+          ],
+          "innerHTML": "\n\n\n\n",
+          "innerContent": [
+            "\n",
+            null,
+            "\n\n",
+            null,
+            "\n"
+          ]
+        }
+      ]
+    }
+  },
+  "_metadata": {
+    "source": "patterns.etchwp.com",
+    "slug": "feature-card-alpha",
+    "title": "Feature Card Alpha",
+    "family": "features",
+    "link": "https://patterns.etchwp.com/layouts/feature-card-alpha/",
+    "modified": "2026-01-17T21:59:44",
+    "collected": "2026-01-31T17:07:36.910Z"
+  }
+}

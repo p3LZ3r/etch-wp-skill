@@ -1,0 +1,540 @@
+{
+  "type": "block",
+  "gutenbergBlock": {
+    "blockName": "etch/component",
+    "attrs": {
+      "ref": 1847,
+      "attributes": {
+        "bg": "black",
+        "fg": "white",
+        "hasCta": "{true}",
+        "hasIcon": "{true}",
+        "inset": "0 auto auto 0",
+        "isDissmissable": "{true}"
+      }
+    },
+    "innerBlocks": [],
+    "innerHTML": "\n\n",
+    "innerContent": [
+      "\n",
+      "\n"
+    ]
+  },
+  "version": 2,
+  "styles": {
+    "etch-section-style": {
+      "type": "element",
+      "selector": ":where([data-etch-element=\"section\"])",
+      "collection": "default",
+      "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;\n  align-items: center;",
+      "readonly": true
+    },
+    "qzwub67": {
+      "type": "class",
+      "selector": ".banner-alpha",
+      "collection": "default",
+      "css": "padding-block: var(--space-xs, 0.6rem);\n  padding-inline: var(--gutter);\n  background-color: var(--bg-ultra-light, #eee);\n  position: relative;\n  border-block-end: var(--border, 1px solid #ddd);\n  &[data-behavior*='overlap' i] {\n    position: absolute;\n    z-index: 9999;\n    inset: var(--inset, 0 auto auto 0);\n  }\n  &[data-behavior*='fixed' i],\n  &[data-position*='auto auto 0 0' i]:not([data-behavior*='push' i]) {\n    position: fixed;\n    z-index: 9999;\n    inset: var(--inset, 0 auto auto 0);\n  }",
+      "readonly": false
+    },
+    "etch-container-style": {
+      "type": "element",
+      "selector": ":where([data-etch-element=\"container\"])",
+      "collection": "default",
+      "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;\n  max-width: var(--content-width, 1366px);\n  align-self: center;",
+      "readonly": true
+    },
+    "s6u8s1o": {
+      "type": "class",
+      "selector": ".banner-alpha__inner",
+      "collection": "default",
+      "css": "display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  gap: calc(var(--content-gap, 1rem) * 2);\n  justify-content: center;\n  align-items: center;\n\n  @media (width < to-rem(950px)) {\n    gap: calc(var(--content-gap, 1rem) / 2);\n    justify-content: flex-start;\n    align-items: start;\n    padding-inline-end: var(--gutter);\n  }",
+      "readonly": false
+    },
+    "6fuw6m7": {
+      "type": "class",
+      "selector": ".banner-alpha__message-wrapper",
+      "collection": "default",
+      "css": "display: flex;\n  flex-direction: row;\n  gap: calc(var(--content-gap, 1rem) / 2);\n\talign-items: center;",
+      "readonly": false
+    },
+    "abynyhi": {
+      "type": "class",
+      "selector": ".banner-alpha__icon",
+      "collection": "default",
+      "css": "inline-size: 1em;",
+      "readonly": false
+    },
+    "jct55ic": {
+      "type": "class",
+      "selector": ".banner-alpha__message",
+      "collection": "default",
+      "css": "line-height: 1.1;",
+      "readonly": false
+    },
+    "fya9sd8": {
+      "type": "class",
+      "selector": ".banner-alpha__cta",
+      "collection": "default",
+      "css": "text-underline-offset: 0.05em;",
+      "readonly": false
+    },
+    "snym2kw": {
+      "type": "class",
+      "selector": ".banner-alpha__close-button",
+      "collection": "default",
+      "css": "position: absolute;\n  inset-inline-end: calc(var(--gutter) / 2);\n  inset-block-start: 50%;\n  translate: 0 -50%;\n  flex-shrink: 0;\n  inline-size: max-content;\n  padding: 0;\n  background: transparent;",
+      "readonly": false
+    },
+    "ilb4tv0": {
+      "type": "class",
+      "selector": ".banner-alpha__close-button-label",
+      "collection": "default",
+      "css": "position: absolute !important;\n    inline-size: 1px !important;\n    block-size: 1px !important;\n    padding: 0;\n    margin: -1px;\n    overflow: hidden;\n    clip-path: inset(100%);\n    white-space: nowrap; /* added line */\n    border: 0;",
+      "readonly": false
+    },
+    "lav5of3": {
+      "type": "class",
+      "selector": ".banner-alpha__close-button-icon",
+      "collection": "default",
+      "css": "inline-size: 1em;\n  flex-shrink: 0;",
+      "readonly": false
+    }
+  },
+  "components": {
+    "1847": {
+      "id": 1847,
+      "name": "Banner Alpha",
+      "key": "BannerAlpha",
+      "blocks": [
+        {
+          "blockName": "etch/element",
+          "attrs": {
+            "metadata": {
+              "name": "Banner Alpha"
+            },
+            "script": {
+              "code": "Ly8gSW5pdGlhbGl6ZSBiYW5uZXIgY2xvc2UgZnVuY3Rpb25hbGl0eQpkb2N1bWVudC5hZGRFdmVudExpc3RlbmVyKCdET01Db250ZW50TG9hZGVkJywgZnVuY3Rpb24oKSB7CiAgY29uc3QgYmFubmVycyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoJy5iYW5uZXItYWxwaGEnKTsKICAKICBiYW5uZXJzLmZvckVhY2goKGJhbm5lciwgaW5kZXgpID0+IHsKICAgIC8vIEdpdmUgZWFjaCBiYW5uZXIgYSB1bmlxdWUgSUQgaWYgaXQgZG9lc24ndCBoYXZlIG9uZQogICAgY29uc3QgYmFubmVySWQgPSBiYW5uZXIuaWQgfHwgYGJhbm5lci0ke2luZGV4fWA7CiAgICBiYW5uZXIuaWQgPSBiYW5uZXJJZDsKICAgIAogICAgLy8gQ2hlY2sgaWYgdGhpcyBiYW5uZXIgaGFzIGJlZW4gZGlzbWlzc2VkIGJlZm9yZQogICAgY29uc3QgaXNEaXNtaXNzZWQgPSBsb2NhbFN0b3JhZ2UuZ2V0SXRlbShgYmFubmVyLWRpc21pc3NlZC0ke2Jhbm5lcklkfWApOwogICAgaWYgKGlzRGlzbWlzc2VkKSB7CiAgICAgIGJhbm5lci5zdHlsZS5kaXNwbGF5ID0gJ25vbmUnOwogICAgICByZXR1cm47CiAgICB9CiAgICAKICAgIGNvbnN0IGNsb3NlQnV0dG9uID0gYmFubmVyLnF1ZXJ5U2VsZWN0b3IoJy5iYW5uZXItYWxwaGFfX2Nsb3NlLWJ1dHRvbicpOwogICAgCiAgICBpZiAoY2xvc2VCdXR0b24pIHsKICAgICAgLy8gSGFuZGxlIGNsaWNrIGV2ZW50cwogICAgICBjbG9zZUJ1dHRvbi5hZGRFdmVudExpc3RlbmVyKCdjbGljaycsIGZ1bmN0aW9uKGUpIHsKICAgICAgICBlLnByZXZlbnREZWZhdWx0KCk7CiAgICAgICAgZGlzbWlzc0Jhbm5lcihiYW5uZXIsIGJhbm5lcklkKTsKICAgICAgfSk7CiAgICAgIAogICAgICAvLyBIYW5kbGUga2V5Ym9hcmQgZXZlbnRzIChFbnRlciBhbmQgU3BhY2UpCiAgICAgIGNsb3NlQnV0dG9uLmFkZEV2ZW50TGlzdGVuZXIoJ2tleWRvd24nLCBmdW5jdGlvbihlKSB7CiAgICAgICAgaWYgKGUua2V5ID09PSAnRW50ZXInIHx8IGUua2V5ID09PSAnICcpIHsKICAgICAgICAgIGUucHJldmVudERlZmF1bHQoKTsKICAgICAgICAgIGRpc21pc3NCYW5uZXIoYmFubmVyLCBiYW5uZXJJZCk7CiAgICAgICAgfQogICAgICB9KTsKICAgIH0KICB9KTsKfSk7CgpmdW5jdGlvbiBkaXNtaXNzQmFubmVyKGJhbm5lciwgYmFubmVySWQpIHsKICBiYW5uZXIuc3R5bGUuZGlzcGxheSA9ICdub25lJzsKICBsb2NhbFN0b3JhZ2Uuc2V0SXRlbShgYmFubmVyLWRpc21pc3NlZC0ke2Jhbm5lcklkfWAsICd0cnVlJyk7Cn0=",
+              "id": "tv1bnyz"
+            },
+            "tag": "div",
+            "attributes": {
+              "data-etch-element": "section",
+              "data-behavior": "{props.behavior}",
+              "style": "--inset: {props.inset}",
+              "data-position": "{props.inset}",
+              "class": "banner-alpha"
+            },
+            "styles": [
+              "etch-section-style",
+              "qzwub67"
+            ]
+          },
+          "innerBlocks": [
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": {
+                  "name": "Inner"
+                },
+                "tag": "div",
+                "attributes": {
+                  "data-etch-element": "container",
+                  "class": "banner-alpha__inner"
+                },
+                "styles": [
+                  "etch-container-style",
+                  "s6u8s1o"
+                ]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": {
+                      "name": "Message Wrapper"
+                    },
+                    "tag": "div",
+                    "attributes": {
+                      "class": "banner-alpha__message-wrapper"
+                    },
+                    "styles": [
+                      "6fuw6m7"
+                    ]
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/condition",
+                      "attrs": {
+                        "metadata": {
+                          "name": "Has Icon?"
+                        },
+                        "condition": {
+                          "leftHand": "props.hasIcon",
+                          "operator": "isTruthy",
+                          "rightHand": null
+                        },
+                        "conditionString": "props.hasIcon"
+                      },
+                      "innerBlocks": [
+                        {
+                          "blockName": "etch/svg",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Icon"
+                            },
+                            "tag": "svg",
+                            "attributes": {
+                              "src": "{props.icon}",
+                              "stripColors": "true",
+                              "aria-hidden": "true",
+                              "class": "banner-alpha__icon"
+                            },
+                            "styles": [
+                              "abynyhi"
+                            ]
+                          },
+                          "innerBlocks": [],
+                          "innerHTML": "\n\n",
+                          "innerContent": [
+                            "\n",
+                            "\n"
+                          ]
+                        }
+                      ],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        null,
+                        "\n"
+                      ]
+                    },
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "Message"
+                        },
+                        "tag": "p",
+                        "attributes": {
+                          "class": "banner-alpha__message"
+                        },
+                        "styles": [
+                          "jct55ic"
+                        ]
+                      },
+                      "innerBlocks": [
+                        {
+                          "blockName": "etch/text",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Text"
+                            },
+                            "content": "{props.message}"
+                          },
+                          "innerBlocks": [],
+                          "innerHTML": "",
+                          "innerContent": []
+                        }
+                      ],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        null,
+                        "\n"
+                      ]
+                    }
+                  ],
+                  "innerHTML": "\n\n\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n\n",
+                    null,
+                    "\n"
+                  ]
+                },
+                {
+                  "blockName": "etch/condition",
+                  "attrs": {
+                    "metadata": {
+                      "name": "Has CTA?"
+                    },
+                    "condition": {
+                      "leftHand": "props.hasCta",
+                      "operator": "isTruthy",
+                      "rightHand": null
+                    },
+                    "conditionString": "props.hasCta"
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "CTA"
+                        },
+                        "tag": "a",
+                        "attributes": {
+                          "href": "{props.ctaLink}",
+                          "class": "banner-alpha__cta"
+                        },
+                        "styles": [
+                          "fya9sd8"
+                        ]
+                      },
+                      "innerBlocks": [
+                        {
+                          "blockName": "etch/text",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Text"
+                            },
+                            "content": "{props.cta}"
+                          },
+                          "innerBlocks": [],
+                          "innerHTML": "",
+                          "innerContent": []
+                        }
+                      ],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        null,
+                        "\n"
+                      ]
+                    }
+                  ],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n"
+                  ]
+                }
+              ],
+              "innerHTML": "\n\n\n\n",
+              "innerContent": [
+                "\n",
+                null,
+                "\n\n",
+                null,
+                "\n"
+              ]
+            },
+            {
+              "blockName": "etch/condition",
+              "attrs": {
+                "metadata": {
+                  "name": "Is Dismissable?"
+                },
+                "condition": {
+                  "leftHand": "props.isDissmissable",
+                  "operator": "isTruthy",
+                  "rightHand": null
+                },
+                "conditionString": "props.isDissmissable"
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": {
+                      "name": "Close Button"
+                    },
+                    "tag": "button",
+                    "attributes": {
+                      "class": "banner-alpha__close-button"
+                    },
+                    "styles": [
+                      "snym2kw"
+                    ]
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "Label (For Accessibility)"
+                        },
+                        "tag": "span",
+                        "attributes": {
+                          "class": "banner-alpha__close-button-label"
+                        },
+                        "styles": [
+                          "ilb4tv0"
+                        ]
+                      },
+                      "innerBlocks": [
+                        {
+                          "blockName": "etch/text",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Text"
+                            },
+                            "content": "Close Banner"
+                          },
+                          "innerBlocks": [],
+                          "innerHTML": "",
+                          "innerContent": []
+                        }
+                      ],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        null,
+                        "\n"
+                      ]
+                    },
+                    {
+                      "blockName": "etch/svg",
+                      "attrs": {
+                        "metadata": {
+                          "name": "Icon"
+                        },
+                        "tag": "svg",
+                        "attributes": {
+                          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20height%3D%2224%22%20color%3D%22currentColor%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%20%20%20%20%20%3Cpath%20d%3D%22M18%206L6.00081%2017.9992M17.9992%2018L6%206.00085%22%20%2F%3E%20%3C%2Fsvg%3E",
+                          "class": "banner-alpha__close-button-icon"
+                        },
+                        "styles": [
+                          "lav5of3"
+                        ]
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        "\n"
+                      ]
+                    }
+                  ],
+                  "innerHTML": "\n\n\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n\n",
+                    null,
+                    "\n"
+                  ]
+                }
+              ],
+              "innerHTML": "\n\n",
+              "innerContent": [
+                "\n",
+                null,
+                "\n"
+              ]
+            }
+          ],
+          "innerHTML": "\n\n\n\n",
+          "innerContent": [
+            "\n",
+            null,
+            "\n\n",
+            null,
+            "\n"
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "key": "behavior",
+          "name": "Behavior",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "Push Content",
+          "selectOptionsString": "Push Content\nOverlap Content\nOverlap Content (Fixed)"
+        },
+        {
+          "key": "inset",
+          "name": "Position (Overlap Behavior Only)",
+          "keyTouched": true,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": " 0 auto auto 0",
+          "selectOptionsString": "Top :  0 auto auto 0\nBottom : auto auto 0 0"
+        },
+        {
+          "key": "icon",
+          "name": "Icon",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "image"
+          },
+          "default": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20height%3D%2224%22%20color%3D%22currentColor%22%20fill%3D%22none%22%20stroke%3D%22%23141B34%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%20%20%20%20%20%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%20%2F%3E%20%20%20%20%20%3Cpath%20d%3D%22M12%2016V11.5%22%20%2F%3E%20%20%20%20%20%3Cpath%20d%3D%22M12%208.01172V8.00172%22%20%2F%3E%20%3C%2Fsvg%3E"
+        },
+        {
+          "key": "message",
+          "name": "Message",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "Place your message here. The X will dismiss this banner."
+        },
+        {
+          "key": "cta",
+          "name": "CTA",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "Primary action"
+        },
+        {
+          "key": "ctaLink",
+          "name": "CTA Link",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "#"
+        },
+        {
+          "key": "hasCta",
+          "name": "Has CTA",
+          "keyTouched": false,
+          "type": {
+            "primitive": "boolean"
+          },
+          "default": true
+        },
+        {
+          "key": "hasIcon",
+          "name": "Has Icon",
+          "keyTouched": false,
+          "type": {
+            "primitive": "boolean"
+          },
+          "default": true
+        },
+        {
+          "key": "isDissmissable",
+          "name": "Is Dissmissable",
+          "keyTouched": false,
+          "type": {
+            "primitive": "boolean"
+          },
+          "default": true
+        }
+      ],
+      "description": "",
+      "legacyId": ""
+    }
+  },
+  "_metadata": {
+    "source": "patterns.etchwp.com",
+    "slug": "banner-alpha",
+    "title": "Banner Alpha",
+    "family": "interactive",
+    "link": "https://patterns.etchwp.com/layouts/banner-alpha/",
+    "modified": "2025-12-28T15:07:29",
+    "collected": "2026-01-31T17:07:54.259Z"
+  }
+}

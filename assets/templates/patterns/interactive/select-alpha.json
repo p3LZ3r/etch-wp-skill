@@ -1,0 +1,311 @@
+{
+  "type": "block",
+  "gutenbergBlock": {
+    "blockName": "etch/component",
+    "attrs": {
+      "ref": 1968,
+      "attributes": {}
+    },
+    "innerBlocks": [
+      {
+        "blockName": "etch/slot-content",
+        "attrs": {
+          "name": "options"
+        },
+        "innerBlocks": [
+          {
+            "blockName": "etch/component",
+            "attrs": {
+              "ref": 1969,
+              "attributes": {
+                "label": "Option 1"
+              }
+            },
+            "innerBlocks": [],
+            "innerHTML": "\n\n",
+            "innerContent": [
+              "\n",
+              "\n"
+            ]
+          },
+          {
+            "blockName": "etch/component",
+            "attrs": {
+              "ref": 1969,
+              "attributes": {
+                "label": "Option 2"
+              }
+            },
+            "innerBlocks": [],
+            "innerHTML": "\n\n",
+            "innerContent": [
+              "\n",
+              "\n"
+            ]
+          },
+          {
+            "blockName": "etch/component",
+            "attrs": {
+              "ref": 1969,
+              "attributes": {
+                "label": "Option 3"
+              }
+            },
+            "innerBlocks": [],
+            "innerHTML": "\n\n",
+            "innerContent": [
+              "\n",
+              "\n"
+            ]
+          }
+        ],
+        "innerHTML": "\n\n\n\n\n\n",
+        "innerContent": [
+          "\n",
+          null,
+          "\n\n",
+          null,
+          "\n\n",
+          null,
+          "\n"
+        ]
+      }
+    ],
+    "innerHTML": "\n\n",
+    "innerContent": [
+      "\n",
+      null,
+      "\n"
+    ]
+  },
+  "version": 2,
+  "styles": {
+    "10rmo2d": {
+      "type": "class",
+      "selector": ".select-alpha",
+      "collection": "default",
+      "css": "max-inline-size: max-content;",
+      "readonly": false
+    },
+    "jqkki83": {
+      "type": "class",
+      "selector": ".select-alpha__control",
+      "collection": "default",
+      "css": "padding: 0.5em 1em;\n  border-radius: var(--radius, 0);\n  border: var(--border, 1px solid #ddd);\n  font-size: inherit;\n  font-family: inherit;\n  font-weight: inherit;\n  background: var(--white, #fff);\n  color: var(--text-dark, #333);\n  /* Custom Arrow */\n  background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' color='%23000000' fill='none' stroke='%23141B34' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5.99977 9.00005L11.9998 15L17.9998 9' stroke-miterlimit='16' /%3E%3C/svg%3E\");\n  background-repeat: no-repeat;\n  background-position: right 0.75rem center;\n  background-size: 1.2em;\n  padding-right: 2.5rem; /* Make room for arrow */\n  appearance: none;\n  -webkit-appearance: none;\n  -moz-appearance: none;",
+      "readonly": false
+    },
+    "a94objn": {
+      "type": "class",
+      "selector": ".select-alpha__option",
+      "collection": "default",
+      "css": "",
+      "readonly": false
+    }
+  },
+  "components": {
+    "1968": {
+      "id": 1968,
+      "name": "Select Alpha",
+      "key": "SelectAlpha",
+      "properties": [
+        {
+          "key": "ariaLabel",
+          "name": "Aria Label",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "Select a Destination"
+        },
+        {
+          "key": "defaultOptionLabel",
+          "name": "Default Option Label",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "Select a Destination"
+        }
+      ],
+      "description": "",
+      "legacyId": "",
+      "blocks": [
+        {
+          "blockName": "etch/element",
+          "attrs": {
+            "metadata": {
+              "name": "Select Alpha"
+            },
+            "script": {
+              "code": "Y2xhc3MgU2VsZWN0QWxwaGEgewogIGNvbnN0cnVjdG9yKGVsZW1lbnQpIHsKICAgIHRoaXMuY29udGFpbmVyID0gZWxlbWVudDsKICAgIHRoaXMuc2VsZWN0ID0gZWxlbWVudC5xdWVyeVNlbGVjdG9yKCcuc2VsZWN0LWFscGhhX19jb250cm9sJyk7CiAgICAKICAgIGlmICghdGhpcy5zZWxlY3QpIHJldHVybjsKICAgIAogICAgLy8gR2VuZXJhdGUgdW5pcXVlIElEIGlmIG9uZSBkb2Vzbid0IGV4aXN0CiAgICBpZiAoIXRoaXMuc2VsZWN0LmlkKSB7CiAgICAgIHRoaXMuaWQgPSBgc2VsZWN0LWFscGhhLSR7TWF0aC5yYW5kb20oKS50b1N0cmluZygzNikuc3Vic3RyKDIsIDkpfWA7CiAgICAgIHRoaXMuc2VsZWN0LmlkID0gdGhpcy5pZDsKICAgIH0KICAgIAogICAgdGhpcy5pbml0KCk7CiAgfQogIAogIGluaXQoKSB7CiAgICB0aGlzLnNlbGVjdC5hZGRFdmVudExpc3RlbmVyKCdjaGFuZ2UnLCAoZSkgPT4gewogICAgICB0aGlzLmhhbmRsZUNoYW5nZShlKTsKICAgIH0pOwogIH0KICAKICBoYW5kbGVDaGFuZ2UoZSkgewogICAgY29uc3QgdmFsdWUgPSBlLnRhcmdldC52YWx1ZTsKICAgIAogICAgaWYgKCF2YWx1ZSkgcmV0dXJuOwogICAgCiAgICBjb25zdCB0YXJnZXQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKHZhbHVlKTsKICAgIAogICAgaWYgKHRhcmdldCkgewogICAgICAvLyBQcmV2ZW50IGRlZmF1bHQgYW5jaG9yIGJlaGF2aW9yCiAgICAgIGUucHJldmVudERlZmF1bHQoKTsKICAgICAgCiAgICAgIC8vIFNtb290aCBzY3JvbGwgdG8gdGFyZ2V0CiAgICAgIHRhcmdldC5zY3JvbGxJbnRvVmlldyh7IAogICAgICAgIGJlaGF2aW9yOiAnc21vb3RoJywgCiAgICAgICAgYmxvY2s6ICdzdGFydCcKICAgICAgfSk7CiAgICAgIAogICAgICAvLyBVcGRhdGUgVVJMIHdpdGhvdXQganVtcGluZyAob3B0aW9uYWwpCiAgICAgIGhpc3RvcnkucHVzaFN0YXRlKG51bGwsIG51bGwsIHZhbHVlKTsKICAgICAgCiAgICAgIC8vIFNldCBmb2N1cyB0byB0aGUgc2VjdGlvbiBmb3IgYWNjZXNzaWJpbGl0eQogICAgICBpZiAoIXRhcmdldC5oYXNBdHRyaWJ1dGUoJ3RhYmluZGV4JykpIHsKICAgICAgICB0YXJnZXQuc2V0QXR0cmlidXRlKCd0YWJpbmRleCcsICctMScpOwogICAgICB9CiAgICAgIAogICAgICAvLyBEZWxheSBmb2N1cyBzbGlnaHRseSB0byBhbGxvdyBzbW9vdGggc2Nyb2xsIHRvIHN0YXJ0CiAgICAgIHNldFRpbWVvdXQoKCkgPT4gewogICAgICAgIHRhcmdldC5mb2N1cyh7IHByZXZlbnRTY3JvbGw6IHRydWUgfSk7CiAgICAgIH0sIDEwMCk7CiAgICAgIAogICAgICAvLyBBZGQgYWN0aXZlIHN0YXRlIG1vZGlmaWVyIHRvIGNvbnRhaW5lcgogICAgICB0aGlzLmNvbnRhaW5lci5jbGFzc0xpc3QuYWRkKCdzZWxlY3QtYWxwaGEtLW5hdmlnYXRpbmcnKTsKICAgICAgCiAgICAgIC8vIFJlbW92ZSBhY3RpdmUgc3RhdGUgYWZ0ZXIgYW5pbWF0aW9uCiAgICAgIHNldFRpbWVvdXQoKCkgPT4gewogICAgICAgIHRoaXMuY29udGFpbmVyLmNsYXNzTGlzdC5yZW1vdmUoJ3NlbGVjdC1hbHBoYS0tbmF2aWdhdGluZycpOwogICAgICB9LCAxMDAwKTsKICAgIH0KICAgIAogICAgLy8gUmVzZXQgdG8gcGxhY2Vob2xkZXIKICAgIGUudGFyZ2V0LnNlbGVjdGVkSW5kZXggPSAwOwogIH0KfQoKLy8gSW5pdGlhbGl6ZSBhbGwgU2VsZWN0IEFscGhhIGNvbXBvbmVudHMgb24gdGhlIHBhZ2UKZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsICgpID0+IHsKICBjb25zdCBzZWxlY3RzID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbCgnLnNlbGVjdC1hbHBoYScpOwogIHNlbGVjdHMuZm9yRWFjaChzZWxlY3QgPT4gbmV3IFNlbGVjdEFscGhhKHNlbGVjdCkpOwp9KTs=",
+              "id": "41ggntl"
+            },
+            "tag": "div",
+            "attributes": {
+              "class": "select-alpha"
+            },
+            "styles": [
+              "10rmo2d"
+            ]
+          },
+          "innerBlocks": [
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": {
+                  "name": "Control"
+                },
+                "tag": "select",
+                "attributes": {
+                  "aria-label": "{props.ariaLabel}",
+                  "class": "select-alpha__control"
+                },
+                "styles": [
+                  "jqkki83"
+                ]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": {
+                      "name": "Option"
+                    },
+                    "tag": "option",
+                    "attributes": {
+                      "value": "",
+                      "disabled": "disabled",
+                      "selected": "selected",
+                      "class": "select-alpha__option"
+                    },
+                    "styles": [
+                      "a94objn"
+                    ]
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/text",
+                      "attrs": {
+                        "metadata": {
+                          "name": "Text"
+                        },
+                        "content": "{props.defaultOptionLabel} "
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "",
+                      "innerContent": []
+                    }
+                  ],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n"
+                  ]
+                },
+                {
+                  "blockName": "etch/slot-placeholder",
+                  "attrs": {
+                    "name": "options"
+                  },
+                  "innerBlocks": [],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    "\n"
+                  ]
+                }
+              ],
+              "innerHTML": "\n\n\n\n",
+              "innerContent": [
+                "\n",
+                null,
+                "\n\n",
+                null,
+                "\n"
+              ]
+            }
+          ],
+          "innerHTML": "\n\n",
+          "innerContent": [
+            "\n",
+            null,
+            "\n"
+          ]
+        }
+      ]
+    },
+    "1969": {
+      "id": 1969,
+      "name": "Select Alpha Option",
+      "key": "SelectAlphaOption",
+      "blocks": [
+        {
+          "blockName": "etch/element",
+          "attrs": {
+            "metadata": {
+              "name": "Option"
+            },
+            "tag": "option",
+            "attributes": {
+              "value": "{props.value}",
+              "class": "select-alpha__option"
+            },
+            "styles": [
+              "a94objn"
+            ]
+          },
+          "innerBlocks": [
+            {
+              "blockName": "etch/text",
+              "attrs": {
+                "metadata": {
+                  "name": "Text"
+                },
+                "content": "{props.label}"
+              },
+              "innerBlocks": [],
+              "innerHTML": "",
+              "innerContent": []
+            }
+          ],
+          "innerHTML": "\n\n",
+          "innerContent": [
+            "\n",
+            null,
+            "\n"
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "key": "value",
+          "name": "Value",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          }
+        },
+        {
+          "key": "label",
+          "name": "Label",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          }
+        }
+      ],
+      "description": "",
+      "legacyId": ""
+    }
+  },
+  "_metadata": {
+    "source": "patterns.etchwp.com",
+    "slug": "select-alpha",
+    "title": "Select Alpha",
+    "family": "interactive",
+    "link": "https://patterns.etchwp.com/layouts/select-alpha/",
+    "modified": "2026-01-08T14:59:30",
+    "collected": "2026-01-31T17:07:52.628Z"
+  }
+}

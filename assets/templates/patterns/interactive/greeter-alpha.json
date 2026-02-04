@@ -1,0 +1,397 @@
+{
+  "type": "block",
+  "gutenbergBlock": {
+    "blockName": "core/block",
+    "attrs": {
+      "ref": 1353,
+      "metadata": {
+        "etchData": {
+          "origin": "etch",
+          "attributes": {
+            "openInBuilder": "{true}",
+            "contentGap": ".75em",
+            "customClass": "dark",
+            "avatar": "https://patterns.etchwp.com/wp-content/uploads/headshot.webp"
+          },
+          "block": {
+            "type": "component",
+            "component": 1353,
+            "innerBlocks": [
+              {
+                "blockName": "core/group",
+                "attrs": {
+                  "metadata": {
+                    "etchData": {
+                      "origin": "etch",
+                      "block": {
+                        "type": "slot",
+                        "slot": "greeterContent"
+                      }
+                    }
+                  }
+                },
+                "innerBlocks": [
+                  {
+                    "blockName": "core/heading",
+                    "attrs": {
+                      "metadata": {
+                        "name": "Heading",
+                        "etchData": {
+                          "origin": "etch",
+                          "name": "Heading",
+                          "block": {
+                            "type": "html",
+                            "tag": "h3"
+                          }
+                        }
+                      },
+                      "level": 3
+                    },
+                    "innerBlocks": [],
+                    "innerHTML": "<h3 class=\"wp-block-heading\">This component greets your visitors</h3>",
+                    "innerContent": [
+                      "<h3 class=\"wp-block-heading\">This component greets your visitors</h3>"
+                    ]
+                  },
+                  {
+                    "blockName": "core/paragraph",
+                    "attrs": {
+                      "metadata": {
+                        "name": "Text",
+                        "etchData": {
+                          "origin": "etch",
+                          "name": "Text",
+                          "block": {
+                            "type": "html",
+                            "tag": "p"
+                          }
+                        }
+                      }
+                    },
+                    "innerBlocks": [],
+                    "innerHTML": "<p>It&apos;s the perfect place to put a strong call to action.</p>",
+                    "innerContent": [
+                      "<p>It&apos;s the perfect place to put a strong call to action.</p>"
+                    ]
+                  },
+                  {
+                    "blockName": "core/paragraph",
+                    "attrs": {
+                      "metadata": {
+                        "name": "Anchor",
+                        "etchData": {
+                          "removeWrapper": true,
+                          "block": {
+                            "type": "html",
+                            "tag": "p"
+                          },
+                          "origin": "etch",
+                          "name": "Anchor",
+                          "nestedData": {
+                            "3w0xbsy": {
+                              "origin": "etch",
+                              "name": "Anchor",
+                              "attributes": {
+                                "href": "#"
+                              },
+                              "block": {
+                                "type": "html",
+                                "tag": "a"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "innerBlocks": [],
+                    "innerHTML": "<p><a data-etch-ref=\"3w0xbsy\">Call to action</a></p>",
+                    "innerContent": [
+                      "<p><a data-etch-ref=\"3w0xbsy\">Call to action</a></p>"
+                    ]
+                  }
+                ],
+                "innerHTML": "<div class=\"wp-block-group\"></div>",
+                "innerContent": [
+                  "<div class=\"wp-block-group\">",
+                  null,
+                  null,
+                  null,
+                  "</div>"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "innerBlocks": [],
+    "innerHTML": "",
+    "innerContent": []
+  },
+  "version": 2,
+  "styles": {
+    "4kyioc4": {
+      "type": "class",
+      "selector": ".greeter-alpha",
+      "collection": "default",
+      "css": "--avatar-size: 80px;\n  --greeter-offset: 1em;\n  --content-offset: 0.5em;\n  --light-bg: var(--white, white);\n  --light-fg: var(--black, black);\n  --light-border: var(--border-color-dark, #ddd);\n  --dark-bg: var(--black, black);\n  --dark-fg: var(--white, white);\n  --dark-border: var(--border-color-light, #555);\n  color-scheme: var(--scheme, light);\n  position: fixed;\n  inset-block-end: 1em;\n  inset-inline-end: 1em;\n  inline-size: 100%;\n  display: flex;\n  justify-content: end;\n  max-inline-size: max-content;",
+      "readonly": false
+    },
+    "ifbyl63": {
+      "type": "class",
+      "selector": ".greeter-alpha__figure",
+      "collection": "default",
+      "css": "",
+      "readonly": false
+    },
+    "c0x278w": {
+      "type": "class",
+      "selector": ".greeter-alpha__avatar",
+      "collection": "default",
+      "css": "aspect-ratio: 1;\n  border-radius: 50vw;\n  object-fit: cover;\n  max-inline-size: var(--avatar-size);\n  border: 2px solid;\n  border-color: var(--border-color-dark);\n  transition: border-color var(--transition);\n  &:hover {\n    border-color: var(--primary, #000);\n  }",
+      "readonly": false
+    },
+    "etch-flex-div-style": {
+      "type": "element",
+      "selector": ":where([data-etch-element=\"flex-div\"])",
+      "collection": "default",
+      "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;",
+      "readonly": true
+    },
+    "q6wdqxc": {
+      "type": "class",
+      "selector": ".greeter-alpha__content-wrapper",
+      "collection": "default",
+      "css": "display: var(--display, none);\n  flex-direction: column;\n  gap: var(--gap, var(--content-gap));\n  max-inline-size: 340px;\n  padding: var(--content-padding, var(--space-s, 1em));\n  background: light-dark(var(--light-bg), var(--dark-bg));\n  color: light-dark(var(--light-fg), var(--dark-fg));\n  border-radius: var(--radius, 1em);\n  position: absolute;\n  inline-size: 100vw;\n  border: 1px solid;\n  border-color: light-dark(var(--light-border), var(--dark-border));\n  inset-inline-end: calc(var(--avatar-size) + var(--content-offset));\n  inset-block-end: calc(var(--avatar-size) + var(--content-offset));\n\n  &.etch-builder-block[data-open-in-builder='true'] {\n    display: flex;\n  }\n  @media (width <= to-rem(460px)) {\n    max-inline-size: 280px;\n    inset-inline-end: 0;\n  }",
+      "readonly": false
+    }
+  },
+  "components": {
+    "1353": {
+      "id": 1353,
+      "name": "Greeter Alpha",
+      "key": "GreeterAlpha",
+      "properties": [
+        {
+          "key": "openInBuilder",
+          "name": "Open in Builder",
+          "keyTouched": false,
+          "type": {
+            "primitive": "boolean"
+          },
+          "default": true
+        },
+        {
+          "key": "avatar",
+          "name": "Avatar",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "image"
+          },
+          "default": "https://patterns.etchwp.com/wp-content/uploads/headshot.webp"
+        },
+        {
+          "key": "contentGap",
+          "name": "Content Gap",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": ".75em"
+        },
+        {
+          "key": "scheme",
+          "name": "Scheme",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "light",
+          "selectOptionsString": "Light : light\nDark : dark"
+        }
+      ],
+      "description": "",
+      "legacyId": "",
+      "blocks": [
+        {
+          "blockName": "core/group",
+          "attrs": {
+            "metadata": {
+              "name": "Greeter Alpha",
+              "etchData": {
+                "origin": "etch",
+                "name": "Greeter Alpha",
+                "script": {
+                  "code": "Ly8gVmFuaWxsYSBKYXZhU2NyaXB0IGZvciBHcmVldGVyIGNvbXBvbmVudAooZnVuY3Rpb24oKSB7CiAgY29uc3QgZ3JlZXRlciA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoJ1tkYXRhLWV0Y2gtZ3JlZXRlcl0nKTsKICBpZiAoIWdyZWV0ZXIpIHJldHVybjsKCiAgY29uc3QgYnV0dG9uID0gZ3JlZXRlci5xdWVyeVNlbGVjdG9yKCc6c2NvcGUgPiBidXR0b24nKTsKICBjb25zdCBjb250ZW50ID0gZ3JlZXRlci5xdWVyeVNlbGVjdG9yKCc6c2NvcGUgPiBkaXYnKTsKCiAgaWYgKCFidXR0b24gfHwgIWNvbnRlbnQpIHJldHVybjsKCiAgLy8gSW5pdGlhbCBzdGF0ZQogIGJ1dHRvbi5zZXRBdHRyaWJ1dGUoJ2FyaWEtZXhwYW5kZWQnLCAnZmFsc2UnKTsKCiAgLy8gRnVuY3Rpb24gdG8gZ2V0IGZvY3VzYWJsZSBlbGVtZW50cyB3aXRoaW4gYSBjb250YWluZXIKICBmdW5jdGlvbiBnZXRGb2N1c2FibGVFbGVtZW50cyhjb250YWluZXIpIHsKICAgIHJldHVybiBBcnJheS5mcm9tKGNvbnRhaW5lci5xdWVyeVNlbGVjdG9yQWxsKAogICAgICAnYnV0dG9uOm5vdChbZGlzYWJsZWRdKSwgW2hyZWZdOm5vdChbZGlzYWJsZWRdKSwgaW5wdXQ6bm90KFtkaXNhYmxlZF0pLCBzZWxlY3Q6bm90KFtkaXNhYmxlZF0pLCB0ZXh0YXJlYTpub3QoW2Rpc2FibGVkXSksIFt0YWJpbmRleF06bm90KFt0YWJpbmRleD0iLTEiXSk6bm90KFtkaXNhYmxlZF0pJwogICAgKSkuZmlsdGVyKGVsID0+IGVsLm9mZnNldFBhcmVudCAhPT0gbnVsbCk7IC8vIE9ubHkgdmlzaWJsZSBlbGVtZW50cwogIH0KCiAgLy8gQ2xvc2UgZnVuY3Rpb24KICBmdW5jdGlvbiBjbG9zZUdyZWV0ZXIoKSB7CiAgICBjb250ZW50LnN0eWxlLnNldFByb3BlcnR5KCctLWRpc3BsYXknLCAnbm9uZScpOwogICAgYnV0dG9uLnNldEF0dHJpYnV0ZSgnYXJpYS1leHBhbmRlZCcsICdmYWxzZScpOwogICAgaWYgKGNvbnRlbnQudGFiSW5kZXggPj0gMCkgewogICAgICBjb250ZW50LnRhYkluZGV4ID0gLTE7IC8vIFJlbW92ZSBmb2N1c2FiaWxpdHkKICAgIH0KICAgIHJlbW92ZUZvY3VzVHJhcCgpOwogICAgYnV0dG9uLmZvY3VzKCk7CiAgfQoKICAvLyBPcGVuIGZ1bmN0aW9uCiAgZnVuY3Rpb24gb3BlbkdyZWV0ZXIoKSB7CiAgICBjb250ZW50LnN0eWxlLnNldFByb3BlcnR5KCctLWRpc3BsYXknLCAnZmxleCcpOwogICAgYnV0dG9uLnNldEF0dHJpYnV0ZSgnYXJpYS1leHBhbmRlZCcsICd0cnVlJyk7CiAgICAvLyBNYWtlIGNvbnRlbnQgZm9jdXNhYmxlIGlmIG5vIG90aGVyIGZvY3VzYWJsZXMgaW5zaWRlCiAgICBjb25zdCBjb250ZW50Rm9jdXNhYmxlcyA9IGdldEZvY3VzYWJsZUVsZW1lbnRzKGNvbnRlbnQpOwogICAgaWYgKGNvbnRlbnRGb2N1c2FibGVzLmxlbmd0aCA9PT0gMCkgewogICAgICBjb250ZW50LnRhYkluZGV4ID0gMDsKICAgIH0KICAgIHNldHVwRm9jdXNUcmFwKCk7CiAgICAvLyBGb2N1cyBmaXJzdCBmb2N1c2FibGUgaW4gY29udGVudCB3cmFwcGVyCiAgICBjb25zdCBmaXJzdEluQ29udGVudCA9IGNvbnRlbnRGb2N1c2FibGVzLmxlbmd0aCA+IDAgPyBjb250ZW50Rm9jdXNhYmxlc1swXSA6IGNvbnRlbnQ7CiAgICBmaXJzdEluQ29udGVudC5mb2N1cygpOwogIH0KCiAgLy8gRm9jdXMgdHJhcCBzZXR1cAogIGxldCBmb2N1c1RyYXBIYW5kbGVyID0gbnVsbDsKICBmdW5jdGlvbiBzZXR1cEZvY3VzVHJhcCgpIHsKICAgIGNvbnN0IGZvY3VzYWJsZXMgPSBnZXRGb2N1c2FibGVFbGVtZW50cyhncmVldGVyKTsKICAgIGlmIChmb2N1c2FibGVzLmxlbmd0aCA8PSAxKSByZXR1cm47IC8vIE5vIG5lZWQgdG8gdHJhcCBpZiBvbmx5IG9uZSBmb2N1c2FibGUKCiAgICBjb25zdCBmaXJzdCA9IGZvY3VzYWJsZXNbMF07CiAgICBjb25zdCBsYXN0ID0gZm9jdXNhYmxlc1tmb2N1c2FibGVzLmxlbmd0aCAtIDFdOwoKICAgIGZvY3VzVHJhcEhhbmRsZXIgPSBmdW5jdGlvbihlKSB7CiAgICAgIGlmIChlLmtleSA9PT0gJ0VzY2FwZScpIHsKICAgICAgICBlLnByZXZlbnREZWZhdWx0KCk7CiAgICAgICAgY2xvc2VHcmVldGVyKCk7CiAgICAgICAgcmV0dXJuOwogICAgICB9CiAgICAgIGlmIChlLmtleSAhPT0gJ1RhYicpIHJldHVybjsKCiAgICAgIGlmIChlLnNoaWZ0S2V5KSB7CiAgICAgICAgLy8gU2hpZnQgKyBUYWIKICAgICAgICBpZiAoZG9jdW1lbnQuYWN0aXZlRWxlbWVudCA9PT0gZmlyc3QpIHsKICAgICAgICAgIGUucHJldmVudERlZmF1bHQoKTsKICAgICAgICAgIGxhc3QuZm9jdXMoKTsKICAgICAgICB9CiAgICAgIH0gZWxzZSB7CiAgICAgICAgLy8gVGFiCiAgICAgICAgaWYgKGRvY3VtZW50LmFjdGl2ZUVsZW1lbnQgPT09IGxhc3QpIHsKICAgICAgICAgIGUucHJldmVudERlZmF1bHQoKTsKICAgICAgICAgIGZpcnN0LmZvY3VzKCk7CiAgICAgICAgfQogICAgICB9CiAgICB9OwoKICAgIGRvY3VtZW50LmFkZEV2ZW50TGlzdGVuZXIoJ2tleWRvd24nLCBmb2N1c1RyYXBIYW5kbGVyKTsKICB9CgogIGZ1bmN0aW9uIHJlbW92ZUZvY3VzVHJhcCgpIHsKICAgIGlmIChmb2N1c1RyYXBIYW5kbGVyKSB7CiAgICAgIGRvY3VtZW50LnJlbW92ZUV2ZW50TGlzdGVuZXIoJ2tleWRvd24nLCBmb2N1c1RyYXBIYW5kbGVyKTsKICAgICAgZm9jdXNUcmFwSGFuZGxlciA9IG51bGw7CiAgICB9CiAgfQoKICAvLyBCdXR0b24gY2xpY2sgaGFuZGxlcgogIGJ1dHRvbi5hZGRFdmVudExpc3RlbmVyKCdjbGljaycsIGZ1bmN0aW9uKGUpIHsKICAgIGUucHJldmVudERlZmF1bHQoKTsKICAgIGNvbnN0IGlzT3BlbiA9IGJ1dHRvbi5nZXRBdHRyaWJ1dGUoJ2FyaWEtZXhwYW5kZWQnKSA9PT0gJ3RydWUnOwogICAgaWYgKGlzT3BlbikgewogICAgICBjbG9zZUdyZWV0ZXIoKTsKICAgIH0gZWxzZSB7CiAgICAgIG9wZW5HcmVldGVyKCk7CiAgICB9CiAgfSk7Cn0pKCk7",
+                  "id": "4slqxd4"
+                },
+                "styles": [
+                  "4kyioc4"
+                ],
+                "attributes": {
+                  "data-etch-greeter": "",
+                  "style": "--scheme: {props.scheme}",
+                  "class": "greeter-alpha"
+                },
+                "block": {
+                  "type": "html",
+                  "tag": "div"
+                }
+              }
+            }
+          },
+          "innerBlocks": [
+            {
+              "blockName": "core/group",
+              "attrs": {
+                "metadata": {
+                  "name": "Button",
+                  "etchData": {
+                    "origin": "etch",
+                    "name": "Button",
+                    "styles": [
+                      "ifbyl63"
+                    ],
+                    "attributes": {
+                      "aria-label": "Open Greeter",
+                      "aria-expanded": "false",
+                      "class": "greeter-alpha__figure"
+                    },
+                    "block": {
+                      "type": "html",
+                      "tag": "button"
+                    }
+                  }
+                }
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "core/image",
+                  "attrs": {
+                    "sizeSlug": "full",
+                    "linkDestination": "none",
+                    "metadata": {
+                      "name": "Avatar",
+                      "etchData": {
+                        "removeWrapper": true,
+                        "block": {
+                          "type": "html",
+                          "tag": "figure"
+                        },
+                        "origin": "etch",
+                        "name": "Avatar",
+                        "nestedData": {
+                          "img": {
+                            "origin": "etch",
+                            "name": "Avatar",
+                            "styles": [
+                              "c0x278w"
+                            ],
+                            "attributes": {
+                              "src": "{props.avatar}",
+                              "alt": "headshot",
+                              "draggable": "false",
+                              "class": "greeter-alpha__avatar"
+                            },
+                            "block": {
+                              "type": "html",
+                              "tag": "img"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "innerBlocks": [],
+                  "innerHTML": "<figure class=\"wp-block-image size-full\"><img src=\"{props.avatar}\" alt=\"headshot\" /></figure>",
+                  "innerContent": [
+                    "<figure class=\"wp-block-image size-full\"><img src=\"{props.avatar}\" alt=\"headshot\" /></figure>"
+                  ]
+                }
+              ],
+              "innerHTML": "<div class=\"wp-block-group\"></div>",
+              "innerContent": [
+                "<div class=\"wp-block-group\">",
+                null,
+                "</div>"
+              ]
+            },
+            {
+              "blockName": "core/group",
+              "attrs": {
+                "metadata": {
+                  "name": "Content Wrapper",
+                  "etchData": {
+                    "origin": "etch",
+                    "name": "Content Wrapper",
+                    "styles": [
+                      "etch-flex-div-style",
+                      "q6wdqxc"
+                    ],
+                    "attributes": {
+                      "data-etch-element": "flex-div",
+                      "aria-hidden": "true",
+                      "data-open-in-builder": "{props.openInBuilder}",
+                      "style": "--gap: {props.contentGap};",
+                      "class": "greeter-alpha__content-wrapper"
+                    },
+                    "block": {
+                      "type": "html",
+                      "tag": "div"
+                    }
+                  }
+                }
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "core/group",
+                  "attrs": {
+                    "metadata": {
+                      "etchData": {
+                        "origin": "etch",
+                        "block": {
+                          "type": "slot-placeholder",
+                          "slot": "greeterContent"
+                        }
+                      }
+                    }
+                  },
+                  "innerBlocks": [],
+                  "innerHTML": "<div class=\"wp-block-group\"></div>",
+                  "innerContent": [
+                    "<div class=\"wp-block-group\">",
+                    "</div>"
+                  ]
+                }
+              ],
+              "innerHTML": "<div class=\"wp-block-group\"></div>",
+              "innerContent": [
+                "<div class=\"wp-block-group\">",
+                null,
+                "</div>"
+              ]
+            }
+          ],
+          "innerHTML": "<div class=\"wp-block-group\"></div>",
+          "innerContent": [
+            "<div class=\"wp-block-group\">",
+            null,
+            null,
+            "</div>"
+          ]
+        }
+      ]
+    }
+  },
+  "_metadata": {
+    "source": "patterns.etchwp.com",
+    "slug": "greeter-alpha",
+    "title": "Greeter Alpha",
+    "family": "interactive",
+    "link": "https://patterns.etchwp.com/layouts/greeter-alpha/",
+    "modified": "2025-11-19T20:59:07",
+    "collected": "2026-01-31T17:07:58.171Z"
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "type": "block",
+  "gutenbergBlock": {
+    "blockName": "etch/component",
+    "attrs": {
+      "ref": 1949,
+      "attributes": {}
+    },
+    "innerBlocks": [
+      {
+        "blockName": "etch/slot-content",
+        "attrs": {
+          "name": "content"
+        },
+        "innerBlocks": [],
+        "innerHTML": "\n\n",
+        "innerContent": [
+          "\n",
+          "\n"
+        ]
+      }
+    ],
+    "innerHTML": "\n\n",
+    "innerContent": [
+      "\n",
+      null,
+      "\n"
+    ]
+  },
+  "version": 2,
+  "styles": {
+    "7b8kcfm": {
+      "type": "class",
+      "selector": ".scroll-snap-alpha",
+      "collection": "default",
+      "css": "display: flex;\n  container-type: size;\n  block-size: var(--height);\n  inline-size: 100%;\n  max-inline-size: var(--max-width);\n  scroll-padding: var(--scroll-padding);\n  scroll-margin: var(--scroll-margin);\n  scrollbar-width: none;\n  -ms-overflow-style: none;\n  &::-webkit-scrollbar {\n    display: none;\n  }\n  gap: var(--gap);\n  > * {\n    scroll-snap-align: var(--snap-align);\n    flex-shrink: 0;\n  }\n  &[data-snap-direction='block' i] {\n    flex-direction: column;\n    overflow-y: scroll;\n    scroll-snap-type: y var(--snap-type);\n    > * {\n      min-block-size: var(--item-block-size);\n    }\n  }\n  &[data-snap-direction='inline' i] {\n    flex-direction: row;\n    flex-wrap: no-wrap;\n    overflow-x: scroll;\n    scroll-snap-type: x var(--snap-type);\n    > * {\n      inline-size: var(--item-inline-size);\n    }\n  }",
+      "readonly": false
+    }
+  },
+  "components": {
+    "1949": {
+      "name": "Scroll Snap Alpha",
+      "key": "ScrollSnapAlpha",
+      "properties": [
+        {
+          "key": "direction",
+          "name": "Direction",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "Block",
+          "selectOptionsString": "Block\nInline"
+        },
+        {
+          "key": "snapAlign",
+          "name": "Snap Align",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "center",
+          "selectOptionsString": "Center : center\nStart : start\nEnd: end"
+        },
+        {
+          "key": "snapType",
+          "name": "Snap Type",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "mandatory",
+          "selectOptionsString": "Mandatory : mandatory\nProximity : proximity"
+        },
+        {
+          "key": "gap",
+          "name": "Gap",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "0"
+        },
+        {
+          "key": "scrollPadding",
+          "name": "Scroll Padding (t-r-b-l)",
+          "keyTouched": true,
+          "type": {
+            "primitive": "string"
+          }
+        },
+        {
+          "key": "scrollMargin",
+          "name": "Scroll Margin (t-r-b-l)",
+          "keyTouched": true,
+          "type": {
+            "primitive": "string"
+          }
+        },
+        {
+          "key": "height",
+          "name": "Height",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "100vh"
+        },
+        {
+          "key": "maxWidth",
+          "name": "Max Width",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "100%"
+        },
+        {
+          "key": "itemSize",
+          "name": "Item Size (%)",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "100"
+        }
+      ],
+      "id": 1949,
+      "blocks": [
+        {
+          "blockName": "etch/element",
+          "attrs": {
+            "metadata": {
+              "name": "Scroll Snap Alpha"
+            },
+            "tag": "div",
+            "attributes": {
+              "style": "--height: {props.height}; --max-width: {props.maxWidth}; --snap-type: {props.snapType}; --snap-align: {props.snapAlign}; --scroll-padding: {props.scrollPadding}; --scroll-margin: {props.scrollMargin}; --gap: {props.gap}; --item-size: {props.itemSize}; --item-block-size: {props.itemSize}cqh; --item-inline-size: {props.itemSize}cqi;",
+              "data-snap-direction": "{props.direction}",
+              "class": "scroll-snap-alpha"
+            },
+            "styles": [
+              "7b8kcfm"
+            ]
+          },
+          "innerBlocks": [
+            {
+              "blockName": "etch/slot-placeholder",
+              "attrs": {
+                "name": "content"
+              },
+              "innerBlocks": [],
+              "innerHTML": "\n\n",
+              "innerContent": [
+                "\n",
+                "\n"
+              ]
+            }
+          ],
+          "innerHTML": "\n\n",
+          "innerContent": [
+            "\n",
+            null,
+            "\n"
+          ]
+        }
+      ]
+    }
+  },
+  "_metadata": {
+    "source": "patterns.etchwp.com",
+    "slug": "scroll-snap-alpha",
+    "title": "Scroll Snap Alpha",
+    "family": "interactive",
+    "link": "https://patterns.etchwp.com/layouts/scroll-snap-alpha/",
+    "modified": "2025-12-28T15:02:44",
+    "collected": "2026-01-31T17:07:53.165Z"
+  }
+}

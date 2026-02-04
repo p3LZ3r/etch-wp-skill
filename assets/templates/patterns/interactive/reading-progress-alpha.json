@@ -1,0 +1,116 @@
+{
+  "type": "block",
+  "gutenbergBlock": {
+    "blockName": "etch/component",
+    "attrs": {
+      "ref": 1801,
+      "attributes": {}
+    },
+    "innerBlocks": [],
+    "innerHTML": "\n\n",
+    "innerContent": [
+      "\n",
+      "\n"
+    ]
+  },
+  "version": 2,
+  "styles": {
+    "etch-flex-div-style": {
+      "type": "element",
+      "selector": ":where([data-etch-element=\"flex-div\"])",
+      "collection": "default",
+      "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;",
+      "readonly": true
+    },
+    "aziy4oe": {
+      "type": "class",
+      "selector": ".reading-progress-alpha",
+      "collection": "default",
+      "css": "/*\n  ATTENTION: \n  PLACE THE BELOW CODE IN A GLOBAL STYLESHEET\n  @keyframes grow {\n    from { transform: scaleX(0); }\n    to   { transform: scaleX(1); }\n  }\n  */\n  background: var(--bg);\n  position: fixed;\n  inset: var(--position);\n  block-size: var(--height);\n  min-block-size: 0;\n  inline-size: 100%;\n  &::before {\n    content: '';\n    inline-size: 100%;\n    block-size: 100%;\n    background: var(--progress);\n    transform: scaleX(0);\n    transform-origin: left;\n    animation: grow linear forwards;\n    animation-timeline: scroll(root block);\n  }\n  @supports not (animation-timeline: scroll()) {\n    display: none;\n  }",
+      "readonly": false
+    }
+  },
+  "components": {
+    "1801": {
+      "name": "Reading Progress Alpha\n",
+      "key": "ReadingProgressAlpha",
+      "properties": [
+        {
+          "key": "background",
+          "name": "Background",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "var(--neutral-ultra-light, #eee)"
+        },
+        {
+          "key": "progressColor",
+          "name": "Progress Color",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "var(--primary, rebeccapurple)"
+        },
+        {
+          "key": "height",
+          "name": "Height",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "5px"
+        },
+        {
+          "key": "position",
+          "name": "Position",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "var(--wp-admin--admin-bar--height, 0) auto auto 0",
+          "selectOptionsString": "Top : var(--wp-admin--admin-bar--height, 0) auto auto 0\nBottom : auto auto 0 0 "
+        }
+      ],
+      "id": 1801,
+      "description": "Read the commented CSS to enable.",
+      "blocks": [
+        {
+          "blockName": "etch/element",
+          "attrs": {
+            "metadata": {
+              "name": "Reading Progress Alpha"
+            },
+            "tag": "div",
+            "attributes": {
+              "data-etch-element": "flex-div",
+              "class": "reading-progress-alpha",
+              "style": "--bg: {props.background}; --progress: {props.progressColor}; --height: {props.height}; --position: {props.position}"
+            },
+            "styles": [
+              "etch-flex-div-style",
+              "aziy4oe"
+            ]
+          },
+          "innerBlocks": [],
+          "innerHTML": "\n\n",
+          "innerContent": [
+            "\n",
+            "\n"
+          ]
+        }
+      ]
+    }
+  },
+  "_metadata": {
+    "source": "patterns.etchwp.com",
+    "slug": "reading-progress-alpha",
+    "title": "Reading Progress Alpha",
+    "family": "interactive",
+    "link": "https://patterns.etchwp.com/layouts/reading-progress-alpha/",
+    "modified": "2026-01-23T17:35:17",
+    "collected": "2026-01-31T17:07:54.800Z"
+  }
+}

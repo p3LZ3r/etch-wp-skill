@@ -1,0 +1,1193 @@
+{
+  "type": "block",
+  "gutenbergBlock": {
+    "blockName": "etch/component",
+    "attrs": {
+      "ref": 2022,
+      "attributes": {
+        "slideAlignment": "center",
+        "carouselId": "default",
+        "customCarouselClasses": "my-carousel"
+      }
+    },
+    "innerBlocks": [
+      {
+        "blockName": "etch/slot-content",
+        "attrs": {
+          "name": "slides"
+        },
+        "innerBlocks": [],
+        "innerHTML": "\n\n",
+        "innerContent": [
+          "\n",
+          "\n"
+        ]
+      },
+      {
+        "blockName": "etch/slot-content",
+        "attrs": {
+          "name": "controls"
+        },
+        "innerBlocks": [
+          {
+            "blockName": "etch/component",
+            "attrs": {
+              "ref": 2025,
+              "attributes": {
+                "buttonAlignment": "flex-end"
+              }
+            },
+            "innerBlocks": [],
+            "innerHTML": "\n\n",
+            "innerContent": [
+              "\n",
+              "\n"
+            ]
+          }
+        ],
+        "innerHTML": "\n\n",
+        "innerContent": [
+          "\n",
+          null,
+          "\n"
+        ]
+      }
+    ],
+    "innerHTML": "\n\n\n\n",
+    "innerContent": [
+      "\n",
+      null,
+      "\n\n",
+      null,
+      "\n"
+    ]
+  },
+  "version": 2,
+  "styles": {
+    "q9nt4tm": {
+      "type": "class",
+      "selector": ".carousel-alpha",
+      "collection": "default",
+      "css": "--slide-gap: 1em;\n  display: flex;\n  flex-direction: column;\n  inline-size: 100%;\n  max-inline-size: var(--carousel-width);\n  /* Don't Touch */\n  --slide-width: calc((100% / var(--slide-count, var(--starting-slide-count, 2)) - var(--slide-gap) * (var(--slide-count, var(--starting-slide-count)) - 1) / var(--slide-count, var(--starting-slide-count))) * (1 + var(--slide-overflow, var(--starting-slide-overflow, 0)) / 100));",
+      "readonly": false
+    },
+    "5gjzmor": {
+      "type": "class",
+      "selector": ".carousel-alpha__viewport",
+      "collection": "default",
+      "css": "overflow: hidden;",
+      "readonly": false
+    },
+    "4uxvr93": {
+      "type": "class",
+      "selector": ".carousel-alpha__viewport-container",
+      "collection": "default",
+      "css": "display: flex;\n  flex-direction: row;\n  align-items: var(--alignment);\n  list-style: none;\n  :where(&) {\n    margin: 0;\n    padding: 0;\n  } \n  > * {\n    flex: 0 0 var(--slide-width);\n    min-inline-size: 0;\n    max-inline-size: 100%;\n    display: flex;\n    flex-direction: column;\n    aspect-ratio: var(--slide-aspect-ratio);\n    position: relative;\n    margin-inline-end: var(--slide-gap);\n    > * {\n      width: 100%;\n      height: 100%;\n    }\n    img {\n      object-fit: cover;\n      width: 100%;\n      height: 100%;\n    }\n  }",
+      "readonly": false
+    },
+    "y8n3skl": {
+      "type": "class",
+      "selector": ".carousel-alpha-controls",
+      "collection": "default",
+      "css": "display: flex;\n  flex-direction: row;\n  gap: var(--button-gap);\n  justify-content: var(--button-alignment, center);\n  order: var(--order);\n  margin-block: var(--margin-block);",
+      "readonly": false
+    },
+    "ifx33gv": {
+      "type": "class",
+      "selector": ".carousel-alpha-controls__button",
+      "collection": "default",
+      "css": "padding: 0;\n  display: flex;\n  flex-direction: row;\n  gap: 0.5em;\n  align-items: center;",
+      "readonly": false
+    },
+    "zbc083b": {
+      "type": "class",
+      "selector": ".carousel-alpha-controls__button--prev",
+      "collection": "default",
+      "css": "flex-direction: row-reverse;",
+      "readonly": false
+    },
+    "77imuy9": {
+      "type": "class",
+      "selector": ".carousel-alpha-controls__button-label",
+      "collection": "default",
+      "css": "",
+      "readonly": false
+    },
+    "svx2ha8": {
+      "type": "class",
+      "selector": ".carousel-alpha-controls__icon",
+      "collection": "default",
+      "css": "color: currentColor;",
+      "readonly": false
+    },
+    "9qdtmiv": {
+      "type": "class",
+      "selector": ".carousel-alpha-controls__icon--prev",
+      "collection": "default",
+      "css": "",
+      "readonly": false
+    },
+    "cyb4vvr": {
+      "type": "class",
+      "selector": ".carousel-alpha-controls__button--next",
+      "collection": "default",
+      "css": "",
+      "readonly": false
+    },
+    "xvpgru5": {
+      "type": "class",
+      "selector": ".carousel-alpha-controls__icon--next",
+      "collection": "default",
+      "css": "",
+      "readonly": false
+    }
+  },
+  "components": {
+    "2022": {
+      "id": 2022,
+      "name": "Carousel Alpha",
+      "key": "CarouselAlpha",
+      "blocks": [
+        {
+          "blockName": "etch/element",
+          "attrs": {
+            "metadata": {
+              "name": "Carousel Alpha"
+            },
+            "script": {
+              "code": "KGZ1bmN0aW9uKCkgewogIGZ1bmN0aW9uIGluaXQoKSB7CiAgICBjb25zdCBwcmVmZXJzUmVkdWNlZE1vdGlvbiA9IHdpbmRvdy5tYXRjaE1lZGlhKCcocHJlZmVycy1yZWR1Y2VkLW1vdGlvbjogcmVkdWNlKScpLm1hdGNoZXMKICAgIGNvbnN0IGNhcm91c2VscyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoJ1tkYXRhLWNhcm91c2VsLWFscGhhXScpCiAgICAKICAgIGNhcm91c2Vscy5mb3JFYWNoKGZ1bmN0aW9uKGVtYmxhTm9kZSkgewogICAgICBjb25zdCBpZCA9IGVtYmxhTm9kZS5kYXRhc2V0LmNhcm91c2VsQWxwaGEKICAgICAgY29uc3Qgdmlld3BvcnROb2RlID0gZW1ibGFOb2RlLnF1ZXJ5U2VsZWN0b3IoJ1tkYXRhLWNhcm91c2VsLWFscGhhLXZpZXdwb3J0XScpCiAgICAgIGNvbnN0IGNvbnRyb2xzTm9kZSA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYFtkYXRhLWNhcm91c2VsLWFscGhhLXRhcmdldD0iJHtpZH0iXWApCiAgICAgIGNvbnN0IHByZXZCdG5Ob2RlID0gY29udHJvbHNOb2RlLnF1ZXJ5U2VsZWN0b3IoJ1tkYXRhLWJ0bi1wcmV2XScpCiAgICAgIGNvbnN0IG5leHRCdG5Ob2RlID0gY29udHJvbHNOb2RlLnF1ZXJ5U2VsZWN0b3IoJ1tkYXRhLWJ0bi1uZXh0XScpCiAgICAgIGNvbnN0IHNsaWRlcyA9IHZpZXdwb3J0Tm9kZS5xdWVyeVNlbGVjdG9yQWxsKCc6c2NvcGUgPiAqID4gKicpCiAgICAgIAogICAgICBlbWJsYU5vZGUuc3R5bGUuc2V0UHJvcGVydHkoJy0tc3RhcnRpbmctc2xpZGUtY291bnQnLCBlbWJsYU5vZGUuZGF0YXNldC5zbGlkZUNvdW50IHx8IDEpCiAgICAgIGVtYmxhTm9kZS5zdHlsZS5zZXRQcm9wZXJ0eSgnLS1zdGFydGluZy1zbGlkZS1vdmVyZmxvdycsIGVtYmxhTm9kZS5kYXRhc2V0LnNsaWRlT3ZlcmZsb3cgfHwgMCkKICAgICAgCiAgICAgIGNvbnN0IE9QVElPTlMgPSB7CiAgICAgICAgYWxpZ246IGVtYmxhTm9kZS5kYXRhc2V0Lmp1c3RpZnkgfHwgJ3N0YXJ0JywKICAgICAgICBkcmFnZ2FibGU6IGVtYmxhTm9kZS5kYXRhc2V0LmRyYWdnYWJsZSAhPT0gJ2ZhbHNlJywKICAgICAgICBzdGFydEluZGV4OiBwYXJzZUludChlbWJsYU5vZGUuZGF0YXNldC5zdGFydEluZGV4KSB8fCAwLAogICAgICAgIGxvb3A6IGVtYmxhTm9kZS5kYXRhc2V0Lmxvb3AgPT09ICd0cnVlJywKICAgICAgICBkdXJhdGlvbjogcHJlZmVyc1JlZHVjZWRNb3Rpb24gPyAwIDogMjAKICAgICAgfQogICAgICAKICAgICAgY29uc3QgZW1ibGFBcGkgPSBFbWJsYUNhcm91c2VsKHZpZXdwb3J0Tm9kZSwgT1BUSU9OUykKICAgICAgCiAgICAgIGZ1bmN0aW9uIHVwZGF0ZVNsaWRlTGFiZWxzKCkgewogICAgICAgIGNvbnN0IHRvdGFsID0gZW1ibGFBcGkuc2Nyb2xsU25hcExpc3QoKS5sZW5ndGgKICAgICAgICBzbGlkZXMuZm9yRWFjaCgoc2xpZGUsIGluZGV4KSA9PiB7CiAgICAgICAgICBzbGlkZS5zZXRBdHRyaWJ1dGUoJ2FyaWEtbGFiZWwnLCBgU2xpZGUgJHtpbmRleCArIDF9IG9mICR7dG90YWx9YCkKICAgICAgICB9KQogICAgICB9CiAgICAgIAogICAgICB1cGRhdGVTbGlkZUxhYmVscygpCiAgICAgIAogICAgICBwcmV2QnRuTm9kZS5hZGRFdmVudExpc3RlbmVyKCdjbGljaycsICgpID0+IGVtYmxhQXBpLnNjcm9sbFByZXYoKSkKICAgICAgbmV4dEJ0bk5vZGUuYWRkRXZlbnRMaXN0ZW5lcignY2xpY2snLCAoKSA9PiBlbWJsYUFwaS5zY3JvbGxOZXh0KCkpCiAgICAgIAogICAgICB2aWV3cG9ydE5vZGUuYWRkRXZlbnRMaXN0ZW5lcigna2V5ZG93bicsIChlKSA9PiB7CiAgICAgICAgaWYgKGUua2V5ID09PSAnQXJyb3dMZWZ0JykgZW1ibGFBcGkuc2Nyb2xsUHJldigpCiAgICAgICAgaWYgKGUua2V5ID09PSAnQXJyb3dSaWdodCcpIGVtYmxhQXBpLnNjcm9sbE5leHQoKQogICAgICB9KQogICAgfSkKICB9CgogIGlmICh0eXBlb2YgRW1ibGFDYXJvdXNlbCAhPT0gJ3VuZGVmaW5lZCcpIHsKICAgIHJlcXVlc3RBbmltYXRpb25GcmFtZShpbml0KQogIH0gZWxzZSB7CiAgICBkb2N1bWVudC5hZGRFdmVudExpc3RlbmVyKCdET01Db250ZW50TG9hZGVkJywgKCkgPT4gcmVxdWVzdEFuaW1hdGlvbkZyYW1lKGluaXQpKQogIH0KfSkoKQ==",
+              "id": "rstgns6"
+            },
+            "tag": "div",
+            "attributes": {
+              "style": "--starting-slide-overflow: {props.slideOverflow}; --slide-gap: {props.slideGap}; --carousel-width: {props.carouselWidth}; --starting-slide-count: {props.slideCount};",
+              "data-draggable": "{props.isDraggable}",
+              "data-justify": "{props.justification}",
+              "data-start-index": "{props.startingSlide}",
+              "data-carousel-alpha": "{props.carouselID}",
+              "data-loop": "{props.infiniteLoop}",
+              "role": "group",
+              "aria-label": "{props.ariaLabel}",
+              "data-slide-count": "{props.slideCount}",
+              "class": "carousel-alpha {props.customCarouselClasses}"
+            },
+            "styles": [
+              "q9nt4tm"
+            ]
+          },
+          "innerBlocks": [
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": {
+                  "name": "Viewport"
+                },
+                "tag": "div",
+                "attributes": {
+                  "data-carousel-alpha-viewport": "",
+                  "aria-live": "polite",
+                  "class": "carousel-alpha__viewport"
+                },
+                "styles": [
+                  "5gjzmor"
+                ]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/dynamic-element",
+                  "attrs": {
+                    "metadata": {
+                      "name": "Viewport Container"
+                    },
+                    "tag": "{props.containerTag}",
+                    "attributes": {
+                      "style": "--alignment: {props.alignment}",
+                      "class": "carousel-alpha__viewport-container",
+                      "tag": "{props.containerTag}"
+                    },
+                    "styles": [
+                      "4uxvr93"
+                    ]
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/slot-placeholder",
+                      "attrs": {
+                        "name": "slides"
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        "\n"
+                      ]
+                    },
+                    {
+                      "blockName": "etch/condition",
+                      "attrs": {
+                        "metadata": {
+                          "name": "If Empty"
+                        },
+                        "condition": {
+                          "leftHand": "slots.slides.empty",
+                          "operator": "isTruthy",
+                          "rightHand": null
+                        },
+                        "conditionString": "slots.slides.empty"
+                      },
+                      "innerBlocks": [
+                        {
+                          "blockName": "etch/element",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Div"
+                            },
+                            "tag": "li",
+                            "attributes": {}
+                          },
+                          "innerBlocks": [
+                            {
+                              "blockName": "etch/element",
+                              "attrs": {
+                                "metadata": {
+                                  "name": "Figure"
+                                },
+                                "tag": "figure",
+                                "attributes": {},
+                                "styles": [
+                                  "s4gkacs"
+                                ]
+                              },
+                              "innerBlocks": [
+                                {
+                                  "blockName": "etch/element",
+                                  "attrs": {
+                                    "metadata": {
+                                      "name": "Image"
+                                    },
+                                    "options": {
+                                      "imageData": {
+                                        "attachmentId": 1597,
+                                        "size": ""
+                                      }
+                                    },
+                                    "tag": "img",
+                                    "attributes": {
+                                      "src": "https://placehold.co/1280x800",
+                                      "alt": "",
+                                      "fetchpriority": "high"
+                                    }
+                                  },
+                                  "innerBlocks": [],
+                                  "innerHTML": "\n\n",
+                                  "innerContent": [
+                                    "\n",
+                                    "\n"
+                                  ]
+                                }
+                              ],
+                              "innerHTML": "\n\n",
+                              "innerContent": [
+                                "\n",
+                                null,
+                                "\n"
+                              ]
+                            }
+                          ],
+                          "innerHTML": "\n\n",
+                          "innerContent": [
+                            "\n",
+                            null,
+                            "\n"
+                          ]
+                        },
+                        {
+                          "blockName": "etch/element",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Div"
+                            },
+                            "tag": "li",
+                            "attributes": {}
+                          },
+                          "innerBlocks": [
+                            {
+                              "blockName": "etch/element",
+                              "attrs": {
+                                "metadata": {
+                                  "name": "Figure"
+                                },
+                                "tag": "figure",
+                                "attributes": {},
+                                "styles": [
+                                  "s4gkacs"
+                                ]
+                              },
+                              "innerBlocks": [
+                                {
+                                  "blockName": "etch/element",
+                                  "attrs": {
+                                    "metadata": {
+                                      "name": "Image"
+                                    },
+                                    "options": {
+                                      "imageData": {
+                                        "attachmentId": 1597,
+                                        "size": ""
+                                      }
+                                    },
+                                    "tag": "img",
+                                    "attributes": {
+                                      "src": "https://placehold.co/1280x800",
+                                      "alt": "",
+                                      "fetchpriority": "high"
+                                    }
+                                  },
+                                  "innerBlocks": [],
+                                  "innerHTML": "\n\n",
+                                  "innerContent": [
+                                    "\n",
+                                    "\n"
+                                  ]
+                                }
+                              ],
+                              "innerHTML": "\n\n",
+                              "innerContent": [
+                                "\n",
+                                null,
+                                "\n"
+                              ]
+                            }
+                          ],
+                          "innerHTML": "\n\n",
+                          "innerContent": [
+                            "\n",
+                            null,
+                            "\n"
+                          ]
+                        },
+                        {
+                          "blockName": "etch/element",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Div"
+                            },
+                            "tag": "li",
+                            "attributes": {}
+                          },
+                          "innerBlocks": [
+                            {
+                              "blockName": "etch/element",
+                              "attrs": {
+                                "metadata": {
+                                  "name": "Figure"
+                                },
+                                "tag": "figure",
+                                "attributes": {},
+                                "styles": [
+                                  "s4gkacs"
+                                ]
+                              },
+                              "innerBlocks": [
+                                {
+                                  "blockName": "etch/element",
+                                  "attrs": {
+                                    "metadata": {
+                                      "name": "Image"
+                                    },
+                                    "options": {
+                                      "imageData": {
+                                        "attachmentId": 1597,
+                                        "size": ""
+                                      }
+                                    },
+                                    "tag": "img",
+                                    "attributes": {
+                                      "src": "https://placehold.co/1280x800",
+                                      "alt": "",
+                                      "fetchpriority": "high"
+                                    }
+                                  },
+                                  "innerBlocks": [],
+                                  "innerHTML": "\n\n",
+                                  "innerContent": [
+                                    "\n",
+                                    "\n"
+                                  ]
+                                }
+                              ],
+                              "innerHTML": "\n\n",
+                              "innerContent": [
+                                "\n",
+                                null,
+                                "\n"
+                              ]
+                            }
+                          ],
+                          "innerHTML": "\n\n",
+                          "innerContent": [
+                            "\n",
+                            null,
+                            "\n"
+                          ]
+                        },
+                        {
+                          "blockName": "etch/element",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Div"
+                            },
+                            "tag": "li",
+                            "attributes": {}
+                          },
+                          "innerBlocks": [
+                            {
+                              "blockName": "etch/element",
+                              "attrs": {
+                                "metadata": {
+                                  "name": "Figure"
+                                },
+                                "tag": "figure",
+                                "attributes": {},
+                                "styles": [
+                                  "s4gkacs"
+                                ]
+                              },
+                              "innerBlocks": [
+                                {
+                                  "blockName": "etch/element",
+                                  "attrs": {
+                                    "metadata": {
+                                      "name": "Image"
+                                    },
+                                    "options": {
+                                      "imageData": {
+                                        "attachmentId": 1597,
+                                        "size": ""
+                                      }
+                                    },
+                                    "tag": "img",
+                                    "attributes": {
+                                      "src": "https://placehold.co/1280x800",
+                                      "alt": "",
+                                      "fetchpriority": "high"
+                                    }
+                                  },
+                                  "innerBlocks": [],
+                                  "innerHTML": "\n\n",
+                                  "innerContent": [
+                                    "\n",
+                                    "\n"
+                                  ]
+                                }
+                              ],
+                              "innerHTML": "\n\n",
+                              "innerContent": [
+                                "\n",
+                                null,
+                                "\n"
+                              ]
+                            }
+                          ],
+                          "innerHTML": "\n\n",
+                          "innerContent": [
+                            "\n",
+                            null,
+                            "\n"
+                          ]
+                        },
+                        {
+                          "blockName": "etch/element",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Div"
+                            },
+                            "tag": "li",
+                            "attributes": {}
+                          },
+                          "innerBlocks": [
+                            {
+                              "blockName": "etch/element",
+                              "attrs": {
+                                "metadata": {
+                                  "name": "Figure"
+                                },
+                                "tag": "figure",
+                                "attributes": {},
+                                "styles": [
+                                  "s4gkacs"
+                                ]
+                              },
+                              "innerBlocks": [
+                                {
+                                  "blockName": "etch/element",
+                                  "attrs": {
+                                    "metadata": {
+                                      "name": "Image"
+                                    },
+                                    "options": {
+                                      "imageData": {
+                                        "attachmentId": 1597,
+                                        "size": ""
+                                      }
+                                    },
+                                    "tag": "img",
+                                    "attributes": {
+                                      "src": "https://placehold.co/1280x800",
+                                      "alt": "",
+                                      "fetchpriority": "high"
+                                    }
+                                  },
+                                  "innerBlocks": [],
+                                  "innerHTML": "\n\n",
+                                  "innerContent": [
+                                    "\n",
+                                    "\n"
+                                  ]
+                                }
+                              ],
+                              "innerHTML": "\n\n",
+                              "innerContent": [
+                                "\n",
+                                null,
+                                "\n"
+                              ]
+                            }
+                          ],
+                          "innerHTML": "\n\n",
+                          "innerContent": [
+                            "\n",
+                            null,
+                            "\n"
+                          ]
+                        },
+                        {
+                          "blockName": "etch/element",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Div"
+                            },
+                            "tag": "li",
+                            "attributes": {}
+                          },
+                          "innerBlocks": [
+                            {
+                              "blockName": "etch/element",
+                              "attrs": {
+                                "metadata": {
+                                  "name": "Figure"
+                                },
+                                "tag": "figure",
+                                "attributes": {},
+                                "styles": [
+                                  "s4gkacs"
+                                ]
+                              },
+                              "innerBlocks": [
+                                {
+                                  "blockName": "etch/element",
+                                  "attrs": {
+                                    "metadata": {
+                                      "name": "Image"
+                                    },
+                                    "options": {
+                                      "imageData": {
+                                        "attachmentId": 1597,
+                                        "size": ""
+                                      }
+                                    },
+                                    "tag": "img",
+                                    "attributes": {
+                                      "src": "https://placehold.co/1280x800",
+                                      "alt": "",
+                                      "fetchpriority": "high"
+                                    }
+                                  },
+                                  "innerBlocks": [],
+                                  "innerHTML": "\n\n",
+                                  "innerContent": [
+                                    "\n",
+                                    "\n"
+                                  ]
+                                }
+                              ],
+                              "innerHTML": "\n\n",
+                              "innerContent": [
+                                "\n",
+                                null,
+                                "\n"
+                              ]
+                            }
+                          ],
+                          "innerHTML": "\n\n",
+                          "innerContent": [
+                            "\n",
+                            null,
+                            "\n"
+                          ]
+                        }
+                      ],
+                      "innerHTML": "\n\n\n\n\n\n\n\n\n\n\n\n",
+                      "innerContent": [
+                        "\n",
+                        null,
+                        "\n\n",
+                        null,
+                        "\n\n",
+                        null,
+                        "\n\n",
+                        null,
+                        "\n\n",
+                        null,
+                        "\n\n",
+                        null,
+                        "\n"
+                      ]
+                    }
+                  ],
+                  "innerHTML": "\n\n\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n\n",
+                    null,
+                    "\n"
+                  ]
+                }
+              ],
+              "innerHTML": "\n\n",
+              "innerContent": [
+                "\n",
+                null,
+                "\n"
+              ]
+            },
+            {
+              "blockName": "etch/slot-placeholder",
+              "attrs": {
+                "name": "controls"
+              },
+              "innerBlocks": [],
+              "innerHTML": "\n\n",
+              "innerContent": [
+                "\n",
+                "\n"
+              ]
+            }
+          ],
+          "innerHTML": "\n\n\n\n",
+          "innerContent": [
+            "\n",
+            null,
+            "\n\n",
+            null,
+            "\n"
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "key": "carouselID",
+          "name": "Carousel ID",
+          "keyTouched": true,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "default"
+        },
+        {
+          "key": "ariaLabel",
+          "name": "Aria Label",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "Carousel"
+        },
+        {
+          "key": "containerTag",
+          "name": "Container Tag",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "ul",
+          "selectOptionsString": "ul\ndiv"
+        },
+        {
+          "key": "carouselWidth",
+          "name": "Carousel Width",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "var(--content-width, 1366px)"
+        },
+        {
+          "key": "slideCount",
+          "name": "Slide Count",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "3"
+        },
+        {
+          "key": "slideGap",
+          "name": "Slide Gap",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "1em"
+        },
+        {
+          "key": "startingSlide",
+          "name": "Starting Slide",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "0"
+        },
+        {
+          "key": "justification",
+          "name": "Justification",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "start",
+          "selectOptionsString": "Start : start\nCenter : center\nEnd : end"
+        },
+        {
+          "key": "alignment",
+          "name": "Alignment",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "stretch",
+          "selectOptionsString": "Stretch : stretch\nStart : flex-start\nCenter : center\nEnd : end"
+        },
+        {
+          "key": "slideOverflow",
+          "name": "Slide Overflow (%)",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "0"
+        },
+        {
+          "key": "customCarouselClasses",
+          "name": "Custom Carousel Classes",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          }
+        },
+        {
+          "key": "isDraggable",
+          "name": "Is Draggable",
+          "keyTouched": false,
+          "type": {
+            "primitive": "boolean"
+          },
+          "default": true
+        },
+        {
+          "key": "infiniteLoop",
+          "name": "Infinite Loop",
+          "keyTouched": false,
+          "type": {
+            "primitive": "boolean"
+          },
+          "default": true
+        }
+      ],
+      "description": "",
+      "legacyId": ""
+    },
+    "2025": {
+      "id": 2025,
+      "name": "Carousel Controls",
+      "key": "CarouselControls",
+      "blocks": [
+        {
+          "blockName": "etch/element",
+          "attrs": {
+            "metadata": {
+              "name": "Carousel Controls"
+            },
+            "tag": "div",
+            "attributes": {
+              "style": "--button-alignment: {props.buttonAlignment}; --button-gap: {props.buttonGap}; --order: {props.position}; --margin-block: {props.marginBlock};",
+              "data-carousel-alpha-target": "{props.carouselTargetId}",
+              "class": "carousel-alpha-controls {props.customControlsClasses}"
+            },
+            "styles": [
+              "y8n3skl"
+            ]
+          },
+          "innerBlocks": [
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": {
+                  "name": "Prev"
+                },
+                "tag": "button",
+                "attributes": {
+                  "data-btn-prev": "",
+                  "class": "carousel-alpha-controls__button carousel-alpha-controls__button--prev",
+                  "aria-label": "Previous Slide"
+                },
+                "styles": [
+                  "ifx33gv",
+                  "zbc083b"
+                ]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/condition",
+                  "attrs": {
+                    "metadata": {
+                      "name": "Label Visibility"
+                    },
+                    "condition": {
+                      "leftHand": "props.buttonLayout.includes(\"Label\")",
+                      "operator": "isTruthy",
+                      "rightHand": null
+                    },
+                    "conditionString": "props.buttonLayout.includes(\"Label\")"
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "Label"
+                        },
+                        "tag": "span",
+                        "attributes": {
+                          "class": "carousel-alpha-controls__button-label"
+                        },
+                        "styles": [
+                          "77imuy9"
+                        ]
+                      },
+                      "innerBlocks": [
+                        {
+                          "blockName": "etch/text",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Text"
+                            },
+                            "content": "Prev "
+                          },
+                          "innerBlocks": [],
+                          "innerHTML": "",
+                          "innerContent": []
+                        }
+                      ],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        null,
+                        "\n"
+                      ]
+                    }
+                  ],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n"
+                  ]
+                },
+                {
+                  "blockName": "etch/condition",
+                  "attrs": {
+                    "metadata": {
+                      "name": "If (Condition)"
+                    },
+                    "condition": {
+                      "leftHand": "props.buttonLayout.toLowercase().includes(\"icon\")",
+                      "operator": "isTruthy",
+                      "rightHand": null
+                    },
+                    "conditionString": "props.buttonLayout.toLowercase().includes(\"icon\")"
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/svg",
+                      "attrs": {
+                        "metadata": {
+                          "name": "SVG"
+                        },
+                        "tag": "svg",
+                        "attributes": {
+                          "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' color='currentColor' fill='none' stroke='%23141B34' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z'/%3E%3Cpath d='M9.0001 12.0001L16.0001 12.0001M11.4999 8.50012L7.9999 12.0001L11.4999 15.5001'/%3E%3C/svg%3E",
+                          "class": "carousel-alpha-controls__icon carousel-alpha-controls__icon--prev",
+                          "stripColors": "true"
+                        },
+                        "styles": [
+                          "svx2ha8",
+                          "9qdtmiv"
+                        ]
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        "\n"
+                      ]
+                    }
+                  ],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n"
+                  ]
+                }
+              ],
+              "innerHTML": "\n\n\n\n",
+              "innerContent": [
+                "\n",
+                null,
+                "\n\n",
+                null,
+                "\n"
+              ]
+            },
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": {
+                  "name": "Next"
+                },
+                "tag": "button",
+                "attributes": {
+                  "data-btn-next": "",
+                  "class": "carousel-alpha-controls__button carousel-alpha-controls__button--next",
+                  "aria-label": "Next Slide"
+                },
+                "styles": [
+                  "ifx33gv",
+                  "cyb4vvr"
+                ]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/condition",
+                  "attrs": {
+                    "metadata": {
+                      "name": "If (Condition)"
+                    },
+                    "condition": {
+                      "leftHand": "props.buttonLayout.includes(\"Label\")",
+                      "operator": "isTruthy",
+                      "rightHand": null
+                    },
+                    "conditionString": "props.buttonLayout.includes(\"Label\")"
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "Label"
+                        },
+                        "tag": "span",
+                        "attributes": {
+                          "class": "carousel-alpha-controls__button-label"
+                        },
+                        "styles": [
+                          "77imuy9"
+                        ]
+                      },
+                      "innerBlocks": [
+                        {
+                          "blockName": "etch/text",
+                          "attrs": {
+                            "metadata": {
+                              "name": "Text"
+                            },
+                            "content": "Next"
+                          },
+                          "innerBlocks": [],
+                          "innerHTML": "",
+                          "innerContent": []
+                        }
+                      ],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        null,
+                        "\n"
+                      ]
+                    }
+                  ],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n"
+                  ]
+                },
+                {
+                  "blockName": "etch/condition",
+                  "attrs": {
+                    "metadata": {
+                      "name": "If (Condition)"
+                    },
+                    "condition": {
+                      "leftHand": "props.buttonLayout.toLowercase().includes(\"icon\")",
+                      "operator": "isTruthy",
+                      "rightHand": null
+                    },
+                    "conditionString": "props.buttonLayout.toLowercase().includes(\"icon\")"
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/svg",
+                      "attrs": {
+                        "metadata": {
+                          "name": "SVG"
+                        },
+                        "tag": "svg",
+                        "attributes": {
+                          "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' color='currentColor' fill='none' stroke='%23141B34' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z'/%3E%3Cpath d='M14.9999 12.0001L7.99991 12.0001M12.5001 8.50012L16.0001 12.0001L12.5001 15.5001'/%3E%3C/svg%3E",
+                          "class": "carousel-alpha-controls__icon carousel-alpha-controls__icon--next",
+                          "stripColors": "true"
+                        },
+                        "styles": [
+                          "svx2ha8",
+                          "xvpgru5"
+                        ]
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        "\n"
+                      ]
+                    }
+                  ],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n"
+                  ]
+                }
+              ],
+              "innerHTML": "\n\n\n\n",
+              "innerContent": [
+                "\n",
+                null,
+                "\n\n",
+                null,
+                "\n"
+              ]
+            }
+          ],
+          "innerHTML": "\n\n\n\n",
+          "innerContent": [
+            "\n",
+            null,
+            "\n\n",
+            null,
+            "\n"
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "key": "carouselTargetId",
+          "name": "Carousel Target (ID)",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "default"
+        },
+        {
+          "key": "buttonLayout",
+          "name": "Button Layout",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "Icon Only",
+          "selectOptionsString": "Icon Only\nLabel and Icon\nLabel Only"
+        },
+        {
+          "key": "buttonAlignment",
+          "name": "Button Alignment",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "flex-start",
+          "selectOptionsString": "Left : flex-start\nRight : flex-end\nCenter : center\nApart : space-between"
+        },
+        {
+          "key": "marginBlock",
+          "name": "Margin Block",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "1em 1em"
+        },
+        {
+          "key": "buttonGap",
+          "name": "Button Gap",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "1em"
+        },
+        {
+          "key": "position",
+          "name": "Position",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "0",
+          "selectOptionsString": "Below : 0\nAbove : -1"
+        },
+        {
+          "key": "customControlsClasses",
+          "name": "Custom Controls Classes",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          }
+        }
+      ],
+      "description": "",
+      "legacyId": ""
+    }
+  },
+  "_metadata": {
+    "source": "patterns.etchwp.com",
+    "slug": "carousel-alpha",
+    "title": "Carousel Alpha",
+    "family": "interactive",
+    "link": "https://patterns.etchwp.com/layouts/carousel-alpha/",
+    "modified": "2026-01-10T20:00:06",
+    "collected": "2026-01-31T17:07:52.091Z"
+  }
+}
