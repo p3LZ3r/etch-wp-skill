@@ -40,6 +40,7 @@ cp README.md dist/temp/ 2>/dev/null || echo "No README.md file found"
 mkdir -p dist/temp/scripts
 cp scripts/validate-component.js dist/temp/scripts/ 2>/dev/null || true
 cp scripts/collect-patterns.js dist/temp/scripts/ 2>/dev/null || true
+cp scripts/encode-safe.js dist/temp/scripts/ 2>/dev/null || true
 
 # Copy references
 cp -r references dist/temp/

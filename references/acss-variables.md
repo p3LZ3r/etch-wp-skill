@@ -2,6 +2,76 @@
 
 This reference provides the complete ACSS v4 variable system for use in Etch WP component CSS.
 
+---
+
+## ⚠️ CRITICAL: ACSS Automatic Styles (DO NOT REDEFINE)
+
+**ACSS automatically applies certain styles to Etch WP elements. NEVER manually define these - they are redundant and cause maintenance issues.**
+
+### Container Elements (data-etch-element="container")
+
+These styles are **AUTOMATICALLY APPLIED** by ACSS - do NOT set them:
+
+```css
+/* REDUNDANT - ACSS sets these automatically */
+max-width: var(--content-width);
+width: 100%;
+margin-inline: auto;
+```
+
+**When to override:**
+- ✅ Narrower containers: `max-width: var(--width-800)` or `var(--content-width-safe)`
+- ✅ Full-width containers: `max-width: none`
+- ✅ Different alignment: `margin-inline: 0` or `margin-inline-start: 0`
+
+### Section Elements (data-etch-element="section")
+
+These styles are **AUTOMATICALLY APPLIED** by ACSS:
+
+```css
+/* REDUNDANT - ACSS handles section spacing */
+padding-block: var(--section-space-m);  /* Default section padding */
+padding-inline: var(--gutter);          /* Horizontal gutter */
+```
+
+**Automatic Contextual Spacing (ACSS 2.6+):**
+- Container gaps between containers in sections
+- Content gaps for direct children of sections
+- Grid gaps for elements with grid utility classes
+
+**When to override:**
+- ✅ Different section spacing: `padding-block: var(--section-space-xl)`
+- ✅ Remove padding: `padding-block: 0`
+- ✅ Custom backgrounds: `background: var(--bg-dark)`
+
+### Text Colors
+
+Default text colors are **AUTOMATICALLY APPLIED** - do NOT set them unless different from standard:
+
+```css
+/* REDUNDANT - Headings use var(--heading-color) automatically */
+color: var(--heading-color);
+
+/* REDUNDANT - Body text uses default color automatically */
+color: var(--text-dark);
+```
+
+**When to override:**
+- ✅ Different color context: `color: var(--text-light)` on dark backgrounds
+- ✅ Muted text: `color: var(--text-dark-muted)`
+- ✅ Special brand color: `color: var(--accent)`
+
+### Summary: Only Define What Deviates from Standard
+
+| Element | Auto-Applied | Manual Override When |
+|---------|--------------|---------------------|
+| Container | `max-width`, `width: 100%`, `margin-inline: auto` | Different width, no centering |
+| Section | `padding-block: var(--section-space-m)`, `padding-inline: var(--gutter)` | Different spacing, no padding |
+| Gaps | Container gaps, content gaps, grid gaps | Custom gap sizes needed |
+| Text | `--heading-color`, `--text-dark` | Different color context |
+
+**Golden Rule:** Only define CSS properties that differ from ACSS defaults. If the design matches standard ACSS behavior, don't add redundant CSS.
+
 ## ⚠️ CRITICAL WARNING: NEVER INVENT ACSS VARIABLES
 
 **ABSOLUTE RULE: You must NEVER create, guess, or invent ACSS variable names.**
@@ -610,7 +680,7 @@ var(--card-shadow)    /* Card shadow */
 "feature-section__grid": {
   "type": "class",
   "selector": ".feature-section__grid",
-  "css": "display: grid;\n  grid-template-columns: var(--grid-auto-3);\n  gap: var(--grid-gap);\n  max-width: var(--content-width);\n  margin-inline: auto;"
+  "css": "display: grid;\n  grid-template-columns: var(--grid-auto-3);\n  gap: var(--grid-gap);"
 }
 ```
 
@@ -660,9 +730,11 @@ Note: Button uses `var(--primary)` as an exception because it's an explicit bran
 "css": "display: grid;\n  grid-template-columns: var(--grid-auto-3);\n  gap: var(--grid-gap);"
 ```
 
-### Container with Max Width
+### Custom Width Container (Override Default)
 ```css
-"css": "max-width: var(--content-width);\n  margin-inline: auto;\n  padding-inline: var(--gutter);"
+/* ACSS sets max-width, margin-inline, width automatically.
+   Only define when different from defaults: */
+"css": "max-width: var(--width-800);  /* Narrower than default */\n  margin-inline: 0;              /* Left-aligned instead of centered */"
 ```
 
 ### Card Component
@@ -670,9 +742,11 @@ Note: Button uses `var(--primary)` as an exception because it's an explicit bran
 "css": "padding: var(--card-padding);\n  gap: var(--card-gap);\n  border-radius: var(--card-radius);\n  box-shadow: var(--card-shadow);\n  background: var(--white);"
 ```
 
-### Section Padding
+### Section Padding (Override Default)
 ```css
-"css": "padding-block: var(--section-space-l);\n  padding-inline: var(--gutter);\n  background: var(--base-ultra-light);"
+/* ACSS applies padding-block: var(--section-space-m) automatically.
+   Only define when different from defaults: */
+"css": "padding-block: var(--section-space-xl);  /* More spacing than default */\n  background: var(--bg-ultra-light);        /* Custom background */"
 ```
 
 ### Typography Stack
@@ -684,3 +758,106 @@ Note: Button uses `var(--primary)` as an exception because it's an explicit bran
 ```css
 "css": "background: var(--primary);\n  transition: var(--transition);\n  &:hover {\n    background: var(--primary-hover);\n    box-shadow: 0 4px 12px color-mix(in oklch, var(--primary) 40%, transparent);\n  }"
 ```
+
+---
+
+## JavaScript Integration
+
+**JavaScript can be added to ANY element, not just components.** Use the `script` field in element attributes.
+
+### Adding Scripts to Elements
+
+**CRITICAL: Scripts must be Base64-encoded.** The script object has `id` and `code` properties:
+
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "div",
+    "attributes": {
+      "class": "animated-card",
+      "data-animate": "fade-up"
+    },
+    "script": {
+      "id": "a1b2c3d",
+      "code": "Y29uc3QgY2FyZCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoJy5hbmltYXRlZC1jYXJkJyk7CmNhcmQuYWRkRXZlbnRMaXN0ZW5lcignY2xpY2snLCAoKSA9PiB7CiAgY2FyZC5jbGFzc0xpc3QudG9nZ2xlKCdpcy1hY3RpdmUnKTsKfSk7"
+    }
+  }
+}
+```
+
+### Script Requirements
+
+- **MUST be Base64-encoded** - Raw JavaScript will not execute
+- **Script ID** - 7 random alphanumeric characters (e.g., "a1b2c3d")
+- **Single line** - The Base64 string must not contain line breaks
+- **Placement** - Must be in `attrs.script`, NOT `attrs.attributes.script`
+
+### Base64 Encoding Example
+
+```javascript
+// Original JavaScript
+const js = `const card = document.querySelector('.animated-card');
+card.addEventListener('click', () => {
+  card.classList.toggle('is-active');
+});`;
+
+// Base64-encoded for Etch WP (single line, no breaks)
+const encoded = btoa(js); // Y29uc3QgY2FyZCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoJy5hbmltYXRlZC1jYXJkJyk7CmNhcmQuYWRkRXZlbnRMaXN0ZW5lcignY2xpY2snLCAoKSA9PiB7CiAgY2FyZC5jbGFzc0xpc3QudG9nZ2xlKCdpcy1hY3RpdmUnKTsKfSk7
+```
+
+---
+
+## GSAP Animations
+
+**GSAP can be integrated for advanced animations.** When GSAP is needed, include a reference to implementation patterns.
+
+### GSAP Implementation Example
+
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "section",
+    "attributes": {
+      "class": "hero-section",
+      "id": "hero"
+    },
+    "script": {
+      "id": "x9y8z7w",
+      "code": "Z3NhcC5mcm9tKCcuaGVyby1zZWN0aW9uIGgxJywgeyBvcGFjaXR5OiAwLCB5OiA1MCwgZHVyYXRpb246IDEsIGVhc2U6ICdwb3dlcjMub3V0JyB9KTs="
+    }
+  }
+}
+```
+
+**Note:** The `code` value is Base64-encoded JavaScript:
+```javascript
+gsap.from('.hero-section h1', { opacity: 0, y: 50, duration: 1, ease: 'power3.out' });
+```
+
+### When to Use GSAP
+
+**Use GSAP for:**
+- Complex timeline animations
+- Scroll-triggered animations (ScrollTrigger)
+- Morphing and path animations
+- High-performance transforms
+- Advanced easing functions
+
+**Use CSS transitions for:**
+- Simple hover states
+- Basic fade/slide effects
+- Color transitions
+- Transform transitions
+
+### PHP Implementation Reference
+
+For GSAP implementations, refer to PHP code demonstrating:
+- ScrollTrigger setup for scroll animations
+- Timeline sequencing for complex animations
+- Performance optimization techniques
+- Responsive animation handling
+- Proper wp_enqueue_script() usage for GSAP library loading
+
+**Note:** Ensure GSAP library is loaded via theme or plugin (functions.php) before using GSAP in element scripts.

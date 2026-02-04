@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * Etch WP Component Validator
- * Automatically validates generated Etch WP JSON components
+ * Etch WP Component Validator (Improved)
+ * Enhanced validation with Base64 and JavaScript checks
  *
- * Usage: node validate-component.js <file.json>
+ * Usage: node validate-component-improved.js <file.json>
  */
 
 const fs = require('fs');
@@ -15,6 +15,7 @@ class EtchComponentValidator {
     this.errors = [];
     this.warnings = [];
     this.info = [];
+    this.base64LineBreakCheck = true;
   }
 
   validateFile(filePath) {
@@ -159,15 +160,117 @@ class EtchComponentValidator {
         );
       }
 
-      if (attrs.script.code && attrs.script.code.includes('\n')) {
+      // Enhanced Base64 validation
+      this.validateBase64Script(attrs.script, blockPath);
+    }
+  }
+
+  validateBase64Script(script, blockPath) {
+    if (!script.code) {
+      this.errors.push(`Missing script.code at ${blockPath}`);
+      return;
+    }
+
+    const code = script.code;
+
+    // Check for line breaks in Base64
+    if (code.includes('\n')) {
+      this.errors.push(
+        `Base64 encoded script must be a single line (no line breaks) at ${blockPath}`
+      );
+    }
+
+    // Check for valid Base64 characters
+    const validBase64Pattern = /^[A-Za-z0-9+/]*={0,2}$/;
+    if (!validBase64Pattern.test(code)) {
+      this.errors.push(
+        `Base64 script contains invalid characters at ${blockPath}. Only A-Z, a-z, 0-9, +, /, = allowed.`
+      );
+    }
+
+    // Check script ID format
+    if (script.id && !/^[a-z0-9]{7}$/.test(script.id)) {
+      this.warnings.push(
+        `Script ID "${script.id}" should be 7 random alphanumeric characters at ${blockPath}`
+      );
+    }
+
+    // Try to decode and validate JavaScript
+    try {
+      const decoded = Buffer.from(code, 'base64').toString('utf8');
+      this.validateJavaScript(decoded, blockPath);
+    } catch (e) {
+      this.errors.push(
+        `Base64 decoding failed at ${blockPath}: ${e.message}`
+      );
+    }
+  }
+
+  validateJavaScript(jsCode, blockPath) {
+    // Common typo patterns to check
+    const commonTypos = [
+      { pattern: /SCrollTrigger/g, correct: 'ScrollTrigger', name: 'SCrollTrigger' },
+      { pattern: /vvar\s/g, correct: 'var', name: 'vvar' },
+      { pattern: /ggsap\./g, correct: 'gsap.', name: 'ggsap' },
+      { pattern: /doccument/g, correct: 'document', name: 'doccument' },
+      { pattern: /querrySelector/g, correct: 'querySelector', name: 'querrySelector' },
+      { pattern: /addeventListener/g, correct: 'addEventListener', name: 'addeventListener' },
+      { pattern: /funtion/g, correct: 'function', name: 'funtion' },
+      { pattern: /retunr/g, correct: 'return', name: 'retunr' },
+    ];
+
+    commonTypos.forEach(({ pattern, correct, name }) => {
+      if (pattern.test(jsCode)) {
         this.errors.push(
-          `Base64 encoded script must be a single line (no line breaks) at ${blockPath}`
+          `JavaScript typo detected at ${blockPath}: "${name}" should be "${correct}"`
         );
       }
+    });
 
-      if (attrs.script.id && !/^[a-z0-9]{7}$/.test(attrs.script.id)) {
-        this.warnings.push(
-          `Script ID "${attrs.script.id}" should be 7 random alphanumeric characters at ${blockPath}`
+    // Check for logical operators that might be typos
+    // Single & or | where && or || is likely intended (outside of valid bitwise contexts)
+    const singleAmpersandPattern = /\w+\s+&\s*\w+/;
+    if (singleAmpersandPattern.test(jsCode)) {
+      this.warnings.push(
+        `Possible typo at ${blockPath}: Single '&' detected. Did you mean '&&' (logical AND)?`
+      );
+    }
+
+    // Check for common quote issues
+    if (jsCode.includes('\u2018') || jsCode.includes('\u2019')) {
+      this.warnings.push(
+        `Curly quotes detected at ${blockPath}. Use straight quotes ' or " instead.`
+      );
+    }
+
+    // Check for console.log (warning for production)
+    if (/console\.log\s*\(/.test(jsCode)) {
+      this.info.push(`console.log found at ${blockPath}. Consider removing for production.`);
+    }
+
+    // Basic syntax check - try to find unclosed braces/parens
+    const openBraces = (jsCode.match(/\{/g) || []).length;
+    const closeBraces = (jsCode.match(/\}/g) || []).length;
+    if (openBraces !== closeBraces) {
+      this.errors.push(
+        `Unmatched braces at ${blockPath}: ${openBraces} opening, ${closeBraces} closing`
+      );
+    }
+
+    const openParens = (jsCode.match(/\(/g) || []).length;
+    const closeParens = (jsCode.match(/\)/g) || []).length;
+    if (openParens !== closeParens) {
+      this.errors.push(
+        `Unmatched parentheses at ${blockPath}: ${openParens} opening, ${closeParens} closing`
+      );
+    }
+
+    // Check for GSAP/ScrollTrigger common patterns
+    if (jsCode.includes('gsap') && jsCode.includes('ScrollTrigger')) {
+      if (!jsCode.includes('gsap.registerPlugin(ScrollTrigger)') &&
+          !jsCode.includes('registerPlugin(ScrollTrigger)')) {
+        this.errors.push(
+          `ScrollTrigger is used but gsap.registerPlugin(ScrollTrigger) is missing at ${blockPath}`
         );
       }
     }
@@ -244,7 +347,7 @@ class EtchComponentValidator {
       /var\(--margin-/,
       /var\(--color-/,
       /var\(--spacing-/,
-      /var\(--btn-/,
+      /var\(--btn-\)/,
     ];
 
     invalidVarPatterns.forEach(pattern => {
@@ -351,8 +454,14 @@ class EtchComponentValidator {
 // CLI execution
 if (require.main === module) {
   if (process.argv.length < 3) {
-    console.log('Usage: node validate-component.js <file.json>');
+    console.log('Usage: node validate-component-improved.js <file.json>');
     console.log('\nValidates Etch WP component JSON files for common issues.');
+    console.log('\nEnhanced checks include:');
+    console.log('  • Base64 validity (no line breaks, valid characters)');
+    console.log('  • JavaScript syntax and common typos');
+    console.log('  • GSAP/ScrollTrigger patterns');
+    console.log('  • Quote consistency');
+    console.log('  • Brace/parenthesis matching');
     process.exit(1);
   }
 

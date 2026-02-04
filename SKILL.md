@@ -4,9 +4,9 @@ description: Expert knowledge for Etch WP - a Unified Visual Development Environ
 license: CC BY-NC-SA 4.0
 metadata:
   author: Torsten Linnecke
-  version: 2.1.0
+  version: 2.2.0
   created: 2025-12-20
-  updated: 2026-01-27
+  updated: 2026-02-04
   category: wordpress
   tags: wordpress, gutenberg, etch-wp, acss, component-generator
   homepage: https://etchwp.com
@@ -44,6 +44,19 @@ node scripts/validate-component.js <filename>.json
 ```
 
 This catches common errors before the user tries to import into Etch WP.
+
+**For components with JavaScript**, also run the enhanced validator:
+
+```bash
+node scripts/validate-component-improved.js <filename>.json
+```
+
+This additionally checks:
+- Base64 encoding validity (no line breaks, valid characters)
+- JavaScript syntax and common typos (`SCrollTrigger`, `vvar`, `ggsap`, etc.)
+- Quote consistency (curly quotes → straight quotes)
+- Brace/parenthesis matching
+- GSAP plugin registration
 
 ## Documentation Lookup Strategy
 
@@ -182,7 +195,20 @@ Transform and manipulate dynamic values using modifiers:
 
 ## ACSS v4 CSS Standards
 
-**Hierarchy (in order of preference):**
+### Automatic Styles - DO NOT REDEFINE
+
+**CRITICAL: ACSS automatically applies certain styles. NEVER manually define redundant CSS:**
+
+| Element | Auto-Applied by ACSS | Manual Override Only When |
+|---------|---------------------|---------------------------|
+| Container | `max-width`, `width: 100%`, `margin-inline: auto` | Different width, no centering |
+| Section | `padding-block: var(--section-space-m)`, `padding-inline: var(--gutter)` | Different spacing, no padding |
+| Gaps | Container gaps, content gaps, grid gaps | Custom gap sizes needed |
+| Text | `--heading-color`, `--text-dark` | Different color context required |
+
+**Only define CSS properties that differ from ACSS defaults.**
+
+### Variable Hierarchy (in order of preference):
 
 1. **PRIMARY: Assignment Variables** - `var(--bg-light)`, `var(--text-dark)`, `var(--border-default)`
 2. **SECONDARY: Spacing/Typography** - `var(--space-m)`, `var(--h2)`, `var(--content-width)`
@@ -193,7 +219,7 @@ Transform and manipulate dynamic values using modifiers:
 - Still uncertain → use Context7 MCP to verify
 - Only use documented variables
 
-**See**: `references/acss-variables.md` for complete variable reference
+**See**: `references/acss-variables.md` for complete variable reference including automatic styles and JavaScript/GSAP integration
 
 ## Responsive Design
 
@@ -299,6 +325,35 @@ These are accessibility-optimized and tested. Always recommend using native comp
 ✅ Correct: `"q2fy3v0"`, `"ndqe17f"`, `"ieasrk9"`
 ❌ Wrong: `"banner-style"`, `"content-style"`
 
+## JavaScript & GSAP
+
+**JavaScript can be added to ANY element** (not just components) via the `script` attribute.
+
+**CRITICAL: Scripts must be Base64-encoded.** Use format: `{"id": "abc1234", "code": "base64encodedstring"}`
+
+**GSAP animations** can be integrated for advanced animations. Reference PP scripts for implementation patterns.
+
+### Safe Base64 Encoding
+
+To avoid encoding issues (invalid characters, typos, curly quotes), use the encoding helper:
+
+```bash
+# Method 1: Encode from file
+node scripts/encode-script.js my-script.js
+
+# Method 2: Interactive mode (paste JS, press Ctrl+D)
+node scripts/encode-safe.js
+```
+
+These tools automatically:
+- ✅ Detect/fix common typos (`SCrollTrigger` → `ScrollTrigger`)
+- ✅ Reject curly quotes
+- ✅ Check brace/parenthesis balance
+- ✅ Verify GSAP plugin registration
+- ✅ Output clean, single-line Base64
+
+**See**: `references/acss-variables.md` (JavaScript Integration & GSAP sections)
+
 ## Critical Lessons - Common Mistakes
 
 1. ❌ **NO `core/html` blocks** - Use `etch/element` instead
@@ -306,6 +361,10 @@ These are accessibility-optimized and tested. Always recommend using native comp
 3. ❌ **NO complex inline styles** - Move to CSS classes
 4. ❌ **NO nesting different components** - One component = one style object
 5. ❌ **NO inventing ACSS variables** - Always verify first
+6. ❌ **NO redundant container styles** - ACSS sets `max-width`, `margin-inline: auto`, `width: 100%` automatically
+7. ❌ **NO default section padding** - ACSS applies `padding-block: var(--section-space-m)` automatically
+8. ❌ **NO default text colors** - ACSS applies `--heading-color` and `--text-dark` automatically
+9. ❌ **NO raw JavaScript in script field** - Scripts MUST be Base64-encoded with `{"id": "xxx", "code": "base64string"}`
 
 ## Response Format
 

@@ -392,6 +392,153 @@ SVG icon/graphic element.
 }
 ```
 
+## etch/dynamic-image
+
+Dynamic image element for use with props. **This is the preferred method for images in components.**
+
+### Basic Structure
+```json
+{
+  "blockName": "etch/dynamic-image",
+  "attrs": {
+    "metadata": {"name": "Image"},
+    "tag": "img",
+    "attributes": {
+      "class": "card__img",
+      "src": "{props.imageUrl}",
+      "alt": "{props.imageAlt}",
+      "loading": "lazy"
+    },
+    "styles": ["a1b2c3d"]
+  },
+  "innerBlocks": [],
+  "innerHTML": "\n\n",
+  "innerContent": ["\n", "\n"]
+}
+```
+
+### Key Points
+- Use `etch/dynamic-image` instead of `etch/element` with `tag: "img"` when the image source comes from props
+- Supports all standard `img` attributes: `src`, `alt`, `loading`, `width`, `height`, etc.
+- Props syntax works for dynamic values: `{props.imageUrl}`, `{post.featured_image}`, etc.
+
+### Image with Figure Wrapper (Recommended Pattern)
+
+For semantic markup and styling flexibility, wrap `etch/dynamic-image` in a `figure` element:
+
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "metadata": {"name": "Figure"},
+    "tag": "figure",
+    "attributes": {
+      "class": "card__figure"
+    },
+    "styles": ["f1g2h3i"]
+  },
+  "innerBlocks": [
+    {
+      "blockName": "etch/dynamic-image",
+      "attrs": {
+        "metadata": {"name": "Image"},
+        "tag": "img",
+        "attributes": {
+          "class": "card__img",
+          "src": "{props.imageUrl}",
+          "alt": "{props.imageAlt}",
+          "loading": "lazy"
+        },
+        "styles": ["j4k5l6m"]
+      },
+      "innerBlocks": [],
+      "innerHTML": "\n\n",
+      "innerContent": ["\n", "\n"]
+    }
+  ],
+  "innerHTML": "\n\n",
+  "innerContent": ["\n", null, "\n"]
+}
+```
+
+### Component Properties for Images
+
+When defining image props in a component, use the `specialized: "image"` type:
+
+```json
+{
+  "properties": [
+    {
+      "key": "imageUrl",
+      "name": "Image URL",
+      "type": {
+        "primitive": "string",
+        "specialized": "image"
+      }
+    },
+    {
+      "key": "imageAlt",
+      "name": "Image Alt Text",
+      "type": {
+        "primitive": "string"
+      },
+      "default": ""
+    }
+  ]
+}
+```
+
+### Passing Image Props from Loops
+
+When using components inside loops, pass post data to image props:
+
+```json
+{
+  "blockName": "etch/component",
+  "attrs": {
+    "ref": 101,
+    "attributes": {
+      "imageUrl": "{post.featured_image}",
+      "imageAlt": "{post.title}"
+    }
+  }
+}
+```
+
+### Common Image Styles
+
+```json
+"img-style": {
+  "type": "element",
+  "selector": ".card__img",
+  "collection": "default",
+  "css": "inline-size: 100%;\nblock-size: 100%;\nobject-fit: cover;"
+}
+```
+
+### Image with Hover Zoom Effect
+
+```json
+"figure-style": {
+  "type": "element",
+  "selector": ".card__figure",
+  "collection": "default",
+  "css": "overflow: hidden;\naspect-ratio: 16/9;"
+},
+"img-style": {
+  "type": "element",
+  "selector": ".card__img",
+  "collection": "default",
+  "css": "inline-size: 100%;\nblock-size: 100%;\nobject-fit: cover;\ntransition: transform 0.4s ease;"
+},
+"img-hover-style": {
+  "type": "element",
+  "selector": ".card:hover .card__img",
+  "collection": "default",
+  "css": "transform: scale(1.05);"
+}
+```
+
 ## etch/loop
 
 Loop structure for dynamic content.

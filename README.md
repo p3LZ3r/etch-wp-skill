@@ -117,6 +117,47 @@ This catches common errors before import:
 - ACSS variable name problems
 - Component nesting issues
 
+### 3. Enhanced Base64/JavaScript Validation
+New in v2.1: The improved validator catches common encoding and typo issues:
+```bash
+node scripts/validate-component-improved.js <filename>.json
+```
+
+Additional checks include:
+- Base64 validity (no line breaks, valid characters)
+- JavaScript syntax validation
+- Common typo detection (`SCrollTrigger`, `vvar`, `ggsap`, etc.)
+- Quote consistency (no curly quotes)
+- Brace/parenthesis matching
+- GSAP plugin registration
+
+### 4. Safe Script Encoding Tools
+To avoid Base64 encoding issues, use the encoding helpers:
+
+**encode-script.js** - Validates before encoding:
+```bash
+# Encode a JavaScript file
+node scripts/encode-script.js my-script.js
+
+# Or paste directly
+cat << 'EOF' | node scripts/encode-script.js
+your javascript here
+EOF
+```
+
+**encode-safe.js** - Interactive mode:
+```bash
+node scripts/encode-safe.js
+# Paste your JavaScript, then press Ctrl+D
+```
+
+These tools automatically:
+- Detect and fix common typos
+- Validate quote types (no curly quotes)
+- Check brace/parenthesis balance
+- Verify GSAP patterns
+- Output clean Base64
+
 ### 3. Comprehensive References
 Detailed documentation for every aspect:
 - Block types and attributes
@@ -206,6 +247,15 @@ To contribute:
 - **Agent Skills Spec**: https://agentskills.io
 
 ## Changelog
+
+### v2.1.0 (2026-01-28)
+- ✨ Added `validate-component-improved.js` with Base64/JavaScript validation
+- ✨ Added `encode-script.js` for safe Base64 encoding
+- ✨ Added `encode-safe.js` interactive encoding tool
+- ✨ Automatic typo detection (`SCrollTrigger`, `vvar`, `ggsap`, etc.)
+- ✨ Quote validation (curly → straight)
+- ✨ Brace/parenthesis matching checks
+- ✨ GSAP plugin registration validation
 
 ### v2.0.0 (2024-12-20)
 - ✨ Complete refactor with new structure
