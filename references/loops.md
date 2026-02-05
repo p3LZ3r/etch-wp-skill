@@ -193,11 +193,11 @@ Multiple overrides:
 
 ```json
 "loops": {
-  "loopId": {
+  "abc123x": {
     "name": "Categories",
     "key": "categories",
     "config": {
-      "type": "terms",
+      "type": "wp-terms",
       "args": {
         "taxonomy": "category",
         "hide_empty": true,
@@ -208,6 +208,8 @@ Multiple overrides:
   }
 }
 ```
+
+**Note:** Loop IDs should be random 7-character strings (e.g., `abc123x`, `8esrv4f`).
 
 ### Users
 
@@ -276,7 +278,7 @@ Display categories, then show posts within each category:
   <div class="category-section">
     <h2>{category.name}</h2>
     <ul>
-      {#loop posts($cat: category.id) as post}
+      {#loop posts($cat_id: category.id) as post}
         <li>{post.title}</li>
       {/loop}
     </ul>
@@ -284,39 +286,80 @@ Display categories, then show posts within each category:
 {/loop}
 ```
 
+**JSON Block Structure:**
+```json
+{
+  "blockName": "etch/loop",
+  "attrs": {
+    "loopId": "a1b2c3d",
+    "itemId": "cat"
+  },
+  "innerBlocks": [
+    {
+      "blockName": "etch/text",
+      "attrs": {
+        "content": "{cat.name}"
+      }
+    },
+    {
+      "blockName": "etch/loop",
+      "attrs": {
+        "loopId": "e4f5g6h",
+        "itemId": "post",
+        "loopParams": {
+          "$cat_id": "cat.id"
+        }
+      },
+      "innerBlocks": [
+        {
+          "blockName": "etch/text",
+          "attrs": {
+            "content": "{post.title}"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
 **Loop Configuration:**
 ```json
 "loops": {
-  "categoriesLoop": {
+  "a1b2c3d": {
     "name": "Categories",
     "key": "categories",
+    "global": true,
     "config": {
-      "type": "terms",
+      "type": "wp-terms",
       "args": {
         "taxonomy": "category",
         "hide_empty": false
       }
     }
   },
-  "postsLoop": {
-    "name": "Posts",
+  "e4f5g6h": {
+    "name": "Posts by Category",
     "key": "posts",
+    "global": false,
     "config": {
       "type": "wp-query",
       "args": {
         "post_type": "post",
-        "posts_per_page": 5
+        "posts_per_page": 5,
+        "cat": "$cat_id"
       }
     }
   }
 }
 ```
 
-**Key Points:**
-- Outer loop uses `categories` data source
-- Inner loop passes `category.id` via `$cat` parameter
-- Parameter syntax: `{#loop posts($cat: category.id) as post}`
-- Inner loop only shows posts belonging to current category
+**Critical Points:**
+- **JSON Format**: Use `"loopParams"` (NOT `"loopArgs"`)
+- **JSON Format**: Use `"cat.id"` (NOT `"{cat.id}"`) - no curly braces in the value
+- **HTML Format**: Use `{#loop posts($cat_id: category.id)}`
+- Loop IDs should be random 7-character strings
+- Inner loop `global` should be `false` for context-specific queries
 
 ### Nested Loop with Custom Post Types
 
@@ -804,12 +847,92 @@ Optional: Provide loop configuration as a separate JSON string for easier editin
 ### Categories
 ```json
 {
-  "type": "terms",
+  "type": "wp-terms",
   "args": {
     "taxonomy": "category",
     "hide_empty": true,
     "orderby": "name",
     "order": "ASC"
+  }
+}
+```
+
+## Common Mistakes
+
+### Nested Loops: JSON vs HTML Syntax
+
+When passing parameters to nested loops, the syntax differs between HTML templates and JSON block structures:
+
+| Format | Wrong | Correct |
+|--------|-------|---------|
+| **JSON** | `"loopArgs": {"$cat_id": "{cat.id}"}` | `"loopParams": {"$cat_id": "cat.id"}` |
+| **JSON** | `"{cat.id}"` (with braces) | `"cat.id"` (without braces) |
+| **HTML** | `{#loop posts($cat_id: {cat.id})}` | `{#loop posts($cat_id: cat.id)}` |
+
+### Loop IDs
+
+| Wrong | Correct |
+|-------|---------|
+| Descriptive names like `"categories"`, `"posts"` | Random 7-char strings like `"8esrv4f"`, `"971co5p"` |
+
+### Loop Types
+
+| Wrong | Correct |
+|-------|---------|
+| `"type": "terms"` | `"type": "wp-terms"` |
+| `"type": "users"` | `"type": "wp-users"` |
+
+### Filter by Category in WP Query
+
+| Wrong | Correct |
+|-------|---------|
+| Complex `tax_query` array | Simple `"cat": "$cat_id"` |
+
+### Example: Complete Working Nested Loop
+
+**Outer Loop (Categories):**
+```json
+"8esrv4f": {
+  "key": "categories",
+  "name": "Categories",
+  "global": true,
+  "config": {
+    "type": "wp-terms",
+    "args": {
+      "taxonomy": "category",
+      "hide_empty": true
+    }
+  }
+}
+```
+
+**Inner Loop (Posts):**
+```json
+"971co5p": {
+  "key": "postsByCategory",
+  "name": "Posts by Category",
+  "global": false,
+  "config": {
+    "type": "wp-query",
+    "args": {
+      "post_type": "post",
+      "posts_per_page": 10,
+      "cat": "$cat_id"
+    }
+  }
+}
+```
+
+**Inner Loop Block with Parameters:**
+```json
+{
+  "blockName": "etch/loop",
+  "attrs": {
+    "loopId": "971co5p",
+    "itemId": "post",
+    "loopParams": {
+      "$cat_id": "cat.id"
+    }
   }
 }
 ```

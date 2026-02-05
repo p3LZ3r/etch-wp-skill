@@ -263,8 +263,42 @@ Use `etch/loop` for dynamic, repetitive elements:
 **Loop Types:**
 - `wp-query` - WordPress posts/pages
 - `json` - Embedded JSON data
-- `terms` - Taxonomy terms
-- `users` - WordPress users
+- `wp-terms` - Taxonomy terms (categories, tags)
+- `wp-users` - WordPress users
+
+### Nested Loops with Parameters
+
+**Critical: JSON vs HTML Syntax Difference**
+
+When passing parameters from outer to inner loops:
+
+**HTML Template:**
+```html
+{#loop categories as cat}
+  {#loop posts($cat_id: cat.id) as post}
+    <h3>{post.title}</h3>
+  {/loop}
+{/loop}
+```
+
+**JSON Block Structure:**
+```json
+{
+  "blockName": "etch/loop",
+  "attrs": {
+    "loopId": "posts456",
+    "itemId": "post",
+    "loopParams": {
+      "$cat_id": "cat.id"
+    }
+  }
+}
+```
+
+**Key Differences:**
+- JSON uses `"loopParams"` (NOT `"loopArgs"`)
+- JSON value is `"cat.id"` (NOT `"{cat.id}"`) - NO curly braces
+- Loop IDs must be random 7-char strings (e.g., `abc123x`, `8esrv4f`)
 
 **See**: `references/loops.md` and `references/examples/loop-example.json`
 
@@ -365,6 +399,10 @@ These tools automatically:
 7. ❌ **NO default section padding** - ACSS applies `padding-block: var(--section-space-m)` automatically
 8. ❌ **NO default text colors** - ACSS applies `--heading-color` and `--text-dark` automatically
 9. ❌ **NO raw JavaScript in script field** - Scripts MUST be Base64-encoded with `{"id": "xxx", "code": "base64string"}`
+10. ❌ **NO `"loopArgs"` in nested loops** - Use `"loopParams"` instead
+11. ❌ **NO `"{item.id}"` with braces** - Use `"item.id"` (no curly braces in loopParams values)
+12. ❌ **NO `"type": "terms"`** - Use `"type": "wp-terms"` for taxonomy/category loops
+13. ❌ **NO descriptive loop IDs** - Use random 7-char strings like `"8esrv4f"`, not `"categories"`
 
 ## Response Format
 
