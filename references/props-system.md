@@ -156,6 +156,9 @@ Properties are defined in the `properties` array of each component:
 ```
 
 ### In Conditional Logic
+
+**Note:** `isTruthy` without curly brackets is correct for `props.*`. For dynamic data (`this.metabox.*`, `post.*`, loop items), use `{field}` with `!== ""` — see `block-types.md`.
+
 ```json
 {
   "blockName": "etch/condition",

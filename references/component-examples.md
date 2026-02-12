@@ -51,10 +51,9 @@ This is a complete section with multiple components - demonstrates the full stru
               "metadata": {"name": "Media Group"},
               "tag": "div",
               "attributes": {
-                "data-etch-element": "flex-div",
                 "class": "feature-section-frankfurt__media-group"
               },
-              "styles": ["etch-flex-div-style", "qvzaqsj"]
+              "styles": ["qvzaqsj"]
             },
             "innerBlocks": [
               {
@@ -106,13 +105,6 @@ This is a complete section with multiple components - demonstrates the full stru
       "collection": "default",
       "css": "display: flex;\n  flex-direction: column;\n  gap: var(--container-gap);\n  padding-block: var(--section-space-l);\n  padding-inline: var(--gutter);",
       "readonly": false
-    },
-    "etch-flex-div-style": {
-      "type": "element",
-      "selector": ":where([data-etch-element=\"flex-div\"])",
-      "collection": "default",
-      "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;",
-      "readonly": true
     },
     "qvzaqsj": {
       "type": "class",
@@ -214,13 +206,6 @@ This is a complete section with multiple components - demonstrates the full stru
   },
   "version": 2,
   "styles": {
-    "etch-flex-div-style": {
-      "type": "element",
-      "selector": ":where([data-etch-element=\"flex-div\"])",
-      "collection": "default",
-      "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;",
-      "readonly": true
-    },
     "feature-card": {
       "type": "class",
       "selector": ".feature-card",
@@ -262,10 +247,9 @@ This is a complete section with multiple components - demonstrates the full stru
             "metadata": {"name": "Feature Card"},
             "tag": "article",
             "attributes": {
-              "data-etch-element": "flex-div",
               "class": "feature-card"
             },
-            "styles": ["etch-flex-div-style", "feature-card"]
+            "styles": ["feature-card"]
           },
           "innerBlocks": [
             {
@@ -454,10 +438,9 @@ This is a complete section with multiple components - demonstrates the full stru
               "metadata": {"name": "Features Grid"},
               "tag": "div",
               "attributes": {
-                "data-etch-element": "flex-div",
                 "class": "features-section__grid"
               },
-              "styles": ["etch-flex-div-style", "features-section__grid"]
+              "styles": ["features-section__grid"]
             },
             "innerBlocks": [
               {
@@ -530,13 +513,6 @@ This is a complete section with multiple components - demonstrates the full stru
       "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;\n  max-width: var(--content-width);\n  align-self: center;",
       "readonly": true
     },
-    "etch-flex-div-style": {
-      "type": "element",
-      "selector": ":where([data-etch-element=\"flex-div\"])",
-      "collection": "default",
-      "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;",
-      "readonly": true
-    },
     "features-section": {
       "type": "class",
       "selector": ".features-section",
@@ -599,10 +575,9 @@ This is a complete section with multiple components - demonstrates the full stru
             "metadata": {"name": "Feature Card"},
             "tag": "article",
             "attributes": {
-              "data-etch-element": "flex-div",
               "class": "feature-card"
             },
-            "styles": ["etch-flex-div-style", "feature-card"]
+            "styles": ["feature-card"]
           },
           "innerBlocks": [
             {
@@ -705,7 +680,7 @@ This is a complete section with multiple components - demonstrates the full stru
 }
 ```
 
-### Conditional Content Pattern
+### Conditional Content Pattern (Props)
 ```json
 {
   "blockName": "etch/condition",
@@ -718,6 +693,22 @@ This is a complete section with multiple components - demonstrates the full stru
     "conditionString": "props.show"
   },
   "innerBlocks": [/* content when true */]
+}
+```
+
+### Conditional Content Pattern (Dynamic Data / MetaBox)
+```json
+{
+  "blockName": "etch/condition",
+  "attrs": {
+    "condition": {
+      "leftHand": "{this.metabox.field_name}",
+      "operator": "!==",
+      "rightHand": "\"\""
+    },
+    "conditionString": "{this.metabox.field_name} !== \"\""
+  },
+  "innerBlocks": [/* content when field has value */]
 }
 ```
 

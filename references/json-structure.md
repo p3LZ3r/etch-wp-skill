@@ -74,7 +74,7 @@ HTML tag name (for etch/element):
 HTML attributes object:
 ```json
 "attributes": {
-  "data-etch-element": "container" | "flex-div" | "section",
+  "data-etch-element": "container" | "section" | "iframe",
   "class": "class-name",
   "id": "element-id",
   "href": "{props.url}",
@@ -284,6 +284,9 @@ Or in attributes:
 
 ## Conditional Logic Structure
 
+**⚠️ Condition format differs for props vs dynamic data. See `block-types.md` for full reference.**
+
+### Props Condition (isTruthy)
 ```json
 {
   "blockName": "etch/condition",
@@ -302,36 +305,66 @@ Or in attributes:
 }
 ```
 
+### Dynamic Data Condition (MetaBox fields, post data)
+For `this.metabox.*`, `post.*`, loop items — wrap leftHand in `{}` and use `!== ""`:
+```json
+{
+  "blockName": "etch/condition",
+  "attrs": {
+    "metadata": {"name": "If (Condition)"},
+    "condition": {
+      "leftHand": "{this.metabox.field_name}",
+      "operator": "!==",
+      "rightHand": "\"\""
+    },
+    "conditionString": "{this.metabox.field_name} !== \"\""
+  },
+  "innerBlocks": [
+    // Content shown when field has value
+  ]
+}
+```
+
 ### Condition Operators
 
-- `isTruthy` - Check if value is truthy
+- `isTruthy` - Check if value is truthy (use for `props.*`)
+- `!==` - Not equal (use for dynamic data existence checks with `""`)
 - `===` - Strict equality
-- `!==` - Not equal
-- `>` - Greater than
-- `<` - Less than
-- `||` - OR
-- `&&` - AND
+- `>`, `<`, `>=`, `<=` - Numeric comparisons
+- `||` - OR (combine conditions)
+- `&&` - AND (combine conditions)
 
-### Complex Conditions
+### Complex Conditions (OR — Dynamic Data)
 
 ```json
 {
   "condition": {
     "leftHand": {
-      "leftHand": "props.showPrimary",
-      "operator": "isTruthy",
-      "rightHand": null
+      "leftHand": "{this.metabox.product_video_url}",
+      "operator": "!==",
+      "rightHand": "\"\""
     },
     "operator": "||",
     "rightHand": {
-      "leftHand": "props.showSecondary",
-      "operator": "isTruthy",
-      "rightHand": null
+      "leftHand": "{this.metabox.product_datasheet}",
+      "operator": "!==",
+      "rightHand": "\"\""
     }
   },
-  "conditionString": "props.showPrimary || props.showSecondary"
+  "conditionString": "{this.metabox.product_video_url} !== \"\" || {this.metabox.product_datasheet} !== \"\""
 }
 ```
+
+### Data Source References
+
+| Source | Syntax | Curly brackets in condition? |
+|--------|--------|----------------------------|
+| Component props | `props.fieldName` | No |
+| MetaBox fields | `this.metabox.field_name` | Yes: `{this.metabox.field_name}` |
+| MetaBox group subfield | `this.metabox.group.subfield` | Yes |
+| Post data | `post.fieldName` | Yes: `{post.featuredImage.url}` |
+| Loop item | `item.fieldName` | Yes |
+| User data | `user.field` | Depends on context |
 
 ## Component Reference Structure
 
@@ -354,11 +387,13 @@ Or in attributes:
 
 ## data-etch-element Values
 
-Common values for `data-etch-element`:
-- `section` - Section containers
-- `container` - Generic containers
-- `flex-div` - Flex containers
-- `grid` - Grid containers
+**⚠️ ONLY 3 values exist:**
+- `section` - Full-width sections (requires `etch-section-style`)
+- `container` - Content containers (requires `etch-container-style`)
+- `iframe` - iFrames (requires `etch-iframe-style`)
+
+❌ `flex-div` is DEPRECATED. Use a standard `div` instead.
+❌ `grid` does NOT exist as a data-etch-element value. Use a standard `div` with CSS grid styles instead.
 
 ## Best Practices
 

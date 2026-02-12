@@ -15,6 +15,20 @@ Use loops when you have repetitive elements that share the same structure but di
 
 ## Loop Structure
 
+### itemId = Data Prefix
+
+**⚠️ CRITICAL:** The `itemId` value becomes the prefix for ALL data references inside the loop. Every child expression must use this prefix consistently.
+
+| `itemId` | Template syntax | Data references |
+|----------|----------------|-----------------|
+| `"post"` | `as post` | `{post.title}`, `{post.excerpt}` |
+| `"cat"` | `as cat` | `{cat.name}`, `{cat.slug}` |
+| `"spec"` | `as spec` | `{spec.name}`, `{spec.slug}` |
+| `"image"` | `as image` | `{image.url}`, `{image.alt}` |
+
+❌ **WRONG:** `itemId: "spec"` with `{specialty.name}` — prefix mismatch!
+✅ **CORRECT:** `itemId: "spec"` with `{spec.name}` — prefix matches.
+
 ### Loop Template Structure
 
 The loop template defines the repeating UI structure:
@@ -189,13 +203,14 @@ Multiple overrides:
 - `tag`: Tag slug
 - `meta_query`: Custom field queries
 
-### Terms (Taxonomies)
+### Terms (Taxonomies) — All Terms
 
 ```json
 "loops": {
   "abc123x": {
     "name": "Categories",
     "key": "categories",
+    "global": true,
     "config": {
       "type": "wp-terms",
       "args": {
@@ -209,7 +224,41 @@ Multiple overrides:
 }
 ```
 
-**Note:** Loop IDs should be random 7-character strings (e.g., `abc123x`, `8esrv4f`).
+### Terms — Current Post Only (with Loop Arguments)
+
+To show only terms assigned to the current post, use `object_ids` with a `$post_id` argument:
+
+**Loop config:**
+```json
+"abc123x": {
+  "name": "Product Categories",
+  "key": "productCategories",
+  "global": false,
+  "config": {
+    "type": "wp-terms",
+    "args": {
+      "taxonomy": "product_category",
+      "object_ids": ["$post_id"]
+    }
+  }
+}
+```
+
+**Loop block (passes `this.id`):**
+```json
+{
+  "blockName": "etch/loop",
+  "attrs": {
+    "loopId": "abc123x",
+    "itemId": "cat",
+    "loopParams": {
+      "$post_id": "this.id"
+    }
+  }
+}
+```
+
+**Template syntax equivalent:** `{#loop productCategories($post_id: this.id) as cat}`
 
 ### Users
 
@@ -219,7 +268,7 @@ Multiple overrides:
     "name": "Team Members",
     "key": "users",
     "config": {
-      "type": "users",
+      "type": "wp-users",
       "args": {
         "role": "author",
         "orderby": "display_name",
@@ -230,39 +279,91 @@ Multiple overrides:
 }
 ```
 
-### JSON Data
+**⚠️ Loop data sources:**
+- `wp-query` — Posts / custom post types
+- `wp-terms` — Taxonomy terms
+- `wp-users` — WordPress users
+- `json` — Static or dynamic JSON data
+- `main-query` — Current page's main query (archives)
+- **Field-based** — Gallery/repeater fields use `this.metabox.*` / `this.acf.*` as the loop `key` with empty config
+
+## Loop Arguments
+
+Loop arguments allow passing dynamic values to loop configs without creating duplicate loops.
+
+### Declaring Arguments
+
+Use `$variable` syntax in the loop config args. The `$variable` becomes a placeholder:
 
 ```json
-"loops": {
-  "loopId": {
-    "name": "Custom Data",
-    "key": "customdata",
-    "config": {
-      "type": "json",
-      "data": [
-        {"title": "Item 1", "value": 100},
-        {"title": "Item 2", "value": 200}
-      ]
+"config": {
+  "type": "wp-terms",
+  "args": {
+    "taxonomy": "product_category",
+    "object_ids": ["$post_id"]
+  }
+}
+```
+
+### Passing Arguments (JSON Block)
+
+Use `loopParams` on the loop block:
+
+```json
+{
+  "blockName": "etch/loop",
+  "attrs": {
+    "loopId": "abc123x",
+    "itemId": "cat",
+    "loopParams": {
+      "$post_id": "this.id"
     }
   }
 }
 ```
 
-### External API
+### Passing Arguments (HTML Template)
 
+```
+{#loop productCategories($post_id: this.id) as cat}
+```
+
+### Available Dynamic Values
+
+- `this.id` — current post ID (singular context)
+- `this.categories.at(0).id` — first category ID of current post
+- `props.fieldName` — component property value
+
+### Default Values
+
+Use null coalescing (`??`) in PHP config for defaults:
+```
+'posts_per_page' => $count ?? -1
+```
+
+### Common Patterns
+
+**Exclude current post (related posts):**
 ```json
-"loops": {
-  "loopId": {
-    "name": "API Data",
-    "key": "apidata",
-    "config": {
-      "type": "api",
-      "url": "https://api.example.com/data",
-      "method": "GET"
-    }
-  }
+"args": {
+  "post_type": "post",
+  "post__not_in": ["$post_id"]
 }
 ```
+Call: `{#loop relatedPosts($post_id: this.id) as post}`
+
+**Filter by current post's category:**
+```json
+"args": {
+  "post_type": "post",
+  "tax_query": [{
+    "taxonomy": "$taxonomy",
+    "field": "term_id",
+    "terms": ["$term_id"]
+  }]
+}
+```
+Call: `{#loop relatedPosts($taxonomy: "category", $term_id: this.categories.at(0).id) as post}`
 
 ## Nested Loops
 
@@ -490,10 +591,11 @@ Gallery fields from ACF, Meta Box, and Jet Engine allow looping through multiple
           "blockName": "etch/condition",
           "attrs": {
             "condition": {
-              "leftHand": "image.caption",
-              "operator": "isTruthy",
-              "rightHand": null
-            }
+              "leftHand": "{image.caption}",
+              "operator": "!==",
+              "rightHand": "\"\""
+            },
+            "conditionString": "{image.caption} !== \"\""
           },
           "innerBlocks": [
             {
@@ -519,15 +621,28 @@ Gallery fields from ACF, Meta Box, and Jet Engine allow looping through multiple
 ```
 
 **Loop Configuration:**
+
+Field-based loops (gallery, repeater) use the field path as the `key`. The config is empty — Etch infers the data source from the `this.metabox.*` / `this.acf.*` key pattern:
+
 ```json
 "loops": {
   "gallery123": {
     "name": "Gallery",
     "key": "this.acf.gallery_field",
     "global": true,
-    "config": {
-      "type": "field"
-    }
+    "config": {}
+  }
+}
+```
+
+For Meta Box:
+```json
+"loops": {
+  "r4nd0m1": {
+    "name": "Product Gallery",
+    "key": "this.metabox.product_gallery",
+    "global": true,
+    "config": {}
   }
 }
 ```

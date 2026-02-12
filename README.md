@@ -6,7 +6,7 @@ An agent skill for generating Etch WP components with ACSS v4 styling.
 
 This skill enables AI agents to generate complete, production-ready Etch WP components in JSON format. It includes comprehensive documentation, validation scripts, and example templates to ensure generated components work correctly in Etch WP.
 
-**Version**: 2.0.0
+**Version**: 2.3.0
 **Author**: Torsten Linnecke
 **License**: CC BY-NC-SA 4.0 (Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International)
 
@@ -86,7 +86,7 @@ etch-wp/
 │   ├── native-components.md   # Native components reference
 │   ├── props-system.md        # Props and slots documentation
 │   └── examples/
-│       ├── basic-structure.json        # Basic section/container/flex-div
+│       ├── basic-structure.json        # Basic section/container/content
 │       ├── component-with-props.json   # Component using properties
 │       ├── component-with-slots.json   # Component with flexible slots
 │       └── loop-example.json          # WordPress posts loop
@@ -169,7 +169,7 @@ Detailed documentation for every aspect:
 
 ### 4. Working Examples
 Real, validated JSON files that work in Etch WP:
-- Basic structure (section/container/flex-div)
+- Basic structure (section/container/content)
 - Components with properties
 - Components with slots
 - WordPress query loops
@@ -248,6 +248,16 @@ To contribute:
 
 ## Changelog
 
+### v2.3.0 (2026-02-12)
+- ✨ Added `init-project.js` interactive project initialization script
+- ✨ Added strict BEM naming validation (2-4 letter prefix requirement)
+- ✨ Added project configuration workflow with `.etch-project.json`
+- ✨ Added Context7 integration for ACSS and Etch WP documentation
+- ✨ Added border variable validation (`var(--border)`, `--border-light`, `--border-dark`)
+- ✨ Removed deprecated `flex-div` element (now section/container/iframe only)
+- 🔧 Fixed button class usage (no base `btn` class, use `btn--primary` directly)
+- 🔧 Streamlined SKILL.md (~25% reduction, compact tables, removed redundancy)
+
 ### v2.1.0 (2026-01-28)
 - ✨ Added `validate-component-improved.js` with Base64/JavaScript validation
 - ✨ Added `encode-script.js` for safe Base64 encoding
@@ -279,5 +289,5 @@ For issues or questions about:
 ---
 
 **Created by**: Torsten Linnecke
-**Version**: 2.0.0
-**Last Updated**: December 20, 2024
+**Version**: 2.3.0
+**Last Updated**: February 12, 2026

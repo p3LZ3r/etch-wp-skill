@@ -16,6 +16,8 @@ class EtchComponentValidator {
     this.warnings = [];
     this.info = [];
     this.base64LineBreakCheck = true;
+    this.projectConfig = this.loadProjectConfig();
+    this.projectPrefix = this.projectConfig?.prefix || null;
   }
 
   validateFile(filePath) {
@@ -128,7 +130,7 @@ class EtchComponentValidator {
     // Check for data-etch-element usage
     if (attrs.attributes && attrs.attributes['data-etch-element']) {
       const etchElement = attrs.attributes['data-etch-element'];
-      const validEtchElements = ['section', 'container', 'flex-div', 'iframe'];
+      const validEtchElements = ['section', 'container', 'iframe'];
 
       if (!validEtchElements.includes(etchElement)) {
         this.errors.push(
@@ -140,7 +142,6 @@ class EtchComponentValidator {
       const expectedStyles = {
         'section': 'etch-section-style',
         'container': 'etch-container-style',
-        'flex-div': 'etch-flex-div-style',
         'iframe': 'etch-iframe-style'
       };
 
@@ -315,12 +316,12 @@ class EtchComponentValidator {
 
       // Check for common CSS issues
       if (style.css) {
-        this.validateCSS(style.css, id);
+        this.validateCSS(style.css, id, this.projectPrefix);
       }
     });
   }
 
-  validateCSS(css, styleId) {
+  validateCSS(css, styleId, projectPrefix = null) {
     // Check for nested component classes (common error)
     const nestedComponentPattern = /\.\w+-\w+\s+\.\w+-\w+/;
     if (nestedComponentPattern.test(css)) {
@@ -341,6 +342,14 @@ class EtchComponentValidator {
       );
     }
 
+    // Check for hardcoded borders (must use var(--border), var(--border-light), or var(--border-dark))
+    const borderPattern = /border(?:-top|-right|-bottom|-left)?\s*:\s*[^;]*\b(?:\d+px|solid|dashed|dotted)[^;]*(?:#[0-9a-f]{3,6}|rgba?\(|var\((?!\-\-border))/i;
+    if (borderPattern.test(css) && !/var\(\-\-border/.test(css)) {
+      this.warnings.push(
+        `Style "${styleId}" contains hardcoded border. Use ACSS border variables: var(--border), var(--border-light), or var(--border-dark)`
+      );
+    }
+
     // Check for invalid ACSS variable patterns (common mistakes)
     const invalidVarPatterns = [
       /var\(--padding-/,
@@ -357,6 +366,103 @@ class EtchComponentValidator {
         );
       }
     });
+
+    // BEM and Prefix Validation
+    this.validateBEMNaming(css, styleId, projectPrefix);
+  }
+
+  validateBEMNaming(css, styleId, projectPrefix = null) {
+    // Extract class selectors from CSS
+    const classSelectorPattern = /\.([a-z][a-z0-9-]*)(?:\s*[,{])/gi;
+    const selectors = [];
+    let match;
+
+    while ((match = classSelectorPattern.exec(css)) !== null) {
+      selectors.push(match[1]);
+    }
+
+    selectors.forEach(selector => {
+      // Check for project prefix (if provided)
+      if (projectPrefix && !selector.startsWith(projectPrefix + '-')) {
+        // Allow etch- prefixed system classes
+        if (!selector.startsWith('etch-')) {
+          this.errors.push(
+            `Style "${styleId}": Class ".${selector}" missing project prefix "${projectPrefix}-". ` +
+            `Expected: .${projectPrefix}-${selector}`
+          );
+        }
+      }
+
+      // Check for BEM structure
+      // Pattern: prefix-block__element--modifier
+      const bemPattern = /^([a-z]{2,4})-([a-z][a-z0-9-]*?)(?:__([a-z][a-z0-9-]*?))?(?:--([a-z][a-z0-9-]*?))?$/;
+      const bemMatch = selector.match(bemPattern);
+
+      if (!bemMatch && !selector.startsWith('etch-')) {
+        this.warnings.push(
+          `Style "${styleId}": Class ".${selector}" doesn't follow BEM naming convention. ` +
+          `Expected format: {prefix}-{block}__{element}--{modifier}`
+        );
+      }
+
+      // Check for common mistakes
+      // Wrong: .prefix-block-element (using - instead of __)
+      if (/^[a-z]{2,4}-[a-z]+-[a-z]+__(?!_)/.test(selector)) {
+        const suggested = selector.replace(/^([a-z]{2,4})-([a-z]+)-([a-z]+)__/, '$1-$2__$3--');
+        this.warnings.push(
+          `Style "${styleId}": Class ".${selector}" may have wrong separator. ` +
+          `Did you mean: .${suggested} ?`
+        );
+      }
+
+      // Check for camelCase (should be kebab-case)
+      if (/[A-Z]/.test(selector)) {
+        this.errors.push(
+          `Style "${styleId}": Class ".${selector}" uses camelCase. ` +
+          `BEM requires kebab-case: .${selector.replace(/[A-Z]/g, m => '-' + m.toLowerCase())}`
+        );
+      }
+
+      // Check for double underscores not in BEM element position
+      const elementCount = (selector.match(/__/g) || []).length;
+      if (elementCount > 1) {
+        this.errors.push(
+          `Style "${styleId}": Class ".${selector}" has multiple elements (__) which is invalid in BEM.`
+        );
+      }
+
+      // Check for double hyphens not in BEM modifier position
+      const modifierCount = (selector.match(/--/g) || []).length;
+      if (modifierCount > 1) {
+        this.errors.push(
+          `Style "${styleId}": Class ".${selector}" has multiple modifiers (--) which is invalid in BEM.`
+        );
+      }
+    });
+  }
+
+  loadProjectConfig() {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+
+      // Look for .etch-project.json in current directory and parent directories
+      let currentDir = process.cwd();
+      let config = null;
+
+      while (currentDir !== path.dirname(currentDir)) {
+        const configPath = path.join(currentDir, '.etch-project.json');
+        if (fs.existsSync(configPath)) {
+          config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+          break;
+        }
+        currentDir = path.dirname(currentDir);
+      }
+
+      return config;
+    } catch (error) {
+      return null;
+    }
   }
 
   validateComponents(components) {
@@ -422,6 +528,13 @@ class EtchComponentValidator {
 
   reportResults() {
     let hasIssues = false;
+
+    // Show project config info
+    if (this.projectConfig) {
+      console.log(`📁 Project: ${this.projectConfig.name} (prefix: ${this.projectConfig.prefix})\n`);
+    } else {
+      console.log('⚠️  No .etch-project.json found. Run: node scripts/init-project.js\n');
+    }
 
     if (this.errors.length > 0) {
       hasIssues = true;

@@ -4,9 +4,9 @@ description: Expert knowledge for Etch WP - a Unified Visual Development Environ
 license: CC BY-NC-SA 4.0
 metadata:
   author: Torsten Linnecke
-  version: 2.2.0
+  version: 2.3.0
   created: 2025-12-20
-  updated: 2026-02-04
+  updated: 2026-02-12
   category: wordpress
   tags: wordpress, gutenberg, etch-wp, acss, component-generator
   homepage: https://etchwp.com
@@ -22,18 +22,79 @@ Etch WP requires components and patterns in a specific JSON format based on Gute
 
 **All generated CSS uses ACSS v4 variables with PRIMARY focus on assignment variables** to ensure components integrate seamlessly with ACSS's contextual color system.
 
+## Pre-Configuration Requirements ⚠️
+
+**BEFORE generating any components, the user MUST configure these in the WordPress dev environment:**
+
+1. **ACSS Dashboard Settings** - Go to ACSS Dashboard and set:
+   - Brand colors (primary, secondary, accent)
+   - Typography scale and fonts
+   - Button styles (default, primary, secondary)
+   - Spacing and section spacing preferences
+   - Container widths and gutters
+
+2. **Verify automatic.css Output** - Ensure the file at:
+   `https://yoursite.com/wp-content/uploads/automatic-css/automatic.css`
+   contains all configured variables and utility classes
+
+3. **Why this matters**: Components rely on ACSS utility classes (`btn`, `btn--primary`, etc.) and variables (`var(--action-primary)`, etc.). If these aren't configured in the dashboard first, the components will not render correctly.
+
+---
+
 ## Workflow
 
-When generating Etch WP components:
+### Project Initialization (REQUIRED)
+
+**CRITICAL**: Before working on any Etch WP project, verify project setup:
+
+1. **Check for CLAUDE.md** - Look for `CLAUDE.md` file in the project root
+2. **Verify Symlink** - Ensure `CLAUDE.md` is symlinked to `agent.md`:
+   ```bash
+   ls -la CLAUDE.md  # Should show: CLAUDE.md -> agent.md
+   ```
+
+3. **If CLAUDE.md is missing** - Run the project initialization:
+   ```bash
+   node scripts/init-project.js
+   ```
+   This interactive script collects: project name, 2-4 letter CSS prefix, dev URL, design requirements (aesthetic, colors, typography, target audience, references), and ACSS configuration status.
+
+4. **Create Project Config** - Generate `.etch-project.json` with:
+   ```json
+   {
+     "name": "project-name",
+     "prefix": "pn",
+     "devUrl": "https://project-name.torsten-linnecke.de",
+     "acssUrl": "https://project-name.torsten-linnecke.de/wp-content/uploads/automatic-css/automatic.css",
+     "created": "2026-02-12",
+     "styles": {
+       "aesthetic": "modern/minimal",
+       "primaryColors": ["#007bff", "#6c757d"],
+       "typography": "Inter + Playfair Display",
+       "targetAudience": "Small business owners",
+       "referenceSites": ["https://example.com"]
+     }
+   }
+   ```
+
+5. **Symlink CLAUDE.md**: After creating agent.md, create the symlink:
+   ```bash
+   ln -s agent.md CLAUDE.md
+   ```
+
+### Component Generation Workflow
+
+Once project is initialized:
 
 1. **Check Official Patterns FIRST** - See if https://patterns.etchwp.com/ has what the user needs
    - If yes → Recommend the official pattern (faster, tested, maintained)
    - If no or needs heavy customization → Generate custom
 2. **Read references** - Consult relevant reference files before generating
-3. **Generate JSON** - Create complete, valid JSON structure
-4. **Save to file** - ALWAYS save as `.json` file (never paste code in chat)
-5. **Validate** - Run validation script automatically after generation
-6. **Report** - Show validation results to user
+3. **Fetch ACSS Variables** - If dev URL provided, fetch automatic.css for real variables
+4. **Generate JSON** - Create complete, valid JSON structure with **project prefix**
+5. **Save to file** - ALWAYS save as `.json` file (never paste code in chat)
+6. **Validate** - Run validation script automatically after generation
+7. **Report** - Show validation results to user
 
 ### Post-Generation Validation
 
@@ -62,32 +123,46 @@ This additionally checks:
 
 **CRITICAL:** When uncertain about Etch WP or ACSS implementation details, ALWAYS consult the official documentation via Context7 MCP before generating code.
 
+### Context7 Library IDs
+
+Use these exact library IDs with the `mcp__plugin_context7_context7__query-docs` tool:
+
+| Library | ID | Use For |
+|---------|-----|---------|
+| **Automatic.css** | `/websites/automaticcss` | ACSS v4 variables, color system, spacing, typography |
+| **Etch WP** | `/websites/etchwp` | Block types, loops, components, native elements |
+
 ### When to Use Context7 MCP
 
 **MANDATORY** Context7 consultation when:
 - ❗ **ACSS variable names** - NEVER guess, always verify
-- ❗ **data-etch-element values** - Only 4 exist, verify if uncertain
+- ❗ **data-etch-element values** - Only 3 exist, verify if uncertain
 - ❗ Block structures or syntax you're unsure about
 - ❗ New or uncommon features
 
-Use the `mcp__context7__resolve-library-id` and `mcp__context7__get-library-docs` tools in these situations:
+Use the `mcp__plugin_context7_context7__query-docs` tool in these situations:
 
-#### 1. Etch WP Documentation (docs.etchwp.com):
-   - Uncertain about block types or structure
-   - Questions about loops, conditions, or dynamic data
-   - Native components usage
-   - Slot implementation details
-   - Script integration patterns
-   - **ANY data-etch-element questions**
+#### 1. Etch WP Documentation (`/websites/etchwp`):
+   ```
+   Query: "How to implement nested loops with parameters"
+   Query: "etch/condition block syntax for dynamic data"
+   Query: "Native accordion component structure"
+   ```
 
-#### 2. Automatic.css (ACSS) Documentation:
-   - **ANY ACSS variable name uncertainty** ← MOST IMPORTANT
-   - Questions about ACSS v4 features
-   - Container query syntax
-   - Grid/layout variables
-   - Color system updates
-   - Spacing scale
-   - Typography variables
+#### 2. Automatic.css Documentation (`/websites/automaticcss`):
+   ```
+   Query: "List all background color assignment variables"
+   Query: "Section spacing variables for padding-block"
+   Query: "Typography variables for font sizes"
+   ```
+
+**Example workflow:**
+```
+User: "Create a dark section with large spacing"
+→ Query Context7: "ACSS dark background and large section spacing variables"
+→ Use results: var(--bg-dark), var(--section-space-l)
+→ Generate component with verified variables
+```
 
 ## Core Structure - The Golden Rule
 
@@ -96,22 +171,257 @@ Use the `mcp__context7__resolve-library-id` and `mcp__context7__get-library-docs
 ```
 section (data-etch-element="section")
   └─ container (data-etch-element="container")
-       └─ flex-div (data-etch-element="flex-div") [optional]
-            └─ content
+       └─ content
 ```
 
-### The 4 Special Etch Elements
+### The 3 Special Etch Elements
 
-**ONLY these 4 use `data-etch-element`:**
+**ONLY these 3 use `data-etch-element`:**
 
 1. **`section`** - Full-width sections (tag: `section`, style: `etch-section-style`)
 2. **`container`** - Content containers (tag: `div`, style: `etch-container-style`)
-3. **`flex-div`** - Flex containers (tag: `div`, style: `etch-flex-div-style`)
-4. **`iframe`** - iFrames (tag: `iframe`, style: `etch-iframe-style`)
+3. **`iframe`** - iFrames (tag: `iframe`, style: `etch-iframe-style`)
 
 All other HTML elements (`h1`, `p`, `a`, `button`, etc.) do NOT use `data-etch-element`.
 
 **See**: `references/examples/basic-structure.json` for complete example
+
+## ACSS Utility Classes - USE THESE FIRST
+
+**CRITICAL: Always use ACSS utility classes before creating custom styles.**
+
+### Buttons - USE ACSS CLASSES ONLY
+
+**NEVER create custom button styles. ACSS buttons use style modifier classes only:**
+
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "a",
+    "attributes": {
+      "href": "{ctaUrl}",
+      "class": "btn--primary"
+    }
+  }
+}
+```
+
+**Available Button Classes:**
+- `btn--primary` - Primary action (uses --action-primary from dashboard)
+- `btn--secondary` - Secondary action (uses --action-secondary from dashboard)
+- `btn--tertiary` - Tertiary/outline style
+- `btn--link` - Link-style button
+- `btn--small`, `btn--large` - Size variants (combine with style: `btn--primary btn--large`)
+
+**⚠️ CRITICAL:** ACSS buttons do NOT use a base `btn` class. The button styles are applied directly through the modifier classes (`btn--primary`, `btn--secondary`, etc.). These classes are generated based on your ACSS Dashboard configuration.
+
+**Custom Button Styling (ONLY when necessary):**
+If you MUST customize a button, use only layout/positioning CSS, NOT color/typography:
+
+```css
+/* ✅ CORRECT - Only layout */
+.tl-hero__cta-wrapper {
+  display: flex;
+  gap: var(--space-m);
+  margin-top: var(--space-l);
+}
+
+/* ❌ WRONG - Never redefine button appearance */
+.tl-hero__button {
+  background: #007bff;      /* Don't do this */
+  padding: 12px 24px;       /* Don't do this */
+  border-radius: 4px;       /* Don't do this */
+}
+```
+
+### Other ACSS Utility Classes
+
+**Layout:**
+- `grid`, `grid--2-col`, `grid--3-col`, `grid--4-col`
+- `flex`, `flex--column`, `flex--center`
+- `container`, `container--narrow`, `container--wide`
+
+**Typography:**
+- `text--center`, `text--left`, `text--right`
+- `heading--h1` through `heading--h6`
+
+**Spacing:**
+- `pad--xs` through `pad--xxl`
+- `margin--xs` through `margin--xxl`
+- `gap--xs` through `gap--xxl`
+
+**Visibility:**
+- `hide`, `hide--mobile`, `hide--desktop`
+- `visually-hidden`
+
+### When to Create Custom Classes
+
+Create custom BEM classes ONLY for:
+- Component-specific layout (grids, flex containers)
+- Positioning and alignment
+- Component-specific spacing
+- Custom decorative elements
+
+**Query Context7 for the full list of utility classes:**
+```
+mcp__plugin_context7_context7__query-docs with libraryId: "/websites/automaticcss"
+query: "List all utility classes for buttons, layout, typography, spacing"
+```
+
+### Borders - ALWAYS Use ACSS Variables
+
+**CRITICAL: Borders must ALWAYS use ACSS border variables:**
+
+```css
+/* ✅ CORRECT - Always use ACSS border variables */
+border: var(--border);
+border: var(--border-light);
+border: var(--border-dark);
+
+/* ✅ CORRECT - Specific border properties */
+border-top: var(--border);
+border-bottom: var(--border-light);
+
+/* ✅ CORRECT - With specific width/style if needed */
+border: 1px solid var(--border-color);  /* If you need specific style */
+```
+
+**❌ WRONG - Never hardcode border values:**
+```css
+/* Don't do this */
+border: 1px solid #e0e0e0;
+border: 1px solid rgba(0,0,0,0.1);
+border: 1px solid var(--gray-light);  /* Even ACSS utility colors */
+```
+
+**Border Variable Usage:**
+- `var(--border)` - Default border (uses --border-color)
+- `var(--border-light)` - For dark backgrounds
+- `var(--border-dark)` - For light backgrounds where more contrast needed
+
+**When to use which:**
+- Light sections: `var(--border)` or `var(--border-dark)`
+- Dark sections: `var(--border-light)`
+
+## BEM Class Naming Convention (STRICT)
+
+**ALL CSS classes MUST follow BEM (Block Element Modifier) naming with project prefix:**
+
+### Format
+```
+.{prefix}-{block}__{element}--{modifier}
+```
+
+### Rules
+
+1. **Project Prefix (REQUIRED)**: Every project has a unique 2-4 letter prefix stored in `.etch-project.json`
+   - Read prefix from: `.etch-project.json` → `prefix` field
+   - If no project config exists, ask user for prefix before generating
+   - Examples: `tl` (torsten-linnecke), `ac` (acme-corp), `bdp` (brand-project)
+
+2. **Block**: The component/section name (kebab-case)
+   - ✅ `hero`, `nav-bar`, `pricing-table`, `cta-section`
+
+3. **Element**: Child element within the block (prefixed with `__`)
+   - ✅ `{prefix}-hero__title`, `{prefix}-hero__button`, `{prefix}-nav-bar__logo`
+
+4. **Modifier**: Variant or state (prefixed with `--`)
+   - ✅ `{prefix}-hero__button--primary`, `{prefix}-hero__button--large`
+
+### Examples
+
+```css
+/* Hero Section - Block */
+.tl-hero {
+  background: var(--bg-light);
+  padding-block: var(--section-space-l);
+}
+
+/* Hero Elements - Layout only, NOT button styles */
+.tl-hero__title {
+  color: var(--heading-color);
+}
+
+.tl-hero__cta-wrapper {
+  display: flex;
+  gap: var(--space-m);
+  margin-top: var(--space-l);
+}
+
+/* Section Modifiers */
+.tl-hero--dark {
+  background: var(--bg-dark);
+}
+
+.tl-hero--centered {
+  text-align: center;
+}
+```
+
+### JSON Structure with BEM
+
+```json
+{
+  "styles": {
+    "q2fy3v0": {
+      "type": "class",
+      "selector": ".tl-hero",
+      "css": "background: var(--bg-light);"
+    },
+    "ndqe17f": {
+      "type": "class",
+      "selector": ".tl-hero__title",
+      "css": "color: var(--heading-color);"
+    },
+    "ieasrk9": {
+      "type": "class",
+      "selector": ".tl-hero__cta-wrapper",
+      "css": "display: flex; gap: var(--space-m); margin-top: var(--space-l);"
+    }
+  }
+}
+```
+
+### ❌ Common Mistakes
+
+```css
+/* WRONG - No prefix */
+.hero { }
+.hero__title { }
+
+/* WRONG - Wrong separator */
+.hero-title { }     /* Use __ for elements */
+.hero-primary { }   /* Use -- for modifiers */
+
+/* WRONG - CamelCase */
+.heroTitle { }
+.heroButtonPrimary { }
+
+/* WRONG - Too generic */
+.button { }
+.title { }
+.container { }
+```
+
+### ✅ Correct Patterns
+
+```css
+/* CORRECT - With prefix, BEM structure */
+.tl-hero { }
+.tl-hero__title { }
+.tl-hero__button { }
+.tl-hero__button--primary { }
+.tl-hero__button--large { }
+
+/* CORRECT - Multiple blocks in component */
+.tl-pricing { }
+.tl-pricing__grid { }
+.tl-pricing-card { }           /* Separate block */
+.tl-pricing-card__title { }
+.tl-pricing-card__price { }
+.tl-pricing-card--featured { } /* Modifier on block */
+```
 
 ## Available Block Types
 
@@ -260,11 +570,17 @@ Use `etch/loop` for dynamic, repetitive elements:
 }
 ```
 
+**⚠️ CRITICAL: `itemId` determines the data prefix.** The `itemId` value becomes the prefix for ALL data references inside the loop. If `itemId` is `"spec"`, then all child expressions MUST use `{spec.name}`, `{spec.slug}`, etc. — NOT `{specialty.name}` or `{item.name}`.
+
+Template equivalent: `{#loop medicalSpecialties($post_id: this.id) as spec}` → `{spec.name}`
+
 **Loop Types:**
 - `wp-query` - WordPress posts/pages
 - `json` - Embedded JSON data
 - `wp-terms` - Taxonomy terms (categories, tags)
 - `wp-users` - WordPress users
+- `main-query` - Current page's main query (archives)
+- **Field-based** - Gallery/repeater fields use `this.metabox.*` / `this.acf.*` as the loop `key` with empty `config: {}`
 
 ### Nested Loops with Parameters
 
@@ -390,19 +706,26 @@ These tools automatically:
 
 ## Critical Lessons - Common Mistakes
 
-1. ❌ **NO `core/html` blocks** - Use `etch/element` instead
-2. ❌ **NO raw booleans** - Use `"{true}"` not `true`
-3. ❌ **NO complex inline styles** - Move to CSS classes
-4. ❌ **NO nesting different components** - One component = one style object
-5. ❌ **NO inventing ACSS variables** - Always verify first
-6. ❌ **NO redundant container styles** - ACSS sets `max-width`, `margin-inline: auto`, `width: 100%` automatically
-7. ❌ **NO default section padding** - ACSS applies `padding-block: var(--section-space-m)` automatically
-8. ❌ **NO default text colors** - ACSS applies `--heading-color` and `--text-dark` automatically
-9. ❌ **NO raw JavaScript in script field** - Scripts MUST be Base64-encoded with `{"id": "xxx", "code": "base64string"}`
-10. ❌ **NO `"loopArgs"` in nested loops** - Use `"loopParams"` instead
-11. ❌ **NO `"{item.id}"` with braces** - Use `"item.id"` (no curly braces in loopParams values)
-12. ❌ **NO `"type": "terms"`** - Use `"type": "wp-terms"` for taxonomy/category loops
-13. ❌ **NO descriptive loop IDs** - Use random 7-char strings like `"8esrv4f"`, not `"categories"`
+| # | Mistake | Correct |
+|---|---------|---------|
+| 1 | `core/html` blocks | Use `etch/element` |
+| 2 | Raw booleans (`true`) | String-wrapped: `"{true}"` |
+| 3 | Complex inline styles | Move to CSS classes |
+| 4 | Nesting component classes | One component = one style object |
+| 5 | Inventing ACSS variables | Verify in `references/acss-variables.md` or Context7 |
+| 6 | Redundant container styles | ACSS auto-sets `max-width`, `margin-inline: auto` |
+| 7 | Default section padding | ACSS auto-applies `padding-block: var(--section-space-m)` |
+| 8 | Raw JavaScript in script field | Base64-encoded: `{"id": "xxx", "code": "base64..."}` |
+| 9 | `"loopArgs"` in nested loops | Use `"loopParams"` |
+| 10 | `"{item.id}"` with braces in loopParams | Use `"item.id"` (no curly braces) |
+| 11 | `"type": "terms"` | Use `"type": "wp-terms"` |
+| 12 | Descriptive loop IDs | Random 7-char: `"8esrv4f"` not `"categories"` |
+| 13 | `isTruthy` for dynamic data | Use `!== ""` for `this.metabox.*`, `post.*`. `isTruthy` = only for `props.*` |
+| 14 | Bare field paths in conditions | Wrap in `{}`: `"{this.metabox.field}"` |
+| 15 | Using `flex-div` | Use standard `div` (deprecated) |
+| 16 | `"type": "field"` in loop configs | Use field path as loop `key` with empty `config: {}` |
+| 17 | Non-standard loop attrs | Only `loopId`, `itemId`, `metadata`, `loopParams` allowed |
+| 18 | Mismatched loop item prefix | `itemId: "spec"` → use `{spec.name}` not `{item.name}` |
 
 ## Response Format
 
@@ -415,27 +738,12 @@ When generating Etch WP code:
 
 ## Reference Files
 
-Consult these before generating code:
+| File | Purpose |
+|------|---------|
+| `references/official-patterns.md` | **CHECK FIRST** - Official patterns library |
+| `references/acss-variables.md` | ACSS v4 variable reference |
+| `references/block-types.md` | All block types and valid elements |
+| `references/loops.md` | Loop implementations & nested loops |
+| `references/examples/*.json` | Working JSON examples |
 
-- **`references/official-patterns.md`** - Official Etch WP patterns library (CHECK FIRST!)
-- **`references/block-types.md`** - All block types and valid elements
-- **`references/acss-variables.md`** - Complete ACSS v4 variable system
-- **`references/css-architecture-rules.md`** - Critical CSS structure rules
-- **`references/props-system.md`** - Component properties and slots
-- **`references/data-modifiers.md`** - Data transformation and comparison modifiers
-- **`references/loops.md`** - Loop implementations
-- **`references/json-structure.md`** - Detailed JSON format spec
-- **`references/component-examples.md`** - Annotated component examples
-- **`references/native-components.md`** - Native components reference
-- **`references/examples/*.json`** - Working JSON examples
-
-## Examples
-
-Quick reference examples are in `references/examples/`:
-
-- `basic-structure.json` - Section > Container > Flex-Div pattern
-- `component-with-props.json` - Component using properties
-- `component-with-slots.json` - Component with flexible content slots
-- `loop-example.json` - WordPress posts loop
-
-For detailed, annotated examples, see `references/component-examples.md`.
+**Full list:** See `references/README.md`

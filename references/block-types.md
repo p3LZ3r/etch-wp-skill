@@ -84,7 +84,7 @@ Also use other common html tags if it's semantically appropriate.
 ### Etch specific elements via data attribute > key data-etch-element with values ->
 - `section` - Full-width sections auto sets styles for display: flex; flex-direction: column; align-items: center;
 - `container` - Content containers auto sets styles for display: flex; flex-direction: column; width: 100%; max-width: var(--content-width); align-self: center;
-- `flex-div` - Flex container auto sets styles for display: flex; flex-direction: column; inline-size: 100%; Use standard `div` only if this styling is not wished)
+- `iframe` - iFrames auto sets styles for inline-size: 100%; height: auto; aspect-ratio: 16/9;
 
 ### Image Element with options
 ```json
@@ -177,7 +177,26 @@ Text content, often with dynamic props.
 
 Conditional rendering logic.
 
-### Basic Condition
+### Data Source References
+
+**CRITICAL:** Different data sources are available in conditions and content:
+
+| Source | Syntax | Example |
+|--------|--------|---------|
+| Component props | `props.fieldName` | `props.showLede` |
+| MetaBox fields | `this.metabox.field_name` | `{this.metabox.product_subtitle}` |
+| Post data | `post.fieldName` | `{post.featuredImage.url}` |
+| MetaBox group subfield | `this.metabox.group.subfield` | `{this.metabox.product_demographics.demo_sex}` |
+| Loop item field | `item.fieldName` | `{proc.procedure_description}` |
+| User data | `user.field` | `user.userRoles` |
+| URL parameters | `url.parameter.name` | `url.parameter.budget` |
+
+### Condition Format: Props vs Dynamic Data
+
+**⚠️ IMPORTANT: The condition format differs based on data source.**
+
+#### Component Props (isTruthy pattern)
+For `props.*` references — use `isTruthy` operator, NO curly brackets on leftHand:
 ```json
 {
   "blockName": "etch/condition",
@@ -198,25 +217,59 @@ Conditional rendering logic.
 }
 ```
 
+#### Dynamic Data (MetaBox, Post, Loop items)
+For `this.metabox.*`, `post.*`, and other dynamic references — use curly brackets on leftHand + `!== ""`:
+```json
+{
+  "blockName": "etch/condition",
+  "attrs": {
+    "metadata": {"name": "If (Condition)"},
+    "condition": {
+      "leftHand": "{this.metabox.product_subtitle}",
+      "operator": "!==",
+      "rightHand": "\"\""
+    },
+    "conditionString": "{this.metabox.product_subtitle} !== \"\""
+  },
+  "innerBlocks": [
+    // Content shown when field has value
+  ],
+  "innerHTML": "\n\n",
+  "innerContent": ["\n", null, "\n"]
+}
+```
+
+#### MetaBox Group Subfield Condition
+```json
+{
+  "condition": {
+    "leftHand": "{this.metabox.product_demographics.demo_sex}",
+    "operator": "!==",
+    "rightHand": "\"\""
+  },
+  "conditionString": "{this.metabox.product_demographics.demo_sex} !== \"\""
+}
+```
+
 ### Operators
-- `isTruthy` - Check if truthy
+- `isTruthy` - Check if truthy (use for `props.*`)
 - `isFalsy` - Check if falsy
 - `===` - Strict equality
-- `!==` - Not equal (strict)
+- `!==` - Not equal (strict) — **use for dynamic data existence checks**
 - `==` - Loose equality
 - `!=` - Not equal (loose)
 - `>` - Greater than
 - `<` - Less than
 - `>=` - Greater or equal
 - `<=` - Less or equal
-- `||` - OR
-- `&&` - AND
+- `||` - OR (logical, for combining conditions)
+- `&&` - AND (logical, for combining conditions)
 - `!` - NOT
 - `in` - Array membership check
 - `contains` - String/array contains
 - `matches` - Regex pattern match
 
-### Complex Condition (OR)
+### Complex Condition (OR) — Props
 ```json
 {
   "condition": {
@@ -233,6 +286,26 @@ Conditional rendering logic.
     }
   },
   "conditionString": "props.showPrimary || props.showSecondary"
+}
+```
+
+### Complex Condition (OR) — Dynamic Data
+```json
+{
+  "condition": {
+    "leftHand": {
+      "leftHand": "{this.metabox.product_video_url}",
+      "operator": "!==",
+      "rightHand": "\"\""
+    },
+    "operator": "||",
+    "rightHand": {
+      "leftHand": "{this.metabox.product_datasheet}",
+      "operator": "!==",
+      "rightHand": "\"\""
+    }
+  },
+  "conditionString": "{this.metabox.product_video_url} !== \"\" || {this.metabox.product_datasheet} !== \"\""
 }
 ```
 
@@ -675,10 +748,9 @@ In `attrs.styles` array, reference style IDs:
   "attrs": {
     "tag": "div",
     "attributes": {
-      "data-etch-element": "flex-div",
       "class": "feature-card"
     },
-    "styles": ["etch-flex-div-style", "feature-card"]
+    "styles": ["feature-card"]
   }
 }
 ```
@@ -758,20 +830,6 @@ These require both `data-etch-element` attribute AND corresponding system style:
 }
 ```
 
-**Flex Container:**
-```json
-{
-  "blockName": "etch/element",
-  "attrs": {
-    "tag": "div",
-    "attributes": {
-      "data-etch-element": "flex-div"
-    },
-    "styles": ["etch-flex-div-style"]
-  }
-}
-```
-
 **Iframe:**
 ```json
 {
@@ -790,15 +848,15 @@ These require both `data-etch-element` attribute AND corresponding system style:
 
 #### Valid data-etch-element Values
 
-⚠️ **CRITICAL: ONLY 4 VALUES EXIST IN ETCH WP**
+⚠️ **CRITICAL: ONLY 3 VALUES EXIST IN ETCH WP**
 
 ONLY these values are allowed:
 - `section` - Full-width sections (requires `etch-section-style`)
 - `container` - Content containers (requires `etch-container-style`)
-- `flex-div` - Flex containers (requires `etch-flex-div-style`)
 - `iframe` - iFrames (requires `etch-iframe-style`)
 
 **❌ ABSOLUTELY FORBIDDEN - Do NOT invent:**
+- ❌ `flex-div` - DEPRECATED, no longer valid
 - ❌ `grid` - DOES NOT EXIST
 - ❌ `wrapper` - DOES NOT EXIST
 - ❌ `group` - DOES NOT EXIST
@@ -810,7 +868,7 @@ ONLY these values are allowed:
 
 **✅ REMEMBER:**
 - 99% of HTML elements DO NOT use `data-etch-element`
-- Only use for the 4 special Etch containers above
+- Only use for the 3 special Etch containers above
 - If uncertain → Check Context7 MCP for Etch WP docs
 
 #### Standard HTML Elements (without data-etch-element)
@@ -862,17 +920,6 @@ These must be included when using corresponding data-etch-element:
   "selector": ":where([data-etch-element=\"container\"])",
   "collection": "default",
   "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;\n  max-width: var(--content-width);\n  align-self: center;",
-  "readonly": true
-}
-```
-
-### etch-flex-div-style
-```json
-"etch-flex-div-style": {
-  "type": "element",
-  "selector": ":where([data-etch-element=\"flex-div\"])",
-  "collection": "default",
-  "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;",
   "readonly": true
 }
 ```
@@ -987,10 +1034,10 @@ These must be included when using corresponding data-etch-element:
 ## Critical Rules
 
 1. **Only use elements listed in this document**
-2. **data-etch-element values**: Only `section`, `container`, `flex-div`, `iframe`
+2. **data-etch-element values**: Only `section`, `container`, `iframe`
 3. **Include system styles**: Always add corresponding `etch-*-style` when using data-etch-element
 4. **Standard HTML**: Use regular HTML tags without data-etch-element for content elements
-5. **Never invent**: Don't create custom data-etch-element values like `grid`, `wrapper`, etc.
+5. **Never invent**: Don't create custom data-etch-element values like `grid`, `wrapper`, `flex-div`, etc.
 
 ## Invalid Examples (Do NOT Use)
 
