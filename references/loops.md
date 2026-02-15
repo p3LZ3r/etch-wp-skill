@@ -63,6 +63,8 @@ The loop template defines the repeating UI structure:
 }
 ```
 
+**⚠️ IMPORTANT:** Always use `etch/text` block for looped content values. This ensures proper data binding with Etch WP's rendering system. Do not use `etch/element` with hardcoded `{...}` placeholders in `innerHTML`.
+
 ### Loop Configuration
 
 The loop configuration defines the data source and is placed in the `loops` object at root level:

@@ -241,29 +241,41 @@ If you MUST customize a button, use only layout/positioning CSS, NOT color/typog
 }
 ```
 
-### Other ACSS Utility Classes
+### Styling with ACSS Variables
 
-**Layout:**
-- `grid`, `grid--2-col`, `grid--3-col`, `grid--4-col`
-- `flex`, `flex--column`, `flex--center`
-- `container`, `container--narrow`, `container--wide`
+**CRITICAL:** ACSS provides VARIABLES, not utility classes. Use custom BEM classes with ACSS variables:
 
-**Typography:**
-- `text--center`, `text--left`, `text--right`
-- `heading--h1` through `heading--h6`
+```css
+/* ✅ CORRECT - Use ACSS variables in custom classes */
+.ph-hero__title {
+  font-size: var(--h1);
+  color: var(--heading-color);
+}
 
-**Spacing:**
-- `pad--xs` through `pad--xxl`
-- `margin--xs` through `margin--xxl`
-- `gap--xs` through `gap--xxl`
+.ph-grid {
+  display: grid;
+  gap: var(--space-m);
+}
+```
 
-**Visibility:**
-- `hide`, `hide--mobile`, `hide--desktop`
-- `visually-hidden`
+**❌ WRONG - Don't invent fake utility classes:**
+```css
+/* These do NOT exist in ACSS */
+.heading--h1 { }
+.grid--3-col { }
+.flex--center { }
+.pad--l { }
+```
+
+**Available ACSS Variables:**
+- **Typography:** `var(--h1)`, `var(--h2)`, `var(--h3)`, `var(--h4)`, `var(--h5)`, `var(--h6)`, `var(--text-sm)`, `var(--text-base)`, `var(--text-lg)`
+- **Spacing:** `var(--space-xs)`, `var(--space-s)`, `var(--space-m)`, `var(--space-l)`, `var(--space-xl)`, `var(--space-xxl)`
+- **Colors:** `var(--heading-color)`, `var(--text-dark)`, `var(--text-muted)`, `var(--bg-light)`, `var(--bg-dark)`
+- **Layout:** `var(--content-width)`, `var(--container-width)`, `var(--gutter)`
 
 ### When to Create Custom Classes
 
-Create custom BEM classes ONLY for:
+Create custom BEM classes for:
 - Component-specific layout (grids, flex containers)
 - Positioning and alignment
 - Component-specific spacing
@@ -309,6 +321,71 @@ border: 1px solid var(--gray-light);  /* Even ACSS utility colors */
 **When to use which:**
 - Light sections: `var(--border)` or `var(--border-dark)`
 - Dark sections: `var(--border-light)`
+
+## Image Best Practices
+
+**CRITICAL:** Use `etch/dynamic-image` wrapped in `figure` element for semantic markup and accessibility:
+
+✅ **CORRECT:**
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "figure",
+    "attributes": {
+      "class": "ph-product-card__figure"
+    },
+    "styles": ["f1g2h3i"]
+  },
+  "innerBlocks": [
+    {
+      "blockName": "etch/dynamic-image",
+      "attrs": {
+        "metadata": {
+          "name": "Product Image"
+        },
+        "tag": "img",
+        "attributes": {
+          "class": "ph-product-card__image",
+          "src": "{prod.metabox.product_thumbnail}",
+          "alt": "{prod.title}",
+          "loading": "lazy"
+        }
+      },
+      "innerBlocks": [],
+      "innerHTML": "",
+      "innerContent": []
+    }
+  ],
+  "innerHTML": "\n\n",
+  "innerContent": ["\n", "\n"]
+}
+```
+
+❌ **WRONG:**
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "img",
+    "attributes": {
+      "class": "ph-product-card__image",
+      "src": "{prod.metabox.product_thumbnail}",
+      "alt": "{prod.title}"
+    }
+  }
+}
+```
+
+**Why use `figure` + `etch/dynamic-image`:**
+- Semantic HTML (figure is meant for images with captions/contexts)
+- Better accessibility (provides context for screen readers)
+- Support for captions (figcaption) if needed
+- Consistent with Etch WP patterns for media
+
+**When to use what:**
+- Dynamic images from loops/MetaBox → `etch/dynamic-image` in `figure`
+- Static placeholder images → `etch/element` with `tag: "img"` or `etch/dynamic-image`
 
 ## BEM Class Naming Convention (STRICT)
 
@@ -442,6 +519,52 @@ border: 1px solid var(--gray-light);  /* Even ACSS utility colors */
 - **`etch/slot-content`** - Slot content when using component
 
 **See**: `references/block-types.md` for detailed documentation
+
+## Dynamic Content with etch/text
+
+**CRITICAL:** When displaying looped or dynamic data (from `etch/loop`, MetaBox fields, or post data), **ALWAYS use `etch/text` blocks** - never hardcode values directly in `innerHTML`.
+
+❌ **WRONG** - Hardcoding dynamic values:
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "h2",
+    "attributes": {
+      "class": "category-title"
+    }
+  },
+  "innerHTML": "{cat.name}",  // DON'T DO THIS
+  "innerContent": ["{cat.name}"]
+}
+```
+
+✅ **CORRECT** - Using etch/text:
+```json
+{
+  "blockName": "etch/text",
+  "attrs": {
+    "tag": "h2",
+    "text": "{cat.name}",  // Dynamic value in text prop
+    "attributes": {
+      "class": "category-title"
+    }
+  },
+  "innerBlocks": [],
+  "innerHTML": "",
+  "innerContent": []
+}
+```
+
+**Why use `etch/text`:**
+- Data binds properly to Etch WP's rendering system
+- Respects conditional rendering and data modifiers
+- Prevents encoding issues with special characters
+- Cleaner separation of structure vs. content
+
+**When to use what:**
+- Looped content (`{cat.name}`, `{prod.title}`, `{post.id}`, etc.) → **etch/text**
+- Static placeholder text ("Products", "Read More") → etch/element with innerHTML
 
 ## Components: Props vs. Slots
 
