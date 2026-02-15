@@ -48,9 +48,9 @@ Etch WP requires components and patterns in a specific JSON format based on Gute
 **CRITICAL**: Before working on any Etch WP project, verify project setup:
 
 1. **Check for CLAUDE.md** - Look for `CLAUDE.md` file in the project root
-2. **Verify Symlink** - Ensure `CLAUDE.md` is symlinked to `agent.md`:
+2. **Verify Symlink** - Ensure `CLAUDE.md` is symlinked to `AGENTS.md`:
    ```bash
-   ls -la CLAUDE.md  # Should show: CLAUDE.md -> agent.md
+   ls -la CLAUDE.md  # Should show: CLAUDE.md -> AGENTS.md
    ```
 
 3. **If CLAUDE.md is missing** - Run the project initialization:
@@ -77,9 +77,9 @@ Etch WP requires components and patterns in a specific JSON format based on Gute
    }
    ```
 
-5. **Symlink CLAUDE.md**: After creating agent.md, create the symlink:
+5. **Symlink CLAUDE.md**: After creating AGENTS.md, create the symlink:
    ```bash
-   ln -s agent.md CLAUDE.md
+   ln -s AGENTS.md CLAUDE.md
    ```
 
 ### Component Generation Workflow

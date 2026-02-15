@@ -359,30 +359,30 @@ async function initProject() {
   console.log('╚═══════════════════════════════════════════════════════════════╝\n');
 
   const hasClaudeMd = fs.existsSync('CLAUDE.md');
-  const hasAgentMd = fs.existsSync('agent.md');
+  const hasAgentMd = fs.existsSync('AGENTS.md');
 
   if (hasAgentMd) {
     if (hasClaudeMd) {
       const stats = fs.lstatSync('CLAUDE.md');
       if (stats.isSymbolicLink()) {
-        console.log('✅ CLAUDE.md is already symlinked to agent.md\n');
+        console.log('✅ CLAUDE.md is already symlinked to AGENTS.md\n');
       } else {
         console.log('⚠️  CLAUDE.md exists but is not a symlink');
-        const makeSymlink = await ask('Replace with symlink to agent.md? (yes/no): ');
+        const makeSymlink = await ask('Replace with symlink to AGENTS.md? (yes/no): ');
         if (makeSymlink.toLowerCase() === 'yes') {
           fs.unlinkSync('CLAUDE.md');
-          fs.symlinkSync('agent.md', 'CLAUDE.md');
-          console.log('✅ Created CLAUDE.md -> agent.md symlink\n');
+          fs.symlinkSync('AGENTS.md', 'CLAUDE.md');
+          console.log('✅ Created CLAUDE.md -> AGENTS.md symlink\n');
         }
       }
     } else {
-      fs.symlinkSync('agent.md', 'CLAUDE.md');
-      console.log('✅ Created CLAUDE.md -> agent.md symlink\n');
+      fs.symlinkSync('AGENTS.md', 'CLAUDE.md');
+      console.log('✅ Created CLAUDE.md -> AGENTS.md symlink\n');
     }
   } else {
-    console.log('⚠️  No agent.md found');
-    console.log('   Create agent.md with project-specific instructions, then run:');
-    console.log('   ln -s agent.md CLAUDE.md\n');
+    console.log('⚠️  No AGENTS.md found');
+    console.log('   Create AGENTS.md with project-specific instructions, then run:');
+    console.log('   ln -s AGENTS.md CLAUDE.md\n');
   }
 
   // Next Steps
@@ -391,7 +391,7 @@ async function initProject() {
   console.log('╚═══════════════════════════════════════════════════════════════╝\n');
 
   console.log('1. If not done above, create the symlink:');
-  console.log('   ln -s agent.md CLAUDE.md\n');
+  console.log('   ln -s AGENTS.md CLAUDE.md\n');
 
   if (config.acssUrl) {
     console.log('2. Verify ACSS is accessible:');
@@ -435,7 +435,7 @@ Standardized Questionnaire:
 
 What Gets Created:
   .etch-project.json             Project configuration
-  CLAUDE.md -> agent.md          Symlink (if agent.md exists)
+  CLAUDE.md -> AGENTS.md          Symlink (if AGENTS.md exists)
 
 Pre-Configuration Requirements:
   Before running this script, you MUST configure in ACSS Dashboard:
