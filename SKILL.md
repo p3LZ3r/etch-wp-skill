@@ -89,7 +89,9 @@ Once project is initialized:
 1. **Check Official Patterns FIRST** - See if https://patterns.etchwp.com/ has what the user needs
    - If yes → Recommend the official pattern (faster, tested, maintained)
    - If no or needs heavy customization → Generate custom
-2. **Check Site API for Existing Components** - Use the site REST index (`/wp-json`) to discover Etch-related endpoints and reuse existing components/patterns when possible before building new JSON
+2. **Check Site API for Existing Components** - Use the site REST index (`/wp-json`) before building new JSON
+   - Discover Etch-related endpoints/routes
+   - Reuse existing components/patterns when they fit the request
 3. **Read references** - Consult relevant reference files before generating
 4. **Fetch ACSS Variables** - If dev URL provided, fetch automatic.css for real variables
 5. **Generate JSON** - Create complete, valid JSON structure with **project prefix**
