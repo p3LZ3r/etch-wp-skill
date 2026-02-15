@@ -144,6 +144,16 @@ Common variants:
 
 5. **If User Wants Custom**: Build from scratch using our system
 
+### Site API Reuse Check (Before Building New)
+
+If the user provides a WordPress site URL, check existing reusable components first:
+
+1. Open `https://example.com/wp-json` (replace with the real site URL)
+2. Find Etch-related routes (for example, routes containing `etch`)
+3. Inspect relevant endpoint responses for existing components/patterns
+4. Reuse or adapt existing components when they already solve the request
+5. Build a new component only when no suitable reusable option exists
+
 ### On-Demand Pattern Fetching
 
 When user wants a specific pattern customized:
