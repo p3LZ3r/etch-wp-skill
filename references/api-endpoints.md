@@ -11,6 +11,25 @@ All Etch API endpoints require WordPress authentication:
 - `GET`: `edit_posts`
 - `POST/PUT/DELETE`: `edit_posts` + `manage_options`
 
+## How to Get API Credentials
+
+You cannot retrieve an API key for any arbitrary WordPress website. You must have authorized access to that specific site.
+
+Recommended method (WordPress Application Passwords):
+
+1. Log in to that site's WordPress admin (`/wp-admin`).
+2. Go to **Users → Profile** (or **Users → Your Profile**).
+3. In **Application Passwords**, create a new password (for example: `Etch API`).
+4. Copy the generated password (shown once).
+5. Use `username:application-password` for Basic Auth over HTTPS.
+
+```bash
+curl -u "username:application-password" \
+  "https://example.com/wp-json/etch-api/components/list"
+```
+
+If you cannot access wp-admin/profile for that site, ask the site owner/admin to create credentials for you.
+
 Outside the WP admin/browser context, use WordPress Application Passwords over HTTPS:
 
 ```bash

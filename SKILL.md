@@ -89,7 +89,9 @@ Once project is initialized:
 1. **Check Official Patterns FIRST** - See if https://patterns.etchwp.com/ has what the user needs
    - If yes → Recommend the official pattern (faster, tested, maintained)
    - If no or needs heavy customization → Generate custom
-2. **Check Site API for Existing Components** - Use Etch REST endpoints (`/wp-json/etch-api`) before building new JSON
+2. **Check the Target Site (separate from official patterns)** - Only after step 1, audit the specific website being built
+   - Ensure project/site access is configured so authenticated Etch API calls are possible
+   - Use Etch REST endpoints (`/wp-json/etch-api`) before building new JSON
    - Start with `components`, `components/list`, `patterns`, `styles`, `stylesheets`
    - For structure-aware generation, also check `loops`, `queries`, `cms/field-group`, `post-types`, `taxonomies`
    - Reuse existing components/patterns/styles when they fit the request

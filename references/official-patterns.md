@@ -146,7 +146,7 @@ Common variants:
 
 ### Site API Reuse Check (Before Building New)
 
-If the user provides a WordPress site URL, check existing reusable components first:
+This is a separate phase from official pattern lookup. If the user provides a WordPress site URL, check existing reusable components on that specific site:
 
 1. Use the Etch namespace: `https://example.com/wp-json/etch-api` (replace with the real site URL)
 2. Check `GET /components/list`, then `GET /components` and `GET /patterns` to find reusable building blocks
