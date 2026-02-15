@@ -176,60 +176,63 @@ async function initProject() {
   console.log('\n─'.repeat(65));
   console.log('Q10 - TARGET SITE API ACCESS');
   console.log('─'.repeat(65));
-  console.log('This is separate from official patterns and is required for');
-  console.log('checking existing site components/patterns/styles via /wp-json/etch-api.\n');
+  console.log('This is REQUIRED. Setup cannot continue without target-site API access info.');
+  console.log('API checks avoid rebuilding components/patterns/styles that already exist.\n');
 
-  let useEtchApi = await ask('Will this project use authenticated Etch API checks? (yes/no): ');
-  while (!isYesNo(useEtchApi.toLowerCase())) {
-    useEtchApi = await ask('Please answer "yes" or "no": ');
+  let proceedWithApi = await ask('Provide required API access info now? (yes): ');
+  while (proceedWithApi.toLowerCase() !== 'yes') {
+    proceedWithApi = await ask('Please type "yes" to continue: ');
   }
-  useEtchApi = useEtchApi.toLowerCase() === 'yes';
+  const useEtchApi = true;
 
   let authMethod = '';
   let credentialsReady = false;
   let apiUsername = '';
 
-  if (useEtchApi) {
-    while (!devUrl) {
-      console.log('❌ Development URL is required for API checks.');
-      devUrl = await ask('Development site URL (e.g., https://example.com): ');
-      while (devUrl && !validateUrl(devUrl)) {
-        console.log('❌ Invalid URL format');
-        devUrl = await ask('Development site URL: ');
-      }
+  while (!devUrl) {
+    console.log('❌ Development URL is required for API checks.');
+    devUrl = await ask('Development site URL (e.g., https://example.com): ');
+    while (devUrl && !validateUrl(devUrl)) {
+      console.log('❌ Invalid URL format');
+      devUrl = await ask('Development site URL: ');
     }
+  }
 
-    authMethod = await ask('Auth method (application-password/wp-admin-browser): ');
-    while (!['application-password', 'wp-admin-browser'].includes(authMethod)) {
-      authMethod = await ask('Choose "application-password" or "wp-admin-browser": ');
+  authMethod = await ask('Auth method (application-password/wp-admin-browser): ');
+  while (!['application-password', 'wp-admin-browser'].includes(authMethod)) {
+    authMethod = await ask('Choose "application-password" or "wp-admin-browser": ');
+  }
+
+  let readyAnswer = await ask('Do you already have required credentials/access? (yes/no): ');
+  while (!isYesNo(readyAnswer.toLowerCase())) {
+    readyAnswer = await ask('Please answer "yes" or "no": ');
+  }
+  credentialsReady = readyAnswer.toLowerCase() === 'yes';
+
+  while (!credentialsReady) {
+    if (authMethod === 'application-password') {
+      console.log('\nℹ️  To create credentials:');
+      console.log('   1. Log into /wp-admin');
+      console.log('   2. Go to Users → Profile');
+      console.log('   3. Create an Application Password');
+      console.log('   4. Use username:application-password for HTTPS Basic Auth\n');
+    } else {
+      console.log('\nℹ️  Ask site admin for wp-admin access and valid session/nonce permissions.\n');
     }
-
-    let readyAnswer = await ask('Do you already have required credentials/access? (yes/no): ');
+    readyAnswer = await ask('Are credentials/access ready now? (yes/no): ');
     while (!isYesNo(readyAnswer.toLowerCase())) {
       readyAnswer = await ask('Please answer "yes" or "no": ');
     }
     credentialsReady = readyAnswer.toLowerCase() === 'yes';
+  }
 
-    if (authMethod === 'application-password') {
-      if (credentialsReady) {
-        apiUsername = await ask('WordPress username for API calls: ');
-        while (!apiUsername) {
-          apiUsername = await ask('Username is required when credentials are ready: ');
-        }
-      }
-
-      if (!credentialsReady) {
-        console.log('\nℹ️  To create credentials:');
-        console.log('   1. Log into /wp-admin');
-        console.log('   2. Go to Users → Profile');
-        console.log('   3. Create an Application Password');
-        console.log('   4. Use username:application-password for HTTPS Basic Auth\n');
-      }
-    } else if (!credentialsReady) {
-      console.log('\nℹ️  Ask site admin for wp-admin access and valid session/nonce permissions.\n');
-    } else {
-      console.log('\n✅ Browser-based auth access confirmed.\n');
+  if (authMethod === 'application-password') {
+    apiUsername = await ask('WordPress username for API calls: ');
+    while (!apiUsername) {
+      apiUsername = await ask('Username is required: ');
     }
+  } else {
+    console.log('\n✅ Browser-based auth access confirmed.\n');
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -392,7 +395,7 @@ Standardized Questionnaire:
   Q7. Typography                 Font families
   Q8. Target Audience            Who the site is for
   Q9. Reference Sites            Inspiration URLs
-  Q10. Target Site API Access    Endpoint auth readiness for /wp-json/etch-api
+  Q10. Target Site API Access    REQUIRED endpoint auth readiness for /wp-json/etch-api
 
 What Gets Created:
   .etch-project.json             Project configuration
