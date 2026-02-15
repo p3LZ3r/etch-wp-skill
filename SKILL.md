@@ -89,12 +89,18 @@ Once project is initialized:
 1. **Check Official Patterns FIRST** - See if https://patterns.etchwp.com/ has what the user needs
    - If yes → Recommend the official pattern (faster, tested, maintained)
    - If no or needs heavy customization → Generate custom
-2. **Read references** - Consult relevant reference files before generating
-3. **Fetch ACSS Variables** - If dev URL provided, fetch automatic.css for real variables
-4. **Generate JSON** - Create complete, valid JSON structure with **project prefix**
-5. **Save to file** - ALWAYS save as `.json` file (never paste code in chat)
-6. **Validate** - Run validation script automatically after generation
-7. **Report** - Show validation results to user
+2. **Check the Target Site (separate from official patterns)** - Only after step 1, audit the specific website being built
+   - Ensure project/site access is configured so authenticated Etch API calls are possible
+   - Use Etch REST endpoints (`/wp-json/etch-api`) before building new JSON
+   - Start with `components`, `components/list`, `patterns`, `styles`, `stylesheets`
+   - For structure-aware generation, also check `loops`, `queries`, `cms/field-group`, `post-types`, `taxonomies`
+   - Reuse existing components/patterns/styles when they fit the request
+3. **Read references** - Consult relevant reference files before generating
+4. **Fetch ACSS Variables** - If dev URL provided, fetch automatic.css for real variables
+5. **Generate JSON** - Create complete, valid JSON structure with **project prefix**
+6. **Save to file** - ALWAYS save as `.json` file (never paste code in chat)
+7. **Validate** - Run validation script automatically after generation
+8. **Report** - Show validation results to user
 
 ### Post-Generation Validation
 
@@ -646,9 +652,11 @@ Available categories:
 **Workflow:**
 1. User asks for hero/footer/header/etc.
 2. → Recommend appropriate pattern from patterns.etchwp.com
-3. → Provide URL and explain benefits
-4. → Offer to help customize if needed
-5. → Build custom only if pattern doesn't fit
+3. → If a site URL is available, check `/wp-json` for Etch routes that expose existing reusable components/patterns
+4. → Reuse/refactor what already exists when it satisfies the request
+5. → Provide URL and explain benefits
+6. → Offer to help customize if needed
+7. → Build custom only if neither official patterns nor site API components fit
 
 **See**: `references/official-patterns.md` for complete guide
 
@@ -741,6 +749,7 @@ When generating Etch WP code:
 | File | Purpose |
 |------|---------|
 | `references/official-patterns.md` | **CHECK FIRST** - Official patterns library |
+| `references/api-endpoints.md` | Etch REST endpoints for reuse-first workflow (`/wp-json/etch-api`) |
 | `references/acss-variables.md` | ACSS v4 variable reference |
 | `references/block-types.md` | All block types and valid elements |
 | `references/loops.md` | Loop implementations & nested loops |
