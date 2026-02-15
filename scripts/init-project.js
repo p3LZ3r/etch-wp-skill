@@ -36,9 +36,13 @@ function validateUrl(url) {
   }
 }
 
+function normalizeBaseUrl(url) {
+  return String(url || '').replace(/\/$/, '');
+}
+
 function generateACSSUrl(devUrl) {
   // Convert https://domain.com to https://domain.com/wp-content/uploads/automatic-css/automatic.css
-  const baseUrl = devUrl.replace(/\/$/, '');
+  const baseUrl = normalizeBaseUrl(devUrl);
   return `${baseUrl}/wp-content/uploads/automatic-css/automatic.css`;
 }
 
@@ -207,7 +211,12 @@ async function initProject() {
     credentialsReady = readyAnswer.toLowerCase() === 'yes';
 
     if (authMethod === 'application-password') {
-      apiUsername = await ask('WordPress username for API calls (optional): ');
+      if (credentialsReady) {
+        apiUsername = await ask('WordPress username for API calls: ');
+        while (!apiUsername) {
+          apiUsername = await ask('Username is required when credentials are ready: ');
+        }
+      }
 
       if (!credentialsReady) {
         console.log('\nℹ️  To create credentials:');
@@ -218,6 +227,8 @@ async function initProject() {
       }
     } else if (!credentialsReady) {
       console.log('\nℹ️  Ask site admin for wp-admin access and valid session/nonce permissions.\n');
+    } else {
+      console.log('\n✅ Browser-based auth access confirmed.\n');
     }
   }
 
@@ -250,9 +261,9 @@ async function initProject() {
 
   config.api = {
     required: useEtchApi,
-    baseUrl: devUrl ? `${devUrl.replace(/\/$/, '')}/wp-json/etch-api` : null,
-    authMethod: useEtchApi ? authMethod : null,
-    credentialsReady: useEtchApi ? credentialsReady : false
+    baseUrl: useEtchApi ? `${normalizeBaseUrl(devUrl)}/wp-json/etch-api` : null,
+    authMethod: authMethod || null,
+    credentialsReady
   };
   if (apiUsername) config.api.username = apiUsername;
 
