@@ -50,6 +50,10 @@ function isYesNo(answer) {
   return answer === 'yes' || answer === 'no';
 }
 
+function isExit(answer) {
+  return ['exit', 'quit', 'cancel'].includes(answer);
+}
+
 async function initProject() {
   console.log('\n┌─────────────────────────────────────────────────────────────┐');
   console.log('│         Etch WP Project Initialization                      │');
@@ -179,9 +183,18 @@ async function initProject() {
   console.log('This is REQUIRED. Setup cannot continue without target-site API access info.');
   console.log('API checks avoid rebuilding components/patterns/styles that already exist.\n');
 
-  let proceedWithApi = await ask('Provide required API access info now? (yes): ');
-  while (proceedWithApi.toLowerCase() !== 'yes') {
-    proceedWithApi = await ask('Please type "yes" to continue: ');
+  let continueAnswer = await ask('Press Enter or type "yes" to continue with required API setup (or exit/quit/cancel to abort): ');
+  while (true) {
+    if (isExit(continueAnswer.toLowerCase())) {
+      console.log('Aborted. API access info is required for project setup.');
+      rl.close();
+      return;
+    }
+    if (continueAnswer === '' || continueAnswer.toLowerCase() === 'yes') {
+      break;
+    }
+    console.log('Invalid input. Please press Enter, type "yes", or use exit/quit/cancel.');
+    continueAnswer = await ask('Press Enter to continue (or exit/quit/cancel to abort): ');
   }
   const useEtchApi = true;
 
@@ -200,12 +213,22 @@ async function initProject() {
 
   authMethod = await ask('Auth method (application-password/wp-admin-browser): ');
   while (!['application-password', 'wp-admin-browser'].includes(authMethod)) {
-    authMethod = await ask('Choose "application-password" or "wp-admin-browser": ');
+    if (isExit(authMethod.toLowerCase())) {
+      console.log('Aborted. API access info is required for project setup.');
+      rl.close();
+      return;
+    }
+    authMethod = await ask('Choose "application-password" or "wp-admin-browser" (or exit/quit/cancel to abort): ');
   }
 
   let readyAnswer = await ask('Do you already have required credentials/access? (yes/no): ');
   while (!isYesNo(readyAnswer.toLowerCase())) {
-    readyAnswer = await ask('Please answer "yes" or "no": ');
+    if (isExit(readyAnswer.toLowerCase())) {
+      console.log('Aborted. API credentials/access are required for project setup.');
+      rl.close();
+      return;
+    }
+    readyAnswer = await ask('Please answer "yes" or "no" (or exit/quit/cancel to abort): ');
   }
   credentialsReady = readyAnswer.toLowerCase() === 'yes';
 
@@ -221,15 +244,28 @@ async function initProject() {
     }
     readyAnswer = await ask('Are credentials/access ready now? (yes/no): ');
     while (!isYesNo(readyAnswer.toLowerCase())) {
-      readyAnswer = await ask('Please answer "yes" or "no": ');
+      if (isExit(readyAnswer.toLowerCase())) {
+        console.log('Aborted. API credentials/access are required for project setup.');
+        rl.close();
+        return;
+      }
+      readyAnswer = await ask('Please answer "yes" or "no" (or exit/quit/cancel to abort): ');
     }
     credentialsReady = readyAnswer.toLowerCase() === 'yes';
   }
 
   if (authMethod === 'application-password') {
-    apiUsername = await ask('WordPress username for API calls: ');
-    while (!apiUsername) {
-      apiUsername = await ask('Username is required: ');
+    while (true) {
+      apiUsername = await ask('WordPress username for API calls (or exit/quit/cancel to abort): ');
+      if (isExit(apiUsername.toLowerCase())) {
+        console.log('Aborted. API access info is required for project setup.');
+        rl.close();
+        return;
+      }
+      if (apiUsername) {
+        break;
+      }
+      console.log('Username is required.');
     }
   } else {
     console.log('\n✅ Browser-based auth access confirmed.\n');
