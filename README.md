@@ -6,7 +6,7 @@ An agent skill for generating Etch WP components with ACSS v4 styling.
 
 This skill enables AI agents to generate complete, production-ready Etch WP components in JSON format. It includes comprehensive documentation, validation scripts, and example templates to ensure generated components work correctly in Etch WP.
 
-**Version**: 2.3.0
+**Version**: 2.4.0
 **Author**: Torsten Linnecke
 **License**: CC BY-NC-SA 4.0 (Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International)
 
@@ -248,6 +248,16 @@ To contribute:
 
 ## Changelog
 
+### v2.4.0 (2026-02-15)
+- ✨ Added mandatory API setup enforcement in project initialization (Q10)
+- ✨ Added API endpoints reference documentation (`references/api-endpoints.md`)
+- ✨ Added Application Password authentication guide for API access
+- ✨ Added reuse-first workflow documentation (check before building)
+- 📝 Added ACSS variables guide (clarify variables vs. utility classes)
+- 📝 Added image best practices (figure + etch/dynamic-image)
+- 📝 Added etch/text for dynamic content (loops, MetaBox fields)
+- 📝 Updated loops.md with etch/text requirement
+
 ### v2.3.0 (2026-02-12)
 - ✨ Added `init-project.js` interactive project initialization script
 - ✨ Added strict BEM naming validation (2-4 letter prefix requirement)
@@ -289,5 +299,5 @@ For issues or questions about:
 ---
 
 **Created by**: Torsten Linnecke
-**Version**: 2.3.0
-**Last Updated**: February 12, 2026
+**Version**: 2.4.0
+**Last Updated**: February 15, 2026
