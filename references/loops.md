@@ -287,6 +287,18 @@ To show only terms assigned to the current post, use `object_ids` with a `$post_
 - `main-query` — Current page's main query (archives)
 - **Field-based** — Gallery/repeater fields use `this.metabox.*` / `this.acf.*` as the loop `key` with empty config
 
+### Reuse Existing Data Structures via Etch API (Before New Loops)
+
+Before creating new loop/query configs, inspect existing site structures:
+
+- `GET /wp-json/etch-api/loops`
+- `GET /wp-json/etch-api/queries`
+- `GET /wp-json/etch-api/cms/field-group/`
+- `GET /wp-json/etch-api/post-types`
+- `GET /wp-json/etch-api/taxonomies`
+
+If suitable loop/query/field structures already exist, reuse them instead of duplicating config.
+
 ## Loop Arguments
 
 Loop arguments allow passing dynamic values to loop configs without creating duplicate loops.

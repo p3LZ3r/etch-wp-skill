@@ -89,9 +89,10 @@ Once project is initialized:
 1. **Check Official Patterns FIRST** - See if https://patterns.etchwp.com/ has what the user needs
    - If yes → Recommend the official pattern (faster, tested, maintained)
    - If no or needs heavy customization → Generate custom
-2. **Check Site API for Existing Components** - Use the site REST index (`/wp-json`) before building new JSON
-   - Discover Etch-related endpoints/routes
-   - Reuse existing components/patterns when they fit the request
+2. **Check Site API for Existing Components** - Use Etch REST endpoints (`/wp-json/etch-api`) before building new JSON
+   - Start with `components`, `components/list`, `patterns`, `styles`, `stylesheets`
+   - For structure-aware generation, also check `loops`, `queries`, `cms/field-group`, `post-types`, `taxonomies`
+   - Reuse existing components/patterns/styles when they fit the request
 3. **Read references** - Consult relevant reference files before generating
 4. **Fetch ACSS Variables** - If dev URL provided, fetch automatic.css for real variables
 5. **Generate JSON** - Create complete, valid JSON structure with **project prefix**
@@ -746,6 +747,7 @@ When generating Etch WP code:
 | File | Purpose |
 |------|---------|
 | `references/official-patterns.md` | **CHECK FIRST** - Official patterns library |
+| `references/api-endpoints.md` | Etch REST endpoints for reuse-first workflow (`/wp-json/etch-api`) |
 | `references/acss-variables.md` | ACSS v4 variable reference |
 | `references/block-types.md` | All block types and valid elements |
 | `references/loops.md` | Loop implementations & nested loops |

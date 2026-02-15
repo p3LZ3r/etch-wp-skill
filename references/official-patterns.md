@@ -148,11 +148,12 @@ Common variants:
 
 If the user provides a WordPress site URL, check existing reusable components first:
 
-1. Open `https://example.com/wp-json` (replace with the real site URL)
-2. Find Etch-related routes (for example namespaces/routes containing `etch`, `etchwp`, `components`, `patterns`, or `layouts`)
-3. Inspect relevant endpoint responses for existing components/patterns
-4. Reuse or adapt existing components when they already solve the request
-5. Build a new component only when no suitable reusable option exists
+1. Use the Etch namespace: `https://example.com/wp-json/etch-api` (replace with the real site URL)
+2. Check `GET /components/list`, then `GET /components` and `GET /patterns` to find reusable building blocks
+3. Check styles before creating new style systems: `GET /styles` and `GET /stylesheets`
+4. For data-driven components, inspect `GET /loops`, `GET /queries`, `GET /post-types`, and `GET /taxonomies`
+5. Reuse or adapt existing components/patterns/styles first
+6. Build a new component only when no suitable reusable option exists
 
 ### On-Demand Pattern Fetching
 
