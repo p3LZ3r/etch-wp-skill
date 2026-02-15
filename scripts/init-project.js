@@ -42,6 +42,10 @@ function generateACSSUrl(devUrl) {
   return `${baseUrl}/wp-content/uploads/automatic-css/automatic.css`;
 }
 
+function isYesNo(answer) {
+  return answer === 'yes' || answer === 'no';
+}
+
 async function initProject() {
   console.log('\n┌─────────────────────────────────────────────────────────────┐');
   console.log('│         Etch WP Project Initialization                      │');
@@ -164,6 +168,59 @@ async function initProject() {
   console.log('─'.repeat(65));
   const referenceSites = await ask('Reference sites (comma-separated URLs): ');
 
+  // Q10 - API Setup
+  console.log('\n─'.repeat(65));
+  console.log('Q10 - TARGET SITE API ACCESS');
+  console.log('─'.repeat(65));
+  console.log('This is separate from official patterns and is required for');
+  console.log('checking existing site components/patterns/styles via /wp-json/etch-api.\n');
+
+  let useEtchApi = await ask('Will this project use authenticated Etch API checks? (yes/no): ');
+  while (!isYesNo(useEtchApi.toLowerCase())) {
+    useEtchApi = await ask('Please answer "yes" or "no": ');
+  }
+  useEtchApi = useEtchApi.toLowerCase() === 'yes';
+
+  let authMethod = '';
+  let credentialsReady = false;
+  let apiUsername = '';
+
+  if (useEtchApi) {
+    while (!devUrl) {
+      console.log('❌ Development URL is required for API checks.');
+      devUrl = await ask('Development site URL (e.g., https://example.com): ');
+      while (devUrl && !validateUrl(devUrl)) {
+        console.log('❌ Invalid URL format');
+        devUrl = await ask('Development site URL: ');
+      }
+    }
+
+    authMethod = await ask('Auth method (application-password/wp-admin-browser): ');
+    while (!['application-password', 'wp-admin-browser'].includes(authMethod)) {
+      authMethod = await ask('Choose "application-password" or "wp-admin-browser": ');
+    }
+
+    let readyAnswer = await ask('Do you already have required credentials/access? (yes/no): ');
+    while (!isYesNo(readyAnswer.toLowerCase())) {
+      readyAnswer = await ask('Please answer "yes" or "no": ');
+    }
+    credentialsReady = readyAnswer.toLowerCase() === 'yes';
+
+    if (authMethod === 'application-password') {
+      apiUsername = await ask('WordPress username for API calls (optional): ');
+
+      if (!credentialsReady) {
+        console.log('\nℹ️  To create credentials:');
+        console.log('   1. Log into /wp-admin');
+        console.log('   2. Go to Users → Profile');
+        console.log('   3. Create an Application Password');
+        console.log('   4. Use username:application-password for HTTPS Basic Auth\n');
+      }
+    } else if (!credentialsReady) {
+      console.log('\nℹ️  Ask site admin for wp-admin access and valid session/nonce permissions.\n');
+    }
+  }
+
   // ─────────────────────────────────────────────────────────────────
   // BUILD PROJECT CONFIG
   // ─────────────────────────────────────────────────────────────────
@@ -191,6 +248,14 @@ async function initProject() {
     config.styles.referenceSites = referenceSites.split(',').map(s => s.trim()).filter(s => s);
   }
 
+  config.api = {
+    required: useEtchApi,
+    baseUrl: devUrl ? `${devUrl.replace(/\/$/, '')}/wp-json/etch-api` : null,
+    authMethod: useEtchApi ? authMethod : null,
+    credentialsReady: useEtchApi ? credentialsReady : false
+  };
+  if (apiUsername) config.api.username = apiUsername;
+
   // Write config file
   fs.writeFileSync('.etch-project.json', JSON.stringify(config, null, 2));
 
@@ -210,6 +275,11 @@ async function initProject() {
   if (config.devUrl) {
     console.log(`  Dev URL:    ${config.devUrl}`);
     console.log(`  ACSS URL:   ${config.acssUrl}`);
+  }
+  if (config.api.required) {
+    console.log(`  API URL:    ${config.api.baseUrl}`);
+    console.log(`  API Auth:   ${config.api.authMethod}`);
+    console.log(`  API Ready:  ${config.api.credentialsReady ? 'Yes' : 'No'}`);
   }
   console.log(`  Aesthetic:  ${config.styles.aesthetic || 'Not specified'}`);
   console.log(`  Typography: ${config.styles.typography || 'Not specified'}`);
@@ -311,6 +381,7 @@ Standardized Questionnaire:
   Q7. Typography                 Font families
   Q8. Target Audience            Who the site is for
   Q9. Reference Sites            Inspiration URLs
+  Q10. Target Site API Access    Endpoint auth readiness for /wp-json/etch-api
 
 What Gets Created:
   .etch-project.json             Project configuration
