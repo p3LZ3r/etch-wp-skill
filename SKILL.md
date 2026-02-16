@@ -41,6 +41,25 @@ Etch WP requires components and patterns in a specific JSON format based on Gute
 
 ---
 
+## ⚠️ API Safety Rules
+
+### Styles Endpoint — READ-ONLY
+
+**CRITICAL: NEVER send PUT, POST, or DELETE requests to the `/styles` or `/stylesheets` endpoints.** These endpoints are strictly read-only. A previous incident caused the deletion of every CSS class on a production website due to a PUT call on the styles endpoint. Only `GET` requests are permitted for styles and stylesheets.
+
+### Human-in-the-Loop — Required for ALL Write Operations
+
+**CRITICAL: Any API call that modifies data (POST, PUT, DELETE) on ANY endpoint MUST require explicit user confirmation before execution.** Never auto-execute write operations. Before performing any write:
+
+1. Clearly describe what will be created, updated, or deleted.
+2. Show the full endpoint URL, HTTP method, and request body to the user.
+3. Wait for explicit user approval before proceeding.
+4. Each write operation requires its own confirmation — do not batch or assume prior approval.
+
+**See**: `references/api-endpoints.md` for full details on endpoint restrictions and allowed methods.
+
+---
+
 ## Workflow
 
 ### Project Initialization (REQUIRED)
@@ -92,9 +111,11 @@ Once project is initialized:
 2. **Check the Target Site (separate from official patterns)** - Only after step 1, audit the specific website being built
    - Ensure project/site access is configured so authenticated Etch API calls are possible
    - Use Etch REST endpoints (`/wp-json/etch-api`) before building new JSON
-   - Start with `components`, `components/list`, `patterns`, `styles`, `stylesheets`
+   - Start with `components`, `components/list`, `patterns`, `styles` (GET only), `stylesheets` (GET only)
    - For structure-aware generation, also check `loops`, `queries`, `cms/field-group`, `post-types`, `taxonomies`
    - Reuse existing components/patterns/styles when they fit the request
+   - **⚠️ NEVER write to `/styles` or `/stylesheets`** — these are read-only (see API Safety Rules above)
+   - **⚠️ All write operations (POST/PUT/DELETE) require explicit user confirmation** before execution
 3. **Read references** - Consult relevant reference files before generating
 4. **Fetch ACSS Variables** - If dev URL provided, fetch automatic.css for real variables
 5. **Generate JSON** - Create complete, valid JSON structure with **project prefix**
@@ -857,6 +878,8 @@ These tools automatically:
 | 16 | `"type": "field"` in loop configs | Use field path as loop `key` with empty `config: {}` |
 | 17 | Non-standard loop attrs | Only `loopId`, `itemId`, `metadata`, `loopParams` allowed |
 | 18 | Mismatched loop item prefix | `itemId: "spec"` → use `{spec.name}` not `{item.name}` |
+| 19 | PUT/POST/DELETE to `/styles` or `/stylesheets` | **NEVER** write to styles endpoints — read-only (GET only) |
+| 20 | Auto-executing write API calls | **ALWAYS** require explicit user confirmation before any POST/PUT/DELETE |
 
 ## Response Format
 

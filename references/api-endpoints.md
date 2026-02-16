@@ -11,6 +11,40 @@ All Etch API endpoints require WordPress authentication:
 - `GET`: `edit_posts`
 - `POST/PUT/DELETE`: `edit_posts` + `manage_options`
 
+## ⚠️ Styles Endpoint — READ-ONLY
+
+**CRITICAL: The `/styles` and `/stylesheets` endpoints MUST only be used for reading (GET). NEVER send PUT, POST, or DELETE requests to these endpoints.**
+
+A previous incident caused the deletion of every CSS class on a live website due to a PUT call to the styles endpoint. To prevent this from ever happening again:
+
+- ✅ `GET /styles` — **Allowed** (read global styles)
+- ✅ `GET /stylesheets` — **Allowed** (read saved stylesheets)
+- ❌ `PUT /styles` — **FORBIDDEN**
+- ❌ `POST /styles` — **FORBIDDEN**
+- ❌ `DELETE /styles` — **FORBIDDEN**
+- ❌ `PUT /stylesheets` — **FORBIDDEN**
+- ❌ `POST /stylesheets` — **FORBIDDEN**
+- ❌ `DELETE /stylesheets` — **FORBIDDEN**
+
+## ⚠️ Human-in-the-Loop — Required for ALL Write Operations
+
+**CRITICAL: Any API call that modifies data (POST, PUT, DELETE) on ANY endpoint MUST require explicit user confirmation before execution.**
+
+Before performing any write operation:
+
+1. **Describe the action** — Clearly explain what will be created, updated, or deleted.
+2. **Show the target endpoint and payload** — Present the full URL, HTTP method, and request body to the user.
+3. **Wait for explicit approval** — Do NOT proceed until the user confirms with an explicit "yes" or approval.
+4. **Never auto-execute write operations** — Even if the user previously approved a similar action, each write operation requires its own confirmation.
+
+This applies to all endpoints including but not limited to:
+- `POST /components`, `PUT /components`, `DELETE /components`
+- `POST /patterns`, `PUT /patterns`, `DELETE /patterns`
+- `POST /loops`, `PUT /loops`, `DELETE /loops`
+- `POST /queries`, `PUT /queries`, `DELETE /queries`
+
+**Remember: `/styles` and `/stylesheets` are fully excluded from write operations — they are read-only regardless of user confirmation.**
+
 ## How to Get API Credentials
 
 You cannot retrieve an API key for any arbitrary WordPress website. You must have authorized access to that specific site.
