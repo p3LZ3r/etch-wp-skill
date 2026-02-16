@@ -11,6 +11,9 @@ const fs = require('fs');
 const path = require('path');
 
 class EtchComponentValidator {
+  // Component key must be PascalCase (e.g., FeatureCard, HeroSection)
+  static PASCAL_CASE_PATTERN = /^[A-Z][A-Za-z0-9]*$/;
+
   constructor() {
     this.errors = [];
     this.warnings = [];
@@ -20,6 +23,26 @@ class EtchComponentValidator {
     this.projectPrefix = this.projectConfig?.prefix || null;
   }
 
+  /**
+   * Detect JSON format: 'api' (component for POST to /components) or 'paste' (layout/section for frontend editor)
+   *
+   * API format:  { name, key, blocks, properties, styles? }
+   * Paste format: { type: "block", gutenbergBlock, version, styles, components? }
+   */
+  detectFormat(data) {
+    if (data.type === 'block' && data.gutenbergBlock) {
+      return 'paste';
+    }
+    if (data.name && data.key && data.blocks) {
+      return 'api';
+    }
+    // Fallback: check for paste-like shape
+    if (data.gutenbergBlock || data.type) {
+      return 'paste';
+    }
+    return 'unknown';
+  }
+
   validateFile(filePath) {
     console.log(`\n🔍 Validating Etch WP Component: ${path.basename(filePath)}\n`);
 
@@ -27,18 +50,43 @@ class EtchComponentValidator {
       const content = fs.readFileSync(filePath, 'utf8');
       const data = JSON.parse(content);
 
-      this.validateStructure(data);
+      const format = this.detectFormat(data);
 
-      if (data.gutenbergBlock) {
-        this.validateBlock(data.gutenbergBlock);
-      }
+      if (format === 'api') {
+        console.log('📦 Format: API component (POST to /wp-json/etch-api/components)\n');
+        this.validateApiComponentStructure(data);
 
-      if (data.styles) {
-        this.validateStyles(data.styles);
-      }
+        // Validate blocks within the API component
+        if (data.blocks && Array.isArray(data.blocks)) {
+          data.blocks.forEach((block, index) => {
+            this.validateBlock(block, `blocks[${index}]`);
+          });
+        }
 
-      if (data.components) {
-        this.validateComponents(data.components);
+        if (data.styles && typeof data.styles === 'object') {
+          this.validateStyles(data.styles);
+        }
+      } else if (format === 'paste') {
+        console.log('📋 Format: Paste/layout (for frontend editor)\n');
+        this.validatePasteStructure(data);
+
+        if (data.gutenbergBlock) {
+          this.validateBlock(data.gutenbergBlock);
+        }
+
+        if (data.styles) {
+          this.validateStyles(data.styles);
+        }
+
+        if (data.components) {
+          this.validateComponents(data.components);
+        }
+      } else {
+        this.errors.push(
+          'Unrecognized JSON format. Expected either:\n' +
+          '   • API component: { name, key, blocks, properties }\n' +
+          '   • Paste/layout:  { type: "block", gutenbergBlock, version: 2, styles }'
+        );
       }
 
       if (data.loops) {
@@ -54,7 +102,10 @@ class EtchComponentValidator {
     }
   }
 
-  validateStructure(data) {
+  /**
+   * Validate paste/layout format: { type, gutenbergBlock, version, styles }
+   */
+  validatePasteStructure(data) {
     if (!data.type || data.type !== 'block') {
       this.errors.push('Missing or invalid "type" property (must be "block")');
     }
@@ -69,6 +120,51 @@ class EtchComponentValidator {
 
     if (!data.styles || typeof data.styles !== 'object') {
       this.warnings.push('Missing "styles" object (usually required)');
+    }
+  }
+
+  /**
+   * Validate API component format: { name, key, blocks, properties, styles? }
+   * This is the structure sent via POST to /wp-json/etch-api/components
+   */
+  validateApiComponentStructure(data) {
+    if (!data.name || typeof data.name !== 'string') {
+      this.errors.push('Missing or invalid "name" (string required for API component)');
+    }
+
+    if (!data.key || typeof data.key !== 'string') {
+      this.errors.push('Missing or invalid "key" (string required for API component)');
+    } else if (!EtchComponentValidator.PASCAL_CASE_PATTERN.test(data.key)) {
+      this.warnings.push(
+        `Component key "${data.key}" should be PascalCase (e.g., "FeatureCard", "HeroSection")`
+      );
+    }
+
+    if (!data.blocks || !Array.isArray(data.blocks)) {
+      this.errors.push('Missing or invalid "blocks" array (required for API component)');
+    } else if (data.blocks.length === 0) {
+      this.warnings.push('Component "blocks" array is empty');
+    }
+
+    if (!data.properties || !Array.isArray(data.properties)) {
+      this.warnings.push('Missing "properties" array for API component');
+    } else {
+      data.properties.forEach((prop, index) => {
+        if (!prop.key || !prop.name) {
+          this.errors.push(
+            `Missing key or name for property ${index} in API component`
+          );
+        }
+        if (!prop.type || !prop.type.primitive) {
+          this.errors.push(
+            `Invalid type for property "${prop.key || index}" in API component`
+          );
+        }
+      });
+    }
+
+    if (data.styles && typeof data.styles !== 'object') {
+      this.errors.push('"styles" must be an object if provided');
     }
   }
 

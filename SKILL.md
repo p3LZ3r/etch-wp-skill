@@ -119,19 +119,55 @@ Once project is initialized:
 3. **Read references** - Consult relevant reference files before generating
 4. **Fetch ACSS Variables** - If dev URL provided, fetch automatic.css for real variables
 5. **Generate JSON** - Create complete, valid JSON structure with **project prefix**
-6. **Save to file** - ALWAYS save as `.json` file (never paste code in chat)
+6. **Deliver via the correct method** — see Output Formats below
 7. **Validate** - Run validation script automatically after generation
 8. **Report** - Show validation results to user
 
+### ⚠️ Output Formats: API vs Paste
+
+**Two distinct JSON formats exist. Use the right one:**
+
+| What | Format | Delivery | Save as file? |
+|------|--------|----------|---------------|
+| **Components** (reusable blocks) | API format | `POST /wp-json/etch-api/components` | ❌ Never — send via API only |
+| **Layouts / Sections / Pages** | Paste format | Copy-paste into Etch frontend editor | ✅ Save as `.json` file |
+
+**API component format** (`POST /wp-json/etch-api/components`):
+```json
+{
+  "name": "Feature Card",
+  "key": "FeatureCard",
+  "blocks": [ /* block tree */ ],
+  "properties": [ /* prop definitions */ ],
+  "styles": { /* style objects */ }
+}
+```
+
+**Paste/layout format** (for frontend editor):
+```json
+{
+  "type": "block",
+  "gutenbergBlock": { /* block tree */ },
+  "version": 2,
+  "styles": { /* style objects */ },
+  "components": { /* referenced component definitions */ }
+}
+```
+
+**Rules:**
+- **Components** are always created via API POST — do NOT save API component JSON as files in the project folder.
+- **Layouts, sections, and pages** are saved as `.json` files and pasted into the Etch frontend editor.
+- The validator auto-detects both formats and validates accordingly.
+
 ### Post-Generation Validation
 
-**CRITICAL**: After creating any Etch WP `.json` file, ALWAYS run:
+**CRITICAL**: After generating any Etch WP JSON (either format), ALWAYS run:
 
 ```bash
 node scripts/validate-component.js <filename>.json
 ```
 
-This catches common errors before the user tries to import into Etch WP.
+The validator auto-detects the format (API component vs paste/layout) and validates accordingly.
 
 **For components with JavaScript**, also run the enhanced validator:
 
@@ -523,15 +559,18 @@ These tools automatically:
 | 18 | Mismatched loop item prefix | `itemId: "spec"` → use `{spec.name}` not `{item.name}` |
 | 19 | PUT/POST/DELETE to `/styles` or `/stylesheets` | **NEVER** write to styles endpoints — read-only (GET only) |
 | 20 | Auto-executing write API calls | **ALWAYS** require explicit user confirmation before any POST/PUT/DELETE |
+| 21 | Saving API component JSON as project file | Components → API POST only. Layouts/sections/pages → `.json` file + paste |
+| 22 | Using paste format for components | Components use API format (`{ name, key, blocks, properties }`) |
 
 ## Response Format
 
 When generating Etch WP code:
 
-1. **Create `.json` file** - NEVER paste code in chat
-2. **Complete JSON structure** - type, gutenbergBlock, version, styles, components
-3. **Run validation script** - `node scripts/validate-component.js <file>.json`
-4. **Report results** - Show validation output to user
+1. **Determine output type** — Component → API format; Layout/section/page → Paste format
+2. **Components (API)**: Generate API format JSON, validate, then POST to `/wp-json/etch-api/components` (with user confirmation). Do NOT save as a `.json` file in the project.
+3. **Layouts/sections/pages (Paste)**: Save as `.json` file, validate, then user pastes in frontend editor.
+4. **Run validation** - `node scripts/validate-component.js <file>.json` (auto-detects format)
+5. **Report results** - Show validation output to user
 
 ## Reference Files
 

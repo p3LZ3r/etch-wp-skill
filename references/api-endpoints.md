@@ -80,6 +80,51 @@ Credentials are configured during project init (`node scripts/init-project.js` â
 3. Reuse or adapt what exists.
 4. Build new JSON only when no suitable reusable option exists.
 
+## API Component Format (POST /components)
+
+Components are **always** created via API â€” never saved as `.json` files in the project folder. The API format differs from the paste format used for layouts/sections/pages.
+
+```json
+{
+  "name": "Feature Card",
+  "key": "FeatureCard",
+  "description": "A reusable card component",
+  "blocks": [
+    {
+      "blockName": "etch/element",
+      "attrs": { "tag": "div", "attributes": { "class": "tl-card" }, "styles": ["a1b2c3d"] },
+      "innerBlocks": [],
+      "innerHTML": "\n\n",
+      "innerContent": ["\n", "\n"]
+    }
+  ],
+  "properties": [
+    {
+      "key": "title",
+      "name": "Title",
+      "keyTouched": true,
+      "type": { "primitive": "string" },
+      "default": "Card Title"
+    }
+  ],
+  "styles": {
+    "a1b2c3d": {
+      "type": "class",
+      "selector": ".tl-card",
+      "css": "padding: var(--space-l);"
+    }
+  }
+}
+```
+
+**Key differences from paste format:**
+- No `type`, `gutenbergBlock`, or `version` wrapper
+- `blocks` array directly at root (not nested in `gutenbergBlock`)
+- `properties` at root (not nested in `components.{id}`)
+- `key` must be PascalCase (e.g., `FeatureCard`)
+
+**Layouts/sections/pages** use the paste format (`{ type: "block", gutenbergBlock, version: 2, ... }`) and are saved as `.json` files for pasting into the Etch frontend editor.
+
 ## Practical cURL Examples
 
 ```bash
