@@ -58,7 +58,7 @@
       "type": "class",
       "selector": ".dialog__header",
       "collection": "default",
-      "css": "display: flex;\n  justify-content: space-between;\n  align-items: center;\n  margin-bottom: var(--space-m);\n  padding-bottom: var(--space-s);\n  border-bottom: 1px solid var(--border-default);",
+      "css": "display: flex;\n  justify-content: space-between;\n  align-items: center;\n  margin-bottom: var(--space-m);\n  padding-bottom: var(--space-s);\n  border-bottom: var(--border);",
       "readonly": false
     },
     "f7g8h9i": {
@@ -90,7 +90,9 @@
             "metadata": { "name": "Dialog" },
             "tag": "div",
             "attributes": {
-              "class": "dialog"
+              "class": "dialog",
+              "role": "dialog",
+              "aria-labelledby": "dialog-title"
             },
             "styles": ["x1y2z3a"]
           },
@@ -112,7 +114,8 @@
                     "metadata": { "name": "Title" },
                     "tag": "h3",
                     "attributes": {
-                      "class": "dialog__title"
+                      "class": "dialog__title",
+                      "id": "dialog-title"
                     },
                     "styles": ["f7g8h9i"]
                   },

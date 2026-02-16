@@ -11,39 +11,46 @@ All Etch API endpoints require WordPress authentication:
 - `GET`: `edit_posts`
 - `POST/PUT/DELETE`: `edit_posts` + `manage_options`
 
-## How to Get API Credentials
+## ⚠️ Styles Endpoint — READ-ONLY
 
-You cannot retrieve an API key for any arbitrary WordPress website. You must have authorized access to that specific site.
+**CRITICAL: The `/styles` and `/stylesheets` endpoints MUST only be used for reading (GET). NEVER send PUT, POST, or DELETE requests to these endpoints.**
 
-Recommended method (WordPress Application Passwords):
+A previous incident caused the deletion of every CSS class on a live website due to a PUT call to the styles endpoint. To prevent this from ever happening again:
 
-1. Log in to that site's WordPress admin (`/wp-admin`).
-2. Go to **Users → Profile** (or **Users → Your Profile**).
-3. In **Application Passwords**, create a new password (for example: `Etch API`).
-4. Copy the generated password (shown once).
-5. Use `username:application-password` for Basic Auth over HTTPS.
+- ✅ `GET /styles` — **Allowed** (read global styles)
+- ✅ `GET /stylesheets` — **Allowed** (read saved stylesheets)
+- ❌ `PUT /styles` — **FORBIDDEN**
+- ❌ `POST /styles` — **FORBIDDEN**
+- ❌ `DELETE /styles` — **FORBIDDEN**
+- ❌ `PUT /stylesheets` — **FORBIDDEN**
+- ❌ `POST /stylesheets` — **FORBIDDEN**
+- ❌ `DELETE /stylesheets` — **FORBIDDEN**
 
-```bash
-curl -u "username:application-password" \
-  "https://example.com/wp-json/etch-api/components/list"
-```
+## ⚠️ Human-in-the-Loop — Required for ALL Write Operations
 
-If you cannot access wp-admin/profile for that site, ask the site owner/admin to create credentials for you.
+**CRITICAL: Any API call that modifies data (POST, PUT, DELETE) on ANY endpoint MUST require explicit user confirmation before execution.**
 
-Outside the WP admin/browser context, use WordPress Application Passwords over HTTPS:
+Before performing any write operation:
 
-```bash
-curl -u "username:application-password" \
-  "https://example.com/wp-json/etch-api/components/list"
-```
+1. **Describe the action** — Clearly explain what will be created, updated, or deleted.
+2. **Show the target endpoint and payload** — Present the full URL, HTTP method, and request body to the user.
+3. **Wait for explicit approval** — Do NOT proceed until the user confirms with an explicit "yes" or approval.
+4. **Never auto-execute write operations** — Even if the user previously approved a similar action, each write operation requires its own confirmation.
 
-Inside a logged-in WP browser context, authenticated requests can use nonce-based headers:
+This applies to all endpoints including but not limited to:
+- `POST /components`, `PUT /components`, `DELETE /components`
+- `POST /patterns`, `PUT /patterns`, `DELETE /patterns`
+- `POST /loops`, `PUT /loops`, `DELETE /loops`
+- `POST /queries`, `PUT /queries`, `DELETE /queries`
 
-```js
-fetch('/wp-json/etch-api/components/list', {
-  headers: { 'X-WP-Nonce': window.wpApiSettings.nonce }
-})
-```
+**Remember: `/styles` and `/stylesheets` are fully excluded from write operations — they are read-only regardless of user confirmation.**
+
+## API Credentials
+
+Credentials are configured during project init (`node scripts/init-project.js` → Q10) and stored in `.etch-project.json` under `api`. Use the auth method recorded there:
+
+- **`application-password`** → Basic Auth: `curl -u "username:app-password" "https://site.com/wp-json/etch-api/..."`
+- **`wp-admin-browser`** → Nonce header: `fetch('/wp-json/etch-api/...', { headers: { 'X-WP-Nonce': window.wpApiSettings.nonce } })`
 
 ## Minimum Endpoints to Check Before Building
 
@@ -72,6 +79,51 @@ fetch('/wp-json/etch-api/components/list', {
 2. Call Etch API endpoints above to discover existing site components/patterns/styles.
 3. Reuse or adapt what exists.
 4. Build new JSON only when no suitable reusable option exists.
+
+## API Component Format (POST /components)
+
+Components are **always** created via API — never saved as `.json` files in the project folder. The API format differs from the paste format used for layouts/sections/pages.
+
+```json
+{
+  "name": "Feature Card",
+  "key": "FeatureCard",
+  "description": "A reusable card component",
+  "blocks": [
+    {
+      "blockName": "etch/element",
+      "attrs": { "tag": "div", "attributes": { "class": "tl-card" }, "styles": ["a1b2c3d"] },
+      "innerBlocks": [],
+      "innerHTML": "\n\n",
+      "innerContent": ["\n", "\n"]
+    }
+  ],
+  "properties": [
+    {
+      "key": "title",
+      "name": "Title",
+      "keyTouched": true,
+      "type": { "primitive": "string" },
+      "default": "Card Title"
+    }
+  ],
+  "styles": {
+    "a1b2c3d": {
+      "type": "class",
+      "selector": ".tl-card",
+      "css": "padding: var(--space-l);"
+    }
+  }
+}
+```
+
+**Key differences from paste format:**
+- No `type`, `gutenbergBlock`, or `version` wrapper
+- `blocks` array directly at root (not nested in `gutenbergBlock`)
+- `properties` at root (not nested in `components.{id}`)
+- `key` must be PascalCase (e.g., `FeatureCard`)
+
+**Layouts/sections/pages** use the paste format (`{ type: "block", gutenbergBlock, version: 2, ... }`) and are saved as `.json` files for pasting into the Etch frontend editor.
 
 ## Practical cURL Examples
 

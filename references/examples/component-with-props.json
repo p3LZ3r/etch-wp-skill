@@ -43,7 +43,7 @@
       "type": "class",
       "selector": ".card__button",
       "collection": "default",
-      "css": "background: var(--primary);\n  color: var(--text-light);\n  padding: var(--space-xs) var(--space-m);\n  border-radius: var(--radius-s);\n  text-decoration: none;\n  display: inline-block;\n\n  &:hover {\n    opacity: 0.9;\n  }",
+      "css": "background: var(--primary);\n  color: var(--text-light);\n  padding: var(--space-xs) var(--space-m);\n  border-radius: var(--radius-s);\n  text-decoration: none;\n  display: inline-block;\n\n  &:hover {\n    opacity: 0.9;\n  }\n\n  &:focus-visible {\n    outline: 2px solid var(--primary);\n    outline-offset: 2px;\n  }",
       "readonly": false
     }
   },

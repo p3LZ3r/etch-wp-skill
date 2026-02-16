@@ -354,9 +354,37 @@ SVG icon/graphic element.
 ```
 
 ### Key Points
-- Use `aria-hidden="true"` for decorative icons
+- Use `aria-hidden="true"` for **decorative** icons (icons next to visible text labels)
+- Use `aria-label="Description"` for **informational** icons (icon-only buttons, standalone icons that convey meaning)
 - `src` can be prop reference: `"{props.icon}"`
 - Or static SVG path/URL
+
+### SVG Accessibility (WCAG 1.1.1 / 4.1.2)
+
+**Decorative icons** (icon + text label visible):
+```json
+"attributes": { "aria-hidden": "true" }
+```
+
+**Informational icons** (icon-only button, no visible text):
+```json
+"attributes": { "role": "img", "aria-label": "Close menu" }
+```
+
+**Icon-only buttons** — the button itself needs the label:
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "button",
+    "attributes": { "aria-label": "Close", "class": "dialog__close" }
+  },
+  "innerBlocks": [{
+    "blockName": "etch/svg",
+    "attrs": { "tag": "svg", "attributes": { "aria-hidden": "true" } }
+  }]
+}
+```
 
 ### Building SVGs with etch/element
 
