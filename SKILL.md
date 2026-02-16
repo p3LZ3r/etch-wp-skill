@@ -148,48 +148,14 @@ This additionally checks:
 
 ## Documentation Lookup Strategy
 
-**CRITICAL:** When uncertain about Etch WP or ACSS implementation details, ALWAYS consult the official documentation via Context7 MCP before generating code.
-
-### Context7 Library IDs
-
-Use these exact library IDs with the `mcp__plugin_context7_context7__query-docs` tool:
+When uncertain about Etch WP or ACSS details, use Context7 MCP **before** generating code.
 
 | Library | ID | Use For |
 |---------|-----|---------|
 | **Automatic.css** | `/websites/automaticcss` | ACSS v4 variables, color system, spacing, typography |
 | **Etch WP** | `/websites/etchwp` | Block types, loops, components, native elements |
 
-### When to Use Context7 MCP
-
-**MANDATORY** Context7 consultation when:
-- ❗ **ACSS variable names** - NEVER guess, always verify
-- ❗ **data-etch-element values** - Only 3 exist, verify if uncertain
-- ❗ Block structures or syntax you're unsure about
-- ❗ New or uncommon features
-
-Use the `mcp__plugin_context7_context7__query-docs` tool in these situations:
-
-#### 1. Etch WP Documentation (`/websites/etchwp`):
-   ```
-   Query: "How to implement nested loops with parameters"
-   Query: "etch/condition block syntax for dynamic data"
-   Query: "Native accordion component structure"
-   ```
-
-#### 2. Automatic.css Documentation (`/websites/automaticcss`):
-   ```
-   Query: "List all background color assignment variables"
-   Query: "Section spacing variables for padding-block"
-   Query: "Typography variables for font sizes"
-   ```
-
-**Example workflow:**
-```
-User: "Create a dark section with large spacing"
-→ Query Context7: "ACSS dark background and large section spacing variables"
-→ Use results: var(--bg-dark), var(--section-space-l)
-→ Generate component with verified variables
-```
+**Mandatory** Context7 lookup for: ACSS variable names, `data-etch-element` values, unfamiliar block structures.
 
 ## Core Structure - The Golden Rule
 
@@ -219,194 +185,52 @@ All other HTML elements (`h1`, `p`, `a`, `button`, etc.) do NOT use `data-etch-e
 
 ### Buttons - USE ACSS CLASSES ONLY
 
-**NEVER create custom button styles. ACSS buttons use style modifier classes only:**
+**NEVER create custom button styles.** No base `btn` class — use modifier classes directly: `btn--primary`, `btn--secondary`, `btn--tertiary`, `btn--link`. Size: `btn--small`, `btn--large` (combine: `btn--primary btn--large`).
 
 ```json
-{
-  "blockName": "etch/element",
-  "attrs": {
-    "tag": "a",
-    "attributes": {
-      "href": "{ctaUrl}",
-      "class": "btn--primary"
-    }
-  }
-}
+{ "tag": "a", "attributes": { "href": "{ctaUrl}", "class": "btn--primary" } }
 ```
 
-**Available Button Classes:**
-- `btn--primary` - Primary action (uses --action-primary from dashboard)
-- `btn--secondary` - Secondary action (uses --action-secondary from dashboard)
-- `btn--tertiary` - Tertiary/outline style
-- `btn--link` - Link-style button
-- `btn--small`, `btn--large` - Size variants (combine with style: `btn--primary btn--large`)
-
-**⚠️ CRITICAL:** ACSS buttons do NOT use a base `btn` class. The button styles are applied directly through the modifier classes (`btn--primary`, `btn--secondary`, etc.). These classes are generated based on your ACSS Dashboard configuration.
-
-**Custom Button Styling (ONLY when necessary):**
-If you MUST customize a button, use only layout/positioning CSS, NOT color/typography:
-
-```css
-/* ✅ CORRECT - Only layout */
-.tl-hero__cta-wrapper {
-  display: flex;
-  gap: var(--space-m);
-  margin-top: var(--space-l);
-}
-
-/* ❌ WRONG - Never redefine button appearance */
-.tl-hero__button {
-  background: #007bff;      /* Don't do this */
-  padding: 12px 24px;       /* Don't do this */
-  border-radius: 4px;       /* Don't do this */
-}
-```
+If you MUST customize, use only layout/positioning CSS (flex, gap, margin) — never redefine button appearance (background, padding, border-radius).
 
 ### Styling with ACSS Variables
 
-**CRITICAL:** ACSS provides VARIABLES, not utility classes. Use custom BEM classes with ACSS variables:
+ACSS provides **variables**, not utility classes. Use custom BEM classes with ACSS variables:
 
 ```css
-/* ✅ CORRECT - Use ACSS variables in custom classes */
-.ph-hero__title {
-  font-size: var(--h1);
-  color: var(--heading-color);
-}
-
-.ph-grid {
-  display: grid;
-  gap: var(--space-m);
-}
+.ph-hero__title { font-size: var(--h1); color: var(--heading-color); }
+.ph-grid { display: grid; gap: var(--space-m); }
 ```
 
-**❌ WRONG - Don't invent fake utility classes:**
-```css
-/* These do NOT exist in ACSS */
-.heading--h1 { }
-.grid--3-col { }
-.flex--center { }
-.pad--l { }
-```
+**Never invent fake utility classes** (`.heading--h1`, `.grid--3-col`, `.flex--center` do NOT exist).
 
-**Available ACSS Variables:**
-- **Typography:** `var(--h1)`, `var(--h2)`, `var(--h3)`, `var(--h4)`, `var(--h5)`, `var(--h6)`, `var(--text-sm)`, `var(--text-base)`, `var(--text-lg)`
-- **Spacing:** `var(--space-xs)`, `var(--space-s)`, `var(--space-m)`, `var(--space-l)`, `var(--space-xl)`, `var(--space-xxl)`
-- **Colors:** `var(--heading-color)`, `var(--text-dark)`, `var(--text-muted)`, `var(--bg-light)`, `var(--bg-dark)`
-- **Layout:** `var(--content-width)`, `var(--container-width)`, `var(--gutter)`
+Create custom BEM classes for component-specific layout, positioning, alignment, and spacing.
 
-### When to Create Custom Classes
-
-Create custom BEM classes for:
-- Component-specific layout (grids, flex containers)
-- Positioning and alignment
-- Component-specific spacing
-- Custom decorative elements
-
-**Query Context7 for the full list of utility classes:**
-```
-mcp__plugin_context7_context7__query-docs with libraryId: "/websites/automaticcss"
-query: "List all utility classes for buttons, layout, typography, spacing"
-```
+**See**: `references/acss-variables.md` for the full variable reference. Use Context7 MCP (`/websites/automaticcss`) when uncertain.
 
 ### Borders - ALWAYS Use ACSS Variables
 
-**CRITICAL: Borders must ALWAYS use ACSS border variables:**
-
-```css
-/* ✅ CORRECT - Always use ACSS border variables */
-border: var(--border);
-border: var(--border-light);
-border: var(--border-dark);
-
-/* ✅ CORRECT - Specific border properties */
-border-top: var(--border);
-border-bottom: var(--border-light);
-
-/* ✅ CORRECT - With specific width/style if needed */
-border: 1px solid var(--border-color);  /* If you need specific style */
-```
-
-**❌ WRONG - Never hardcode border values:**
-```css
-/* Don't do this */
-border: 1px solid #e0e0e0;
-border: 1px solid rgba(0,0,0,0.1);
-border: 1px solid var(--gray-light);  /* Even ACSS utility colors */
-```
-
-**Border Variable Usage:**
-- `var(--border)` - Default border (uses --border-color)
-- `var(--border-light)` - For dark backgrounds
-- `var(--border-dark)` - For light backgrounds where more contrast needed
-
-**When to use which:**
-- Light sections: `var(--border)` or `var(--border-dark)`
-- Dark sections: `var(--border-light)`
+Always use `var(--border)`, `var(--border-light)`, or `var(--border-dark)` — never hardcode border values (`1px solid #e0e0e0`). Use `--border-light` on dark backgrounds, `--border` or `--border-dark` on light backgrounds.
 
 ## Image Best Practices
 
-**CRITICAL:** Use `etch/dynamic-image` wrapped in `figure` element for semantic markup and accessibility:
+Use `etch/dynamic-image` wrapped in a `figure` element for semantic markup and accessibility. Never use bare `etch/element` with `tag: "img"` for dynamic images.
 
-✅ **CORRECT:**
 ```json
 {
   "blockName": "etch/element",
-  "attrs": {
-    "tag": "figure",
-    "attributes": {
-      "class": "ph-product-card__figure"
-    },
-    "styles": ["f1g2h3i"]
-  },
-  "innerBlocks": [
-    {
-      "blockName": "etch/dynamic-image",
-      "attrs": {
-        "metadata": {
-          "name": "Product Image"
-        },
-        "tag": "img",
-        "attributes": {
-          "class": "ph-product-card__image",
-          "src": "{prod.metabox.product_thumbnail}",
-          "alt": "{prod.title}",
-          "loading": "lazy"
-        }
-      },
-      "innerBlocks": [],
-      "innerHTML": "",
-      "innerContent": []
-    }
-  ],
-  "innerHTML": "\n\n",
-  "innerContent": ["\n", "\n"]
+  "attrs": { "tag": "figure", "attributes": { "class": "ph-product-card__figure" }, "styles": ["f1g2h3i"] },
+  "innerBlocks": [{
+    "blockName": "etch/dynamic-image",
+    "attrs": { "tag": "img", "attributes": { "src": "{prod.metabox.product_thumbnail}", "alt": "{prod.title}", "loading": "lazy" } },
+    "innerBlocks": [], "innerHTML": "", "innerContent": []
+  }],
+  "innerHTML": "\n\n", "innerContent": ["\n", "\n"]
 }
 ```
 
-❌ **WRONG:**
-```json
-{
-  "blockName": "etch/element",
-  "attrs": {
-    "tag": "img",
-    "attributes": {
-      "class": "ph-product-card__image",
-      "src": "{prod.metabox.product_thumbnail}",
-      "alt": "{prod.title}"
-    }
-  }
-}
-```
-
-**Why use `figure` + `etch/dynamic-image`:**
-- Semantic HTML (figure is meant for images with captions/contexts)
-- Better accessibility (provides context for screen readers)
-- Support for captions (figcaption) if needed
-- Consistent with Etch WP patterns for media
-
-**When to use what:**
-- Dynamic images from loops/MetaBox → `etch/dynamic-image` in `figure`
-- Static placeholder images → `etch/element` with `tag: "img"` or `etch/dynamic-image`
+- Dynamic images (loops/MetaBox) → `etch/dynamic-image` in `figure`
+- Static placeholders → `etch/element` with `tag: "img"` or `etch/dynamic-image`
 
 ## BEM Class Naming Convention (STRICT)
 
@@ -436,31 +260,17 @@ border: 1px solid var(--gray-light);  /* Even ACSS utility colors */
 ### Examples
 
 ```css
-/* Hero Section - Block */
 .tl-hero {
   background: var(--bg-light);
   padding-block: var(--section-space-l);
 }
-
-/* Hero Elements - Layout only, NOT button styles */
-.tl-hero__title {
-  color: var(--heading-color);
-}
-
+.tl-hero__title { color: var(--heading-color); }
 .tl-hero__cta-wrapper {
   display: flex;
   gap: var(--space-m);
   margin-top: var(--space-l);
 }
-
-/* Section Modifiers */
-.tl-hero--dark {
-  background: var(--bg-dark);
-}
-
-.tl-hero--centered {
-  text-align: center;
-}
+.tl-hero--dark { background: var(--bg-dark); }
 ```
 
 ### JSON Structure with BEM
@@ -477,55 +287,12 @@ border: 1px solid var(--gray-light);  /* Even ACSS utility colors */
       "type": "class",
       "selector": ".tl-hero__title",
       "css": "color: var(--heading-color);"
-    },
-    "ieasrk9": {
-      "type": "class",
-      "selector": ".tl-hero__cta-wrapper",
-      "css": "display: flex; gap: var(--space-m); margin-top: var(--space-l);"
     }
   }
 }
 ```
 
-### ❌ Common Mistakes
-
-```css
-/* WRONG - No prefix */
-.hero { }
-.hero__title { }
-
-/* WRONG - Wrong separator */
-.hero-title { }     /* Use __ for elements */
-.hero-primary { }   /* Use -- for modifiers */
-
-/* WRONG - CamelCase */
-.heroTitle { }
-.heroButtonPrimary { }
-
-/* WRONG - Too generic */
-.button { }
-.title { }
-.container { }
-```
-
-### ✅ Correct Patterns
-
-```css
-/* CORRECT - With prefix, BEM structure */
-.tl-hero { }
-.tl-hero__title { }
-.tl-hero__button { }
-.tl-hero__button--primary { }
-.tl-hero__button--large { }
-
-/* CORRECT - Multiple blocks in component */
-.tl-pricing { }
-.tl-pricing__grid { }
-.tl-pricing-card { }           /* Separate block */
-.tl-pricing-card__title { }
-.tl-pricing-card__price { }
-.tl-pricing-card--featured { } /* Modifier on block */
-```
+**Mistakes to avoid:** No prefix (`.hero`), wrong separators (`.hero-title` instead of `.__`), camelCase (`.heroTitle`), generic names (`.button`, `.title`).
 
 ## Available Block Types
 
@@ -543,49 +310,18 @@ border: 1px solid var(--gray-light);  /* Even ACSS utility colors */
 
 ## Dynamic Content with etch/text
 
-**CRITICAL:** When displaying looped or dynamic data (from `etch/loop`, MetaBox fields, or post data), **ALWAYS use `etch/text` blocks** - never hardcode values directly in `innerHTML`.
+**CRITICAL:** For looped or dynamic data, **ALWAYS use `etch/text` blocks** — never put dynamic values in `innerHTML`.
 
-❌ **WRONG** - Hardcoding dynamic values:
-```json
-{
-  "blockName": "etch/element",
-  "attrs": {
-    "tag": "h2",
-    "attributes": {
-      "class": "category-title"
-    }
-  },
-  "innerHTML": "{cat.name}",  // DON'T DO THIS
-  "innerContent": ["{cat.name}"]
-}
-```
-
-✅ **CORRECT** - Using etch/text:
 ```json
 {
   "blockName": "etch/text",
-  "attrs": {
-    "tag": "h2",
-    "text": "{cat.name}",  // Dynamic value in text prop
-    "attributes": {
-      "class": "category-title"
-    }
-  },
-  "innerBlocks": [],
-  "innerHTML": "",
-  "innerContent": []
+  "attrs": { "tag": "h2", "text": "{cat.name}", "attributes": { "class": "category-title" } },
+  "innerBlocks": [], "innerHTML": "", "innerContent": []
 }
 ```
 
-**Why use `etch/text`:**
-- Data binds properly to Etch WP's rendering system
-- Respects conditional rendering and data modifiers
-- Prevents encoding issues with special characters
-- Cleaner separation of structure vs. content
-
-**When to use what:**
-- Looped content (`{cat.name}`, `{prod.title}`, `{post.id}`, etc.) → **etch/text**
-- Static placeholder text ("Products", "Read More") → etch/element with innerHTML
+- Looped/dynamic content (`{cat.name}`, `{prod.title}`, `{post.id}`) → **etch/text**
+- Static text ("Products", "Read More") → `etch/element` with innerHTML
 
 ## Components: Props vs. Slots
 
@@ -626,60 +362,17 @@ Transform and manipulate dynamic values using modifiers:
 
 ## CSS Architecture Rules
 
-**CRITICAL - NEVER nest different components:**
-
-❌ **WRONG:**
-```css
-.footer-grid {
-  .footer-column { /* WRONG - separate component */ }
-}
-```
-
-✅ **CORRECT:**
-```css
-.footer-grid {
-  display: grid;
-  /* only styles for THIS component */
-}
-
-.footer-column {
-  /* separate style object */
-}
-```
-
-**ALLOWED nesting:**
-- `:where()`, `&`, pseudo-selectors (`:hover`, `:focus`)
-- State variants (`&[data-state='open']`)
+**NEVER nest different components** in CSS. Each component gets its own style object. Allowed nesting: `:where()`, `&`, pseudo-selectors (`:hover`, `:focus`), state variants (`&[data-state='open']`).
 
 **See**: `references/css-architecture-rules.md` for full rules
 
 ## ACSS v4 CSS Standards
 
-### Automatic Styles - DO NOT REDEFINE
+ACSS auto-applies styles to containers (`max-width`, `margin-inline: auto`), sections (`padding-block`, `padding-inline`), and text (`--heading-color`, `--text-dark`). **Only define CSS properties that differ from ACSS defaults.**
 
-**CRITICAL: ACSS automatically applies certain styles. NEVER manually define redundant CSS:**
+**Variable priority:** 1) Assignment vars (`--bg-light`, `--text-dark`) → 2) Spacing/typography (`--space-m`, `--h2`) → 3) Brand colors (`--primary`, `--accent`) only for explicit brand elements.
 
-| Element | Auto-Applied by ACSS | Manual Override Only When |
-|---------|---------------------|---------------------------|
-| Container | `max-width`, `width: 100%`, `margin-inline: auto` | Different width, no centering |
-| Section | `padding-block: var(--section-space-m)`, `padding-inline: var(--gutter)` | Different spacing, no padding |
-| Gaps | Container gaps, content gaps, grid gaps | Custom gap sizes needed |
-| Text | `--heading-color`, `--text-dark` | Different color context required |
-
-**Only define CSS properties that differ from ACSS defaults.**
-
-### Variable Hierarchy (in order of preference):
-
-1. **PRIMARY: Assignment Variables** - `var(--bg-light)`, `var(--text-dark)`, `var(--border-default)`
-2. **SECONDARY: Spacing/Typography** - `var(--space-m)`, `var(--h2)`, `var(--content-width)`
-3. **RARE: Direct Brand Colors** - `var(--primary)`, `var(--accent)` only for explicit brand elements
-
-**⚠️ NEVER invent ACSS variable names**
-- If uncertain → check `references/acss-variables.md`
-- Still uncertain → use Context7 MCP to verify
-- Only use documented variables
-
-**See**: `references/acss-variables.md` for complete variable reference including automatic styles and JavaScript/GSAP integration
+**⚠️ NEVER invent ACSS variable names** — verify in `references/acss-variables.md` or Context7 MCP.
 
 ## Responsive Design
 
@@ -734,73 +427,23 @@ Template equivalent: `{#loop medicalSpecialties($post_id: this.id) as spec}` →
 
 ### Nested Loops with Parameters
 
-**Critical: JSON vs HTML Syntax Difference**
+When passing parameters from outer to inner loops, use `"loopParams"` (NOT `"loopArgs"`), values without curly braces (`"cat.id"` not `"{cat.id}"`), and random 7-char loop IDs.
 
-When passing parameters from outer to inner loops:
-
-**HTML Template:**
-```html
-{#loop categories as cat}
-  {#loop posts($cat_id: cat.id) as post}
-    <h3>{post.title}</h3>
-  {/loop}
-{/loop}
-```
-
-**JSON Block Structure:**
 ```json
-{
-  "blockName": "etch/loop",
-  "attrs": {
-    "loopId": "posts456",
-    "itemId": "post",
-    "loopParams": {
-      "$cat_id": "cat.id"
-    }
-  }
-}
+{ "blockName": "etch/loop", "attrs": { "loopId": "posts456", "itemId": "post", "loopParams": { "$cat_id": "cat.id" } } }
 ```
-
-**Key Differences:**
-- JSON uses `"loopParams"` (NOT `"loopArgs"`)
-- JSON value is `"cat.id"` (NOT `"{cat.id}"`) - NO curly braces
-- Loop IDs must be random 7-char strings (e.g., `abc123x`, `8esrv4f`)
 
 **See**: `references/loops.md` and `references/examples/loop-example.json`
 
 ## Official Patterns Library ⭐
 
-**ALWAYS check patterns.etchwp.com FIRST** before building common components!
-
-**URL**: https://patterns.etchwp.com/
-
-Available categories:
-- **Hero** (10+ variants) - hero-alpha, hero-bravo, hero-charlie, etc.
-- **Headers** - Navigation, drawers, mobile menus
-- **Footer** - Multi-column, newsletter, social icons
-- **Features** - Grid layouts, showcase sections
-- **Testimonials** - Cards, ratings, avatars
-- **Content** - Article grids, content blocks
-- **Blog** - Post layouts, archives
-- **Interactive** - Accordions, dialogs, drawers
-- **Avatars** - Profile cards, team grids
-
-**Why use official patterns:**
-- ✅ Production-ready and tested
-- ✅ ACSS v4 integrated
-- ✅ Accessibility built-in
-- ✅ Responsive design
-- ✅ Free to use and modify
-- ✅ Maintained by Etch team
+**ALWAYS check https://patterns.etchwp.com/ FIRST** before building common components (heroes, headers, footers, features, testimonials, content, blog, interactive, avatars — 10+ variants each).
 
 **Workflow:**
-1. User asks for hero/footer/header/etc.
-2. → Recommend appropriate pattern from patterns.etchwp.com
-3. → If a site URL is available, check `/wp-json` for Etch routes that expose existing reusable components/patterns
-4. → Reuse/refactor what already exists when it satisfies the request
-5. → Provide URL and explain benefits
-6. → Offer to help customize if needed
-7. → Build custom only if neither official patterns nor site API components fit
+1. User asks for a component → Check patterns.etchwp.com
+2. If a site URL is available → Check `/wp-json/etch-api` for existing reusable components/patterns
+3. Recommend official pattern or reuse existing → Offer to customize
+4. Build custom only if neither fit
 
 **See**: `references/official-patterns.md` for complete guide
 

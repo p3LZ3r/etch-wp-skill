@@ -45,39 +45,12 @@ This applies to all endpoints including but not limited to:
 
 **Remember: `/styles` and `/stylesheets` are fully excluded from write operations — they are read-only regardless of user confirmation.**
 
-## How to Get API Credentials
+## API Credentials
 
-You cannot retrieve an API key for any arbitrary WordPress website. You must have authorized access to that specific site.
+Credentials are configured during project init (`node scripts/init-project.js` → Q10) and stored in `.etch-project.json` under `api`. Use the auth method recorded there:
 
-Recommended method (WordPress Application Passwords):
-
-1. Log in to that site's WordPress admin (`/wp-admin`).
-2. Go to **Users → Profile** (or **Users → Your Profile**).
-3. In **Application Passwords**, create a new password (for example: `Etch API`).
-4. Copy the generated password (shown once).
-5. Use `username:application-password` for Basic Auth over HTTPS.
-
-```bash
-curl -u "username:application-password" \
-  "https://example.com/wp-json/etch-api/components/list"
-```
-
-If you cannot access wp-admin/profile for that site, ask the site owner/admin to create credentials for you.
-
-Outside the WP admin/browser context, use WordPress Application Passwords over HTTPS:
-
-```bash
-curl -u "username:application-password" \
-  "https://example.com/wp-json/etch-api/components/list"
-```
-
-Inside a logged-in WP browser context, authenticated requests can use nonce-based headers:
-
-```js
-fetch('/wp-json/etch-api/components/list', {
-  headers: { 'X-WP-Nonce': window.wpApiSettings.nonce }
-})
-```
+- **`application-password`** → Basic Auth: `curl -u "username:app-password" "https://site.com/wp-json/etch-api/..."`
+- **`wp-admin-browser`** → Nonce header: `fetch('/wp-json/etch-api/...', { headers: { 'X-WP-Nonce': window.wpApiSettings.nonce } })`
 
 ## Minimum Endpoints to Check Before Building
 
