@@ -260,6 +260,25 @@ class EtchComponentValidator {
       // Enhanced Base64 validation
       this.validateBase64Script(attrs.script, blockPath);
     }
+
+    // Accessibility checks
+    if (attrs.attributes) {
+      // WCAG 4.1.2: role="dialog" should have aria-labelledby or aria-label
+      if (attrs.attributes.role === 'dialog') {
+        if (!attrs.attributes['aria-labelledby'] && !attrs.attributes['aria-label']) {
+          this.warnings.push(
+            `role="dialog" at ${blockPath} should have aria-labelledby or aria-label (WCAG 4.1.2)`
+          );
+        }
+      }
+    }
+
+    // WCAG 1.1.1: img elements should have alt attribute
+    if (attrs.tag === 'img' && (!attrs.attributes || !attrs.attributes.alt)) {
+      this.warnings.push(
+        `<img> at ${blockPath} is missing "alt" attribute (WCAG 1.1.1)`
+      );
+    }
   }
 
   validateBase64Script(script, blockPath) {
@@ -465,6 +484,13 @@ class EtchComponentValidator {
 
     // BEM and Prefix Validation
     this.validateBEMNaming(css, styleId, projectPrefix);
+
+    // Accessibility: Check for :hover without :focus-visible (WCAG 2.4.7)
+    if (css.includes(':hover') && !css.includes(':focus-visible')) {
+      this.warnings.push(
+        `Style "${styleId}" has :hover but no :focus-visible state. Add &:focus-visible for keyboard accessibility (WCAG 2.4.7)`
+      );
+    }
   }
 
   validateBEMNaming(css, styleId, projectPrefix = null) {

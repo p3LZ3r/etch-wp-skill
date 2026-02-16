@@ -431,9 +431,12 @@ ACSS auto-applies styles to containers (`max-width`, `margin-inline: auto`), sec
 ALL components must include:
 - ✅ Logical properties for RTL support (`margin-inline-start`, not `margin-left`)
 - ✅ Reduced motion alternatives (`@media (prefers-reduced-motion: reduce)`)
-- ✅ Visible focus indicators (`:focus-visible`)
-- ✅ Proper ARIA attributes
+- ✅ Visible focus indicators (`:focus-visible`) on all interactive elements — never `:hover` without `:focus-visible`
+- ✅ Proper ARIA attributes (`role`, `aria-label`, `aria-labelledby`)
 - ✅ Screen reader support where needed
+- ✅ Alt text on all `<img>` elements (WCAG 1.1.1)
+- ✅ Icon-only buttons need `aria-label`; decorative icons need `aria-hidden="true"` (WCAG 4.1.2)
+- ✅ Dialog/modal elements need `role="dialog"` + `aria-labelledby` (WCAG 4.1.2)
 
 ## Loops for Repetitive Content
 

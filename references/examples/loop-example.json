@@ -126,7 +126,7 @@
       "type": "class",
       "selector": ".post-card__link",
       "collection": "default",
-      "css": "color: var(--primary);\n  text-decoration: none;\n  font-weight: 600;\n\n  &:hover {\n    text-decoration: underline;\n  }",
+      "css": "color: var(--primary);\n  text-decoration: none;\n  font-weight: 600;\n\n  &:hover {\n    text-decoration: underline;\n  }\n\n  &:focus-visible {\n    outline: 2px solid var(--primary);\n    outline-offset: 2px;\n  }",
       "readonly": false
     }
   },
