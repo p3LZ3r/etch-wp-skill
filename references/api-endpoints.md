@@ -11,20 +11,32 @@ All Etch API endpoints require WordPress authentication:
 - `GET`: `edit_posts`
 - `POST/PUT/DELETE`: `edit_posts` + `manage_options`
 
-## ⚠️ Styles Endpoint — READ-ONLY
+## API Credentials
 
-**CRITICAL: The `/styles` and `/stylesheets` endpoints MUST only be used for reading (GET). NEVER send PUT, POST, or DELETE requests to these endpoints.**
+Credentials are configured during project init (`node scripts/init-project.js` → Q10) and stored in `.etch-project.json` under `api`. Use the auth method recorded there:
 
-A previous incident caused the deletion of every CSS class on a live website due to a PUT call to the styles endpoint. To prevent this from ever happening again:
+- **`application-password`** → Basic Auth: `curl -u "username:app-password" "https://site.com/wp-json/etch-api/..."`
+- **`wp-admin-browser`** → Nonce header: `fetch('/wp-json/etch-api/...', { headers: { 'X-WP-Nonce': window.wpApiSettings.nonce } })`
 
-- ✅ `GET /styles` — **Allowed** (read global styles)
-- ✅ `GET /stylesheets` — **Allowed** (read saved stylesheets)
-- ❌ `PUT /styles` — **FORBIDDEN**
-- ❌ `POST /styles` — **FORBIDDEN**
-- ❌ `DELETE /styles` — **FORBIDDEN**
-- ❌ `PUT /stylesheets` — **FORBIDDEN**
-- ❌ `POST /stylesheets` — **FORBIDDEN**
-- ❌ `DELETE /stylesheets` — **FORBIDDEN**
+## ⚠️ Styles/Stylesheets Endpoints — READ-ONLY
+
+**CRITICAL: The `/styles` and `/stylesheets` endpoints are READ-ONLY. Only `GET` is allowed.**
+
+Styles must **ALWAYS** be provided inline with the component, layout, section, or element JSON. Never push styles separately.
+
+| Endpoint | GET | PUT | POST | DELETE |
+|----------|-----|-----|------|--------|
+| `/styles` | ✅ Allowed | ❌ **PROHIBITED** | ❌ **PROHIBITED** | ❌ **PROHIBITED** |
+| `/stylesheets` | ✅ Allowed | ❌ **PROHIBITED** | ❌ **PROHIBITED** | ❌ **PROHIBITED** |
+
+**Why?** Styles are part of the component/layout definition and should travel with it. Separate style management causes:
+- Style/component version mismatches
+- Accidental overwrites of global styles
+- Orphaned styles when components are deleted
+
+**Correct approach:** Include styles inline in the `etchData.styles` array within each block's metadata.
+
+---
 
 ## ⚠️ Human-in-the-Loop — Required for ALL Write Operations
 
@@ -43,47 +55,39 @@ This applies to all endpoints including but not limited to:
 - `POST /loops`, `PUT /loops`, `DELETE /loops`
 - `POST /queries`, `PUT /queries`, `DELETE /queries`
 
-**Remember: `/styles` and `/stylesheets` are fully excluded from write operations — they are read-only regardless of user confirmation.**
+**Note:** `/styles` and `/stylesheets` are fully excluded from write operations — they are read-only regardless of user confirmation.
 
-## API Credentials
+---
 
-Credentials are configured during project init (`node scripts/init-project.js` → Q10) and stored in `.etch-project.json` under `api`. Use the auth method recorded there:
+## Components API (`/components`)
 
-- **`application-password`** → Basic Auth: `curl -u "username:app-password" "https://site.com/wp-json/etch-api/..."`
-- **`wp-admin-browser`** → Nonce header: `fetch('/wp-json/etch-api/...', { headers: { 'X-WP-Nonce': window.wpApiSettings.nonce } })`
+Components are reusable blocks with properties (props) that can be referenced via `etch_component('key')` in PHP templates.
 
-## Minimum Endpoints to Check Before Building
+### GET /components
+Returns all components with full details.
 
-### 1) Existing reusable blocks
+**Response:**
+```json
+[
+  {
+    "id": 123,
+    "name": "Feature Card",
+    "key": "FeatureCard",
+    "blocks": [...],
+    "properties": [...],
+    "description": "A reusable card component",
+    "legacyId": "old_id_if_migrated"
+  }
+]
+```
 
-- `GET /components/list` (fast names + keys)
-- `GET /components` (full component payloads)
-- `GET /patterns` (saved patterns)
+### GET /components/list
+Returns lightweight list (id, key, name, legacyId only) for quick lookup.
 
-### 2) Existing style systems
+### POST /components
+**Creates a new component.**
 
-- `GET /styles` (global styles)
-- `GET /stylesheets` (saved stylesheets)
-
-### 3) Content structure for dynamic builds
-
-- `GET /loops` (saved loop definitions)
-- `GET /queries` (saved query definitions)
-- `GET /cms/field-group/` (field groups)
-- `GET /post-types` and `GET /post-types/{post_type_name}`
-- `GET /taxonomies` and `GET /taxonomies/{id}`
-
-## Reuse-First Workflow
-
-1. Check official pattern library first (`patterns.etchwp.com`).
-2. Call Etch API endpoints above to discover existing site components/patterns/styles.
-3. Reuse or adapt what exists.
-4. Build new JSON only when no suitable reusable option exists.
-
-## API Component Format (POST /components)
-
-Components are **always** created via API — never saved as `.json` files in the project folder. The API format differs from the paste format used for layouts/sections/pages.
-
+**Request Body:**
 ```json
 {
   "name": "Feature Card",
@@ -92,57 +96,386 @@ Components are **always** created via API — never saved as `.json` files in th
   "blocks": [
     {
       "blockName": "etch/element",
-      "attrs": { "tag": "div", "attributes": { "class": "tl-card" }, "styles": ["a1b2c3d"] },
-      "innerBlocks": [],
-      "innerHTML": "\n\n",
-      "innerContent": ["\n", "\n"]
+      "attrs": {
+        "metadata": {
+          "name": "Card Container",
+          "etchData": {
+            "origin": "etch",
+            "component": "div",
+            "styles": ["a1b2c3d"],
+            "attributes": {
+              "class": "tl-card"
+            },
+            "block": {
+              "type": "html",
+              "tag": "div"
+            }
+          }
+        },
+        "tag": "div",
+        "attributes": {
+          "class": "tl-card"
+        }
+      },
+      "innerBlocks": [...],
+      "innerHTML": "<div class=\"tl-card\"></div>",
+      "innerContent": ["<div class=\"tl-card\">", null, "</div>"]
     }
   ],
   "properties": [
     {
       "key": "title",
-      "name": "Title",
-      "keyTouched": true,
-      "type": { "primitive": "string" },
-      "default": "Card Title"
+      "name": "Card Title",
+      "type": "text",
+      "default": "Default Title"
     }
-  ],
-  "styles": {
-    "a1b2c3d": {
-      "type": "class",
-      "selector": ".tl-card",
-      "css": "padding: var(--space-l);"
-    }
+  ]
+}
+```
+
+**Important Notes:**
+- `styles` is NOT accepted in POST body — push styles separately via `PUT /styles` or `PUT /stylesheets`
+- `key` must be PascalCase (e.g., `FeatureCard`)
+- `blocks` must be valid WordPress block objects with `blockName`, `attrs`, `innerBlocks`, `innerHTML`, `innerContent`
+
+### GET /components/{id}
+Returns single component by ID.
+
+### PUT /components/{id}
+Updates an existing component.
+
+### DELETE /components/{id}
+Deletes a component.
+
+---
+
+## Patterns API (`/patterns`)
+
+Patterns are standard wp_block posts (synced or unsynced) WITHOUT the `etch_component_html_key` meta. They are used in the editor but cannot be referenced via `etch_component()`.
+
+### GET /patterns
+Returns all patterns.
+
+### GET /patterns/{id}
+Returns single pattern.
+
+### POST /patterns
+**Creates a new pattern.**
+
+**Request Body:**
+```json
+{
+  "name": "Hero Pattern",
+  "description": "A hero section pattern",
+  "blocks": [...],
+  "synced": true,
+  "categories": ["header", "hero"]
+}
+```
+
+### PUT /patterns/{id}
+Updates a pattern.
+
+### DELETE /patterns/{id}
+Deletes a pattern.
+
+---
+
+## Styles API (`/styles`)
+
+**READ-ONLY: GET only. Styles must be provided inline with components.**
+
+### GET /styles
+Returns all global styles as an object. Useful for inspection/reference only.
+
+**Response:**
+```json
+{
+  "a1b2c3d": {
+    "type": "class",
+    "selector": ".tl-card",
+    "collection": "default",
+    "css": "padding: var(--space-l);",
+    "readonly": false
   }
 }
 ```
 
-**Key differences from paste format:**
-- No `type`, `gutenbergBlock`, or `version` wrapper
-- `blocks` array directly at root (not nested in `gutenbergBlock`)
-- `properties` at root (not nested in `components.{id}`)
-- `key` must be PascalCase (e.g., `FeatureCard`)
+**Note:** Never use `PUT /styles`. Always include styles inline in the `etchData.styles` array within each block's metadata.
 
-**Layouts/sections/pages** use the paste format (`{ type: "block", gutenbergBlock, version: 2, ... }`) and are saved as `.json` files for pasting into the Etch frontend editor.
+---
+
+## Stylesheets API (`/stylesheets`)
+
+**READ-ONLY: GET only. Styles must be provided inline with components.**
+
+### GET /stylesheets
+Returns all stylesheets as an object. Useful for inspection/reference only.
+
+**Response:**
+```json
+{
+  "abc1234": {
+    "name": "Main",
+    "css": "/* CSS here */",
+    "type": "default"
+  }
+}
+```
+
+**Note:** Never use `PUT/POST/DELETE /stylesheets`. Always include styles inline with components.
+
+---
+
+## Block Parser API (`/blocks/parse`)
+
+Converts Gutenberg HTML block comments into JSON block objects.
+
+### POST /blocks/parse
+
+**Request Body:**
+```json
+{
+  "content": "<!-- wp:paragraph --><p>Hello</p><!-- /wp:paragraph -->"
+}
+```
+
+**Response:**
+```json
+[
+  {
+    "blockName": "core/paragraph",
+    "attrs": {},
+    "innerBlocks": [],
+    "innerHTML": "<p>Hello</p>",
+    "innerContent": ["<p>Hello</p>"]
+  }
+]
+```
+
+---
+
+## Complete Component Creation Example
+
+### Step 1: Prepare Component JSON
+```json
+{
+  "name": "Hero Section",
+  "key": "HeroSection",
+  "description": "A full-width hero section",
+  "blocks": [
+    {
+      "blockName": "etch/element",
+      "attrs": {
+        "metadata": {
+          "name": "Hero Container",
+          "etchData": {
+            "origin": "etch",
+            "component": "section",
+            "styles": ["section-style-id"],
+            "attributes": {
+              "class": "tl-hero"
+            },
+            "block": {
+              "type": "html",
+              "tag": "section"
+            }
+          }
+        },
+        "tag": "section",
+        "attributes": {
+          "class": "tl-hero"
+        }
+      },
+      "innerBlocks": [
+        {
+          "blockName": "etch/text",
+          "attrs": {
+            "content": "{props.heading}"
+          },
+          "innerBlocks": [],
+          "innerHTML": "",
+          "innerContent": []
+        }
+      ],
+      "innerHTML": "<section class=\"tl-hero\"></section>",
+      "innerContent": ["<section class=\"tl-hero\">", null, "</section>"]
+    }
+  ],
+  "properties": [
+    {
+      "key": "heading",
+      "name": "Heading",
+      "type": "text",
+      "default": "Welcome"
+    }
+  ]
+}
+```
+
+### Step 2: POST Component
+```bash
+curl -u "user:pass" \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d @component.json \
+  "https://site.com/wp-json/etch-api/components"
+```
+
+**Done!** The component is created with inline styles. No separate style push needed.
+
+---
+
+## Inline Styles (Correct Approach)
+
+Styles must ALWAYS be provided inline within each block's `etchData.styles` array:
+
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "metadata": {
+      "name": "Hero Container",
+      "etchData": {
+        "origin": "etch",
+        "component": "section",
+        "styles": ["a1b2c3d", "etch-section-style"],
+        "attributes": {
+          "class": "tl-hero",
+          "data-etch-element": "section"
+        },
+        "block": {
+          "type": "html",
+          "tag": "section"
+        }
+      }
+    },
+    "tag": "section",
+    "attributes": {
+      "class": "tl-hero",
+      "data-etch-element": "section"
+    }
+  },
+  "innerBlocks": [...],
+  "innerHTML": "<section class=\"tl-hero\" data-etch-element=\"section\"></section>",
+  "innerContent": ["<section class=\"tl-hero\" data-etch-element=\"section\">", null, "</section>"]
+}
+```
+
+Style definitions are stored in a separate `styles` object (for paste format) or referenced by ID. The style IDs in `etchData.styles` reference these definitions.
+
+**Key points:**
+- `etchData.styles` is an array of style IDs (7-char alphanumeric)
+- Style definitions travel with the component JSON (paste format) or are referenced (API format)
+- Never use `PUT /styles` or `PUT /stylesheets` — these are read-only endpoints
+
+---
+
+## Other Useful Endpoints
+
+### Loops (`/loops`)
+- `GET /loops` — All saved loop definitions
+- `POST /loops` — Create loop
+- `PUT /loops/{id}` — Update loop
+
+### Queries (`/queries`)
+- `GET /queries` — All saved queries
+- `POST /queries` — Create query
+
+### CMS/Field Groups (`/cms`)
+- `GET /cms/field-group/{id}` — Field group by ID
+- `GET /cms/field-groups` — All field groups
+
+### Post Types (`/post-types`)
+- `GET /post-types` — All post types
+- `GET /post-types/{name}` — Specific post type
+
+### Taxonomies (`/taxonomies`)
+- `GET /taxonomies` — All taxonomies
+- `GET /taxonomies/{id}` — Specific taxonomy
+
+---
+
+## Minimum Endpoints to Check Before Building
+
+1. **Existing reusable blocks**
+   - `GET /components/list` (fast names + keys)
+   - `GET /components` (full component payloads)
+   - `GET /patterns` (saved patterns)
+
+2. **Existing style systems**
+   - `GET /styles` (global styles)
+   - `GET /stylesheets` (saved stylesheets)
+
+3. **Content structure for dynamic builds**
+   - `GET /loops` (saved loop definitions)
+   - `GET /queries` (saved query definitions)
+   - `GET /cms/field-group/` (field groups)
+   - `GET /post-types` and `GET /post-types/{post_type_name}`
+   - `GET /taxonomies` and `GET /taxonomies/{id}`
+
+## Reuse-First Workflow
+
+1. Check official pattern library first (`patterns.etchwp.com`).
+2. Call Etch API endpoints above to discover existing site components/patterns/styles.
+3. Reuse or adapt what exists.
+4. Build new JSON only when no suitable reusable option exists.
+
+---
 
 ## Practical cURL Examples
 
 ```bash
-# Components
+# Get components list (fast)
 curl -u "username:application-password" \
   "https://example.com/wp-json/etch-api/components/list"
 
-# Patterns
+# Get full components
+curl -u "username:application-password" \
+  "https://example.com/wp-json/etch-api/components"
+
+# Get patterns
 curl -u "username:application-password" \
   "https://example.com/wp-json/etch-api/patterns"
 
-# Stylesheets
+# Get styles
+curl -u "username:application-password" \
+  "https://example.com/wp-json/etch-api/styles"
+
+# Get stylesheets
 curl -u "username:application-password" \
   "https://example.com/wp-json/etch-api/stylesheets"
 
-# Loops and queries (for data structure understanding)
+# Get loops
 curl -u "username:application-password" \
   "https://example.com/wp-json/etch-api/loops"
+
+# Get queries
 curl -u "username:application-password" \
   "https://example.com/wp-json/etch-api/queries"
+
+# Create component
+curl -u "username:application-password" \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Test Component",
+    "key": "TestComponent",
+    "blocks": [],
+    "properties": []
+  }' \
+  "https://example.com/wp-json/etch-api/components"
 ```
+
+---
+
+## Summary: Component vs Pattern
+
+| Aspect | Component | Pattern |
+|--------|-----------|---------|
+| Endpoint | `/components` | `/patterns` |
+| PHP Usage | `etch_component('Key')` | Not available |
+| Meta Key | `etch_component_html_key` | None |
+| Purpose | Template-renderable blocks | Editor-only reusable blocks |
+| Properties | Yes | No |
+| Key Field | Required (PascalCase) | N/A |

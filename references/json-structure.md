@@ -286,18 +286,19 @@ Or in attributes:
 
 **⚠️ Condition format differs for props vs dynamic data. See `block-types.md` for full reference.**
 
-### Props Condition (isTruthy)
+### Component Props Condition
+For component props, use `this.propName` with `!= ""`:
 ```json
 {
   "blockName": "etch/condition",
   "attrs": {
     "metadata": {"name": "If (Condition)"},
     "condition": {
-      "leftHand": "props.showElement",
-      "operator": "isTruthy",
-      "rightHand": null
+      "leftHand": "this.showElement",
+      "operator": "!=",
+      "rightHand": "\"\""
     },
-    "conditionString": "props.showElement"
+    "conditionString": "this.showElement != \"\""
   },
   "innerBlocks": [
     // Content shown when condition is true
@@ -327,8 +328,8 @@ For `this.metabox.*`, `post.*`, loop items — wrap leftHand in `{}` and use `!=
 
 ### Condition Operators
 
-- `isTruthy` - Check if value is truthy (use for `props.*`)
-- `!==` - Not equal (use for dynamic data existence checks with `""`)
+- `!=` - Not equal (loose) - use for component props: `this.prop != ""`
+- `!==` - Not equal (strict) - use for dynamic data: `{this.metabox.field} !== ""`
 - `===` - Strict equality
 - `>`, `<`, `>=`, `<=` - Numeric comparisons
 - `||` - OR (combine conditions)

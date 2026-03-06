@@ -60,3 +60,6 @@ temp/
 
 # Claude Code specific
 .claude/
+
+# Etch WP plugin source (reference only)
+etch/

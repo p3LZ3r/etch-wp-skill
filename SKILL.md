@@ -4,9 +4,9 @@ description: Expert knowledge for Etch WP - a Unified Visual Development Environ
 license: CC BY-NC-SA 4.0
 metadata:
   author: Torsten Linnecke
-  version: 2.5.0
+  version: 2.9.0
   created: 2025-12-20
-  updated: 2026-02-16
+  updated: 2026-03-06
   category: wordpress
   tags: wordpress, gutenberg, etch-wp, acss, component-generator
   homepage: https://etchwp.com
@@ -43,9 +43,16 @@ Etch WP requires components and patterns in a specific JSON format based on Gute
 
 ## ⚠️ API Safety Rules
 
-### Styles Endpoint — READ-ONLY
+### Styles/Stylesheets Endpoints — READ-ONLY
 
-**CRITICAL: NEVER send PUT, POST, or DELETE requests to the `/styles` or `/stylesheets` endpoints.** These endpoints are strictly read-only. A previous incident caused the deletion of every CSS class on a production website due to a PUT call on the styles endpoint. Only `GET` requests are permitted for styles and stylesheets.
+**CRITICAL: The `/styles` and `/stylesheets` endpoints are READ-ONLY. Only `GET` is allowed.**
+
+| Endpoint | GET | PUT | POST | DELETE |
+|----------|-----|-----|------|--------|
+| `/styles` | ✅ Allowed | ❌ **PROHIBITED** | ❌ **PROHIBITED** | ❌ **PROHIBITED** |
+| `/stylesheets` | ✅ Allowed | ❌ **PROHIBITED** | ❌ **PROHIBITED** | ❌ **PROHIBITED** |
+
+**Styles must ALWAYS be provided inline** within the component, layout, section, or element JSON via `etchData.styles`. They travel with the component — never pushed separately.
 
 ### Human-in-the-Loop — Required for ALL Write Operations
 
@@ -138,10 +145,10 @@ Once project is initialized:
   "name": "Feature Card",
   "key": "FeatureCard",
   "blocks": [ /* block tree */ ],
-  "properties": [ /* prop definitions */ ],
-  "styles": { /* style objects */ }
+  "properties": [ /* prop definitions */ ]
 }
 ```
+⚠️ `styles` is NOT accepted by `POST /components` — the server ignores it silently. **Styles must ALWAYS be inline** in `etchData.styles` within each block's metadata. Never use `PUT /styles` or `PUT /stylesheets` — these endpoints are read-only.
 
 **Paste/layout format** (for frontend editor):
 ```json
@@ -250,23 +257,72 @@ Always use `var(--border)`, `var(--border-light)`, or `var(--border-dark)` — n
 
 ## Image Best Practices
 
-Use `etch/dynamic-image` wrapped in a `figure` element for semantic markup and accessibility. Never use bare `etch/element` with `tag: "img"` for dynamic images.
+**ALWAYS use `etch/dynamic-image` for all images in Etch WP — no exceptions.**
+
+Never use `etch/element` with `tag: "img"`. The `etch/dynamic-image` block is the standard for all image rendering.
+
+### With Media Picker (Components)
+
+When the image comes from a WordPress media picker property:
 
 ```json
 {
   "blockName": "etch/element",
-  "attrs": { "tag": "figure", "attributes": { "class": "ph-product-card__figure" }, "styles": ["f1g2h3i"] },
+  "attrs": {
+    "metadata": {"name": "Featured Figure"},
+    "tag": "figure",
+    "attributes": { "class": "frm-featured__figure" }
+  },
   "innerBlocks": [{
     "blockName": "etch/dynamic-image",
-    "attrs": { "tag": "img", "attributes": { "src": "{prod.metabox.product_thumbnail}", "alt": "{prod.title}", "loading": "lazy" } },
+    "attrs": {
+      "metadata": {"name": "Featured Image"},
+      "tag": "img",
+      "attributes": {
+        "mediaId": "{props.featuredImage}",
+        "class": "frm-featured__image",
+        "loading": "lazy"
+      }
+    },
     "innerBlocks": [], "innerHTML": "", "innerContent": []
   }],
   "innerHTML": "\n\n", "innerContent": ["\n", "\n"]
 }
 ```
 
-- Dynamic images (loops/MetaBox) → `etch/dynamic-image` in `figure`
-- Static placeholders → `etch/element` with `tag: "img"` or `etch/dynamic-image`
+**Key points:**
+- Use `mediaId` — Etch auto-populates src and alt from media library
+- No separate alt property needed (fetched from media library)
+- Always wrap in `figure` for semantic markup
+
+### With Dynamic Data (Loops/Layouts)
+
+When the image URL comes from post data, MetaBox fields, or loops:
+
+```json
+{
+  "blockName": "etch/element",
+  "attrs": { "tag": "figure", "attributes": { "class": "ph-product-card__figure" } },
+  "innerBlocks": [{
+    "blockName": "etch/dynamic-image",
+    "attrs": {
+      "tag": "img",
+      "attributes": {
+        "src": "{prod.metabox.product_thumbnail}",
+        "alt": "{prod.title}",
+        "loading": "lazy"
+      }
+    },
+    "innerBlocks": [], "innerHTML": "", "innerContent": []
+  }],
+  "innerHTML": "\n\n", "innerContent": ["\n", "\n"]
+}
+```
+
+**Summary:**
+- **Always** use `etch/dynamic-image` — never `etch/element` with `tag: "img"`
+- Media picker images → `mediaId: "{props.imageProperty}"`
+- Dynamic/URL images → `src: "{item.image}"` with explicit `alt`
 
 ## BEM Class Naming Convention (STRICT)
 
@@ -332,32 +388,130 @@ Use `etch/dynamic-image` wrapped in a `figure` element for semantic markup and a
 
 ## Available Block Types
 
-- **`etch/element`** - HTML elements (divs, headings, etc.)
-- **`etch/text`** - Text content with dynamic props
-- **`etch/svg`** - SVG icons and graphics
-- **`etch/dynamic-image`** - Image elements with dynamic props
-- **`etch/component`** - Component references
-- **`etch/loop`** - Loops for repetitive elements
-- **`etch/condition`** - Conditional rendering
-- **`etch/slot-placeholder`** - Slot placeholder in component definition
-- **`etch/slot-content`** - Slot content when using component
+| Block Type | Purpose | Key Attributes |
+|------------|---------|----------------|
+| **`etch/element`** | HTML elements (divs, headings, etc.) | `metadata.name`, `tag`, `attributes.class` |
+| **`etch/text`** | Text content with dynamic props | `content` (e.g., `"{props.title}"`) |
+| **`etch/svg`** | SVG icons and graphics | `metadata.name`, `viewBox`, `attributes.class` |
+| **`etch/dynamic-image`** | Image elements with dynamic props | `metadata.name`, `attributes.mediaId` (components) or `attributes.src` (loops) |
+| **`etch/component`** | Component references | `ref` (component ID), `attributes` |
+| **`etch/loop`** | Loops for repetitive elements | `loopId`, `itemId`, `loopParams` |
+| **`etch/condition`** | Conditional rendering | `metadata.name`, `condition` object, `conditionString` |
+| **`etch/slot-placeholder`** | Slot placeholder in component definition | `name` |
+| **`etch/slot-content`** | Slot content when using component | `name` |
 
 **See**: `references/block-types.md` for detailed documentation
 
-## Dynamic Content with etch/text
+### Component-Specific Block Notes
 
-**CRITICAL:** For looped or dynamic data, **ALWAYS use `etch/text` blocks** — never put dynamic values in `innerHTML`.
+**`etch/element` inside components:**
+- MUST include `metadata: {name: "..."}` for Etch editor visibility
+- Property references use `props.` prefix: `"href": "{props.linkUrl}"`
+
+**`etch/dynamic-image` inside components:**
+- Use `attributes.mediaId` (not `src`): `"mediaId": "{props.featuredImage}"`
+- Etch auto-populates src and alt from media library
+- Property should have `"specialized": "image"`
+
+**`etch/condition` inside components:**
+- MUST include `metadata.name` describing the condition
+- Use object format: `condition: {leftHand, operator, rightHand}`
+- Use `props.` prefix in `leftHand`: `"leftHand": "props.hasMedia"`
+
+## Text Content Rules - ALL Text Uses `etch/text` Blocks
+
+**CRITICAL: ALL text content MUST use `etch/text` blocks — NEVER put text directly in `innerHTML`.**
+
+This applies to:
+- ✅ **Static text** ("Products", "Read More", "Impressum") → `etch/text`
+- ✅ **Dynamic text** (`{cat.name}`, `{prod.title}`, `{post.id}`) → `etch/text`
+- ❌ **NEVER**: Text content in `innerHTML` of an element
+
+### Correct Structure
+
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "h2",
+    "attributes": { "class": "my-heading" }
+  },
+  "innerBlocks": [
+    {
+      "blockName": "etch/text",
+      "attrs": {
+        "content": "My Heading Text"  // ← ALL text goes here
+      },
+      "innerBlocks": [],
+      "innerHTML": "",
+      "innerContent": []
+    }
+  ],
+  "innerHTML": "\n\n",  // ← Just spacing, no text content
+  "innerContent": ["\n", null, "\n"]
+}
+```
+
+### Wrong Structure (Will Not Display Text)
+
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "h2"
+  },
+  "innerBlocks": [],
+  "innerHTML": "\nMy Heading Text\n",  // ❌ Text won't render!
+  "innerContent": ["\nMy Heading Text\n"]
+}
+```
+
+### Dynamic Text Example
 
 ```json
 {
   "blockName": "etch/text",
-  "attrs": { "tag": "h2", "text": "{cat.name}", "attributes": { "class": "category-title" } },
-  "innerBlocks": [], "innerHTML": "", "innerContent": []
+  "attrs": {
+    "content": "{cat.name}"  // ← Dynamic values work the same way
+  },
+  "innerBlocks": [],
+  "innerHTML": "",
+  "innerContent": []
 }
 ```
 
-- Looped/dynamic content (`{cat.name}`, `{prod.title}`, `{post.id}`) → **etch/text**
-- Static text ("Products", "Read More") → `etch/element` with innerHTML
+### Mixed Content Example
+
+For elements with HTML tags + text, nest them properly:
+
+```json
+{
+  "blockName": "etch/element",
+  "attrs": { "tag": "p" },
+  "innerBlocks": [
+    {
+      "blockName": "etch/element",
+      "attrs": { "tag": "strong" },
+      "innerBlocks": [
+        {
+          "blockName": "etch/text",
+          "attrs": { "content": "Bold text" }
+        }
+      ],
+      "innerHTML": "\n\n",
+      "innerContent": ["\n", null, "\n"]
+    },
+    {
+      "blockName": "etch/text",
+      "attrs": { "content": " regular text" }
+    }
+  ],
+  "innerHTML": "\n\n\n",
+  "innerContent": ["\n", null, "\n\n", null, "\n"]
+}
+```
+
+**Rule**: If an element displays ANY text content, it MUST have `etch/text` blocks as children!
 
 ## Components: Props vs. Slots
 
@@ -372,6 +526,134 @@ Use `etch/dynamic-image` wrapped in a `figure` element for semantic markup and a
 - Need flexible, complex content? → Slot
 
 **See**: `references/props-system.md` and `references/examples/component-with-*.json`
+
+## Component Property References - ALWAYS Use `props.` Prefix
+
+**CRITICAL: Inside component definitions, ALL property references MUST use the `props.` prefix.**
+
+### ❌ WRONG - Missing `props.` prefix
+```json
+{
+  "blockName": "etch/text",
+  "attrs": {
+    "content": "{itemLabel}"
+  }
+}
+```
+
+### ✅ CORRECT - With `props.` prefix
+```json
+{
+  "blockName": "etch/text",
+  "attrs": {
+    "content": "{props.itemLabel}"
+  }
+}
+```
+
+**This applies to ALL property references inside components:**
+- Text content: `"{props.title}"`
+- Attribute values: `"href": "{props.linkUrl}"`
+- Class conditions: `"class": "{props.isActive ? 'active' : ''}"`
+- Image references: `"mediaId": "{props.featuredImage}"`
+
+## Property Structure Requirements
+
+**ALL properties MUST include `keyTouched: true`:**
+
+```json
+{
+  "key": "itemLabel",
+  "name": "Item Label",
+  "keyTouched": true,
+  "type": {
+    "primitive": "string"
+  },
+  "default": "Default Value"
+}
+```
+
+**Required fields:**
+- `key` - Machine name (camelCase, unique within component)
+- `name` - Display label in Etch editor
+- `keyTouched: true` - REQUIRED flag indicating the key was explicitly set
+- `type` - Object with `primitive` type (and optionally `specialized`)
+- `default` - Default value for the property
+
+### Image Properties
+
+For image properties, add `"specialized": "image"` to the type:
+
+```json
+{
+  "key": "featuredImage",
+  "name": "Featured Image",
+  "keyTouched": true,
+  "type": {
+    "primitive": "string",
+    "specialized": "image"
+  },
+  "default": ""
+}
+```
+
+**Note:** No separate `alt` property needed — Etch auto-populates src and alt from the media library when using `mediaId`.
+
+## Condition Format for `etch/condition`
+
+**Conditions MUST use object format with metadata name:**
+
+```json
+{
+  "blockName": "etch/condition",
+  "attrs": {
+    "metadata": {"name": "If Has Media"},
+    "condition": {
+      "leftHand": "props.hasMedia",
+      "operator": "===",
+      "rightHand": "true"
+    },
+    "conditionString": "props.hasMedia === true"
+  },
+  "innerBlocks": [
+    // Content to show when condition is true
+  ]
+}
+```
+
+**Required fields:**
+- `metadata.name` - Display name in Etch editor (follows BEM naming)
+- `condition.leftHand` - Left side of comparison (use `props.` prefix)
+- `condition.operator` - Comparison operator (`===`, `!==`, `==`, `!=`, `>`, `<`, etc.)
+- `condition.rightHand` - Right side of comparison
+- `conditionString` - String representation for debugging
+
+**Note:** Boolean values in `rightHand` should be strings: `"true"` or `"false"` (not `true` or `false`).
+
+## Element Metadata Names
+
+**ALL elements MUST have metadata names for visibility in the Etch editor:**
+
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "metadata": {"name": "Item Heading"},
+    "tag": "h4",
+    "attributes": {
+      "class": "frm-dropdown-list__item-heading"
+    }
+  }
+}
+```
+
+**Applies to:**
+- `etch/element` - Use descriptive names following BEM (e.g., "Item Heading", "Featured Image")
+- `etch/svg` - Use names like "Trigger Icon", "Arrow Icon"
+- `etch/dynamic-image` - Use names like "Featured Image", "Product Thumbnail"
+- `etch/condition` - Use names describing the condition (e.g., "If Has Media", "Show Description")
+
+**Naming convention:** Use plain English describing the element's purpose (follows BEM structure in natural language).
 
 ## Data Modifiers
 
@@ -538,6 +820,176 @@ These tools automatically:
 
 **See**: `references/acss-variables.md` (JavaScript Integration & GSAP sections)
 
+## ⚠️ CRITICAL: Text Content MUST Use `etch/text` Blocks
+
+**NEVER put text content directly in `innerHTML` of elements. All text must be in `etch/text` blocks!**
+
+### ❌ WRONG - Text in innerHTML
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "h2"
+  },
+  "innerBlocks": [],
+  "innerHTML": "\nMy Heading\n",  // WRONG: Text in innerHTML won't render!
+  "innerContent": ["\nMy Heading\n"]
+}
+```
+
+### ✅ CORRECT - Text in etch/text block
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "h2"
+  },
+  "innerBlocks": [
+    {
+      "blockName": "etch/text",
+      "attrs": {
+        "content": "My Heading"  // Text goes here!
+      },
+      "innerBlocks": [],
+      "innerHTML": "",
+      "innerContent": []
+    }
+  ],
+  "innerHTML": "\n\n",  // Just spacing
+  "innerContent": ["\n", null, "\n"]
+}
+```
+
+### Mixed Content Example
+For elements with both tags and text, nest them properly:
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "p"
+  },
+  "innerBlocks": [
+    {
+      "blockName": "etch/element",
+      "attrs": {
+        "tag": "strong"
+      },
+      "innerBlocks": [
+        {
+          "blockName": "etch/text",
+          "attrs": {
+            "content": "Bold text"
+          },
+          "innerBlocks": [],
+          "innerHTML": "",
+          "innerContent": []
+        }
+      ],
+      "innerHTML": "\n\n",
+      "innerContent": ["\n", null, "\n"]
+    },
+    {
+      "blockName": "etch/text",
+      "attrs": {
+        "content": " regular text"
+      },
+      "innerBlocks": [],
+      "innerHTML": "",
+      "innerContent": []
+    }
+  ],
+  "innerHTML": "\n\n\n",
+  "innerContent": ["\n", null, "\n\n", null, "\n"]
+}
+```
+
+**Rule**: If an element displays text, it MUST have an `etch/text` block as a child!
+
+## ⚠️ CRITICAL: Style Object Structure (Styles Won't Apply Without This)
+
+**ALL style objects MUST include these 5 fields:**
+
+```json
+{
+  "q2fy3v0": {
+    "type": "class",           // REQUIRED: "class" or "element"
+    "selector": ".my-class",   // REQUIRED: CSS selector
+    "collection": "default",   // REQUIRED: ALWAYS "default"
+    "css": "color: red;",      // REQUIRED: CSS properties
+    "readonly": false          // REQUIRED: true for built-in, false for custom
+  }
+}
+```
+
+**❌ Missing ANY of these = CSS will NOT apply when pasted**
+
+Common causes of styles not working:
+- Missing `"collection": "default"`
+- Missing `"readonly": false`
+- Missing `"type": "class"`
+
+### Including Built-in Etch Styles
+
+When using `data-etch-element="section"` or `data-etch-element="container"`, MUST include their built-in styles:
+
+```json
+{
+  "styles": {
+    "etch-section-style": {
+      "type": "element",
+      "selector": ":where([data-etch-element=\"section\"])",
+      "collection": "default",
+      "css": "inline-size: 100%; display: flex; flex-direction: column; align-items: center;",
+      "readonly": true
+    },
+    "etch-container-style": {
+      "type": "element",
+      "selector": ":where([data-etch-element=\"container\"])",
+      "collection": "default",
+      "css": "inline-size: 100%; display: flex; flex-direction: column; max-width: var(--content-width, 1366px); align-self: center;",
+      "readonly": true
+    }
+    // ... your custom styles
+  }
+}
+```
+
+And reference them in elements:
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "section",
+    "attributes": { "data-etch-element": "section" },
+    "styles": ["your-custom-style", "etch-section-style"]
+  }
+}
+```
+
+**See**: `references/css-architecture-rules.md` for complete CSS architecture guide.
+
+### Built-in Etch Element Styles
+
+**You do NOT need to include `etch-section-style` or `etch-container-style` in your styles object.**
+
+These are automatically applied by Etch when you use the data attributes:
+- `data-etch-element="section"` → Automatically gets section styles
+- `data-etch-element="container"` → Automatically gets container styles
+
+**Correct usage:**
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "section",
+    "attributes": {
+      "data-etch-element": "section"
+    }
+    // No styles array needed for built-in behavior
+  }
+}
+```
+
 ## Critical Lessons - Common Mistakes
 
 | # | Mistake | Correct |
@@ -554,7 +1006,7 @@ These tools automatically:
 | 10 | `"{item.id}"` with braces in loopParams | Use `"item.id"` (no curly braces) |
 | 11 | `"type": "terms"` | Use `"type": "wp-terms"` |
 | 12 | Descriptive loop IDs | Random 7-char: `"8esrv4f"` not `"categories"` |
-| 13 | `isTruthy` for dynamic data | Use `!== ""` for `this.metabox.*`, `post.*`. `isTruthy` = only for `props.*` |
+| 13 | `isTruthy` operator | Does NOT exist - use `!= ""` or `!== ""` instead |
 | 14 | Bare field paths in conditions | Wrap in `{}`: `"{this.metabox.field}"` |
 | 15 | Using `flex-div` | Use standard `div` (deprecated) |
 | 16 | `"type": "field"` in loop configs | Use field path as loop `key` with empty `config: {}` |
@@ -564,16 +1016,31 @@ These tools automatically:
 | 20 | Auto-executing write API calls | **ALWAYS** require explicit user confirmation before any POST/PUT/DELETE |
 | 21 | Saving API component JSON as project file | Components → API POST only. Layouts/sections/pages → `.json` file + paste |
 | 22 | Using paste format for components | Components use API format (`{ name, key, blocks, properties }`) |
+| 23 | **Missing style object fields** | **ALL styles need: `type`, `selector`, `collection`, `css`, `readonly`** |
+| 24 | **Missing `"collection": "default"`** | **Required in all style objects or CSS won't apply** |
+| 25 | **Missing `"readonly": false/true`** | **Required in all style objects or CSS won't apply** |
+| 26 | **Over-engineering BEM classes** | Don't create classes for standard paragraphs - use ACSS defaults |
+| 27 | **Text content in innerHTML** | **Use `etch/text` blocks - NEVER put text in innerHTML!** |
+| 28 | **`styles` at root of POST /components body** | Server silently ignores it — **always use inline styles** in `etchData.styles` within each block |
+| 29 | **Wrong property format** | Use `"name"` not `"label"`. Type must be `{"primitive": "string"}` not `"text"`, and select must be `{"primitive": "string", "specialized": "select"}` not `"select"` |
+| 30 | **Missing `props.` prefix** | ALWAYS use `props.propertyName` inside components: `{props.itemLabel}` not `{itemLabel}` |
+| 31 | **Missing `keyTouched: true`** | All properties MUST include `"keyTouched": true` or they won't work |
+| 32 | **Condition as string** | Conditions need object format with `metadata.name`, `leftHand`, `operator`, `rightHand`, `conditionString` |
+| 33 | **Image with `src` attribute** | ALWAYS use `etch/dynamic-image` (never `etch/element` with `tag: "img"`). Use `mediaId` for media picker, `src` for URLs |
+| 34 | **Missing element metadata** | All `etch/element`, `etch/svg`, `etch/dynamic-image` need `metadata: {name: "..."}` for Etch editor visibility |
 
 ## Response Format
 
 When generating Etch WP code:
 
 1. **Determine output type** — Component → API format; Layout/section/page → Paste format
-2. **Components (API)**: Generate API format JSON, validate, then POST to `/wp-json/etch-api/components` (with user confirmation). Do NOT save as a `.json` file in the project.
+2. **Components (API)** — Single-step push (requires explicit user confirmation):
+   - `POST /wp-json/etch-api/components` with `{ name, key, blocks, properties }` — creates the component with inline styles
 3. **Layouts/sections/pages (Paste)**: Save as `.json` file, validate, then user pastes in frontend editor.
 4. **Run validation** - `node scripts/validate-component.js <file>.json` (auto-detects format)
 5. **Report results** - Show validation output to user
+
+**Note:** Styles are always inline via `etchData.styles`. Never use `PUT /styles` or `PUT /stylesheets`.
 
 ## Reference Files
 
@@ -581,6 +1048,8 @@ When generating Etch WP code:
 |------|---------|
 | `references/official-patterns.md` | **CHECK FIRST** - Official patterns library |
 | `references/api-endpoints.md` | Etch REST endpoints for reuse-first workflow (`/wp-json/etch-api`) |
+| `references/component-json-structure.md` | ⭐ Exact JSON structure for API component creation |
+| `references/technical-reference.md` | ⭐ Technical internals (EtchData, conditions, properties, loops) |
 | `references/acss-variables.md` | ACSS v4 variable reference |
 | `references/block-types.md` | All block types and valid elements |
 | `references/loops.md` | Loop implementations & nested loops |

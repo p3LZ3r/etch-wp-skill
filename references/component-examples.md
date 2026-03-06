@@ -257,11 +257,11 @@ This is a complete section with multiple components - demonstrates the full stru
               "attrs": {
                 "metadata": {"name": "If (Condition)"},
                 "condition": {
-                  "leftHand": "props.hasIcon",
-                  "operator": "isTruthy",
-                  "rightHand": null
+                  "leftHand": "this.hasIcon",
+                  "operator": "!=",
+                  "rightHand": "\"\""
                 },
-                "conditionString": "props.hasIcon"
+                "conditionString": "this.hasIcon != \"\""
               },
               "innerBlocks": [
                 {
@@ -680,17 +680,17 @@ This is a complete section with multiple components - demonstrates the full stru
 }
 ```
 
-### Conditional Content Pattern (Props)
+### Conditional Content Pattern (Component Props)
 ```json
 {
   "blockName": "etch/condition",
   "attrs": {
     "condition": {
-      "leftHand": "props.show",
-      "operator": "isTruthy",
-      "rightHand": null
+      "leftHand": "this.show",
+      "operator": "!=",
+      "rightHand": "\"\""
     },
-    "conditionString": "props.show"
+    "conditionString": "this.show != \"\""
   },
   "innerBlocks": [/* content when true */]
 }

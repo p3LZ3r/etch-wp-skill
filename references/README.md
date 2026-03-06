@@ -7,8 +7,10 @@ This directory contains reference documentation for the Etch WP skill.
 | File | Purpose |
 |------|---------|
 | `acss-variables.md` | ACSS v4 variable reference (colors, spacing, typography) |
-| `api-endpoints.md` | REST API endpoints for components, patterns, styles |
-| `property-structure.md` | ⭐ Component property format reference (NEW) |
+| `api-endpoints.md` | ⭐ REST API endpoints - complete guide with curl examples |
+| `component-json-structure.md` | ⭐ Exact JSON structure for API component creation |
+| `technical-reference.md` | ⭐ Technical internals (EtchData, conditions, properties, loops) |
+| `property-structure.md` | Component property format reference |
 | `block-types.md` | All Etch WP block types and valid elements |
 | `loops.md` | Loop implementations and nested loops |
 | `official-patterns.md` | Official patterns library guide |

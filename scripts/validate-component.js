@@ -114,8 +114,9 @@ class EtchComponentValidator {
       this.errors.push('Missing "gutenbergBlock" property');
     }
 
-    if (data.version !== 2) {
-      this.errors.push('Invalid version (must be 2)');
+    // Version field is optional for paste format
+    if (data.version !== undefined && data.version !== 2) {
+      this.warnings.push('Unexpected version value (should be 2 if provided, or omitted)');
     }
 
     if (!data.styles || typeof data.styles !== 'object') {

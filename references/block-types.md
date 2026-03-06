@@ -191,45 +191,54 @@ Conditional rendering logic.
 | User data | `user.field` | `user.userRoles` |
 | URL parameters | `url.parameter.name` | `url.parameter.budget` |
 
-### Condition Format: Props vs Dynamic Data
+### Condition Format
 
-**⚠️ IMPORTANT: The condition format differs based on data source.**
+**⚠️ IMPORTANT: Context determines which syntax to use:**
 
-#### Component Props (isTruthy pattern)
-For `props.*` references — use `isTruthy` operator, NO curly brackets on leftHand:
+| Context | Syntax | Example |
+|---------|--------|---------|
+| **Inside Components** | `props.propertyName` | `props.showFeature` |
+| **Templates/Layouts** | `this.metabox.field_name` | `this.metabox.hero_image` |
+| **Loops** | `item.fieldName` | `post.title` |
+
+#### Component Props (Inside Component Definitions)
+
+For checking component property values, use `props.propName`:
+
 ```json
 {
   "blockName": "etch/condition",
   "attrs": {
-    "metadata": {"name": "If (Condition)"},
+    "metadata": {"name": "If Link Exists"},
     "condition": {
-      "leftHand": "props.showElement",
-      "operator": "isTruthy",
-      "rightHand": null
+      "leftHand": "props.link",
+      "operator": "!=",
+      "rightHand": "\"\""
     },
-    "conditionString": "props.showElement"
+    "conditionString": "props.link != \"\""
   },
   "innerBlocks": [
-    // Content shown when true
+    // Content shown when link has value
   ],
   "innerHTML": "\n\n",
   "innerContent": ["\n", null, "\n"]
 }
 ```
 
-#### Dynamic Data (MetaBox, Post, Loop items)
-For `this.metabox.*`, `post.*`, and other dynamic references — use curly brackets on leftHand + `!== ""`:
+#### Template Data (MetaBox, Post)
+For templates/layouts checking MetaBox fields or post data — use `this.metabox.*` or `post.*`:
+
 ```json
 {
   "blockName": "etch/condition",
   "attrs": {
-    "metadata": {"name": "If (Condition)"},
+    "metadata": {"name": "If Has Hero Image"},
     "condition": {
-      "leftHand": "{this.metabox.product_subtitle}",
+      "leftHand": "{this.metabox.hero_image}",
       "operator": "!==",
       "rightHand": "\"\""
     },
-    "conditionString": "{this.metabox.product_subtitle} !== \"\""
+    "conditionString": "{this.metabox.hero_image} !== \"\""
   },
   "innerBlocks": [
     // Content shown when field has value
@@ -252,8 +261,6 @@ For `this.metabox.*`, `post.*`, and other dynamic references — use curly brack
 ```
 
 ### Operators
-- `isTruthy` - Check if truthy (use for `props.*`)
-- `isFalsy` - Check if falsy
 - `===` - Strict equality
 - `!==` - Not equal (strict) — **use for dynamic data existence checks**
 - `==` - Loose equality
@@ -269,27 +276,27 @@ For `this.metabox.*`, `post.*`, and other dynamic references — use curly brack
 - `contains` - String/array contains
 - `matches` - Regex pattern match
 
-### Complex Condition (OR) — Props
+### Complex Condition (OR) — Component Props
 ```json
 {
   "condition": {
     "leftHand": {
       "leftHand": "props.showPrimary",
-      "operator": "isTruthy",
-      "rightHand": null
+      "operator": "!=",
+      "rightHand": "\"\""
     },
     "operator": "||",
     "rightHand": {
       "leftHand": "props.showSecondary",
-      "operator": "isTruthy",
-      "rightHand": null
+      "operator": "!=",
+      "rightHand": "\"\""
     }
   },
-  "conditionString": "props.showPrimary || props.showSecondary"
+  "conditionString": "props.showPrimary != \"\" || props.showSecondary != \"\""
 }
 ```
 
-### Complex Condition (OR) — Dynamic Data
+### Complex Condition (OR) — Template Data
 ```json
 {
   "condition": {
@@ -309,7 +316,7 @@ For `this.metabox.*`, `post.*`, and other dynamic references — use curly brack
 }
 ```
 
-### Complex Condition (AND)
+### Complex Condition (AND) — Component Props
 ```json
 {
   "condition": {
@@ -495,9 +502,10 @@ SVG icon/graphic element.
 
 ## etch/dynamic-image
 
-Dynamic image element for use with props. **This is the preferred method for images in components.**
+**ALWAYS use `etch/dynamic-image` for all images — never use `etch/element` with `tag: "img"`.
+This is the standard for all image rendering in Etch WP.**
 
-### Basic Structure
+### Basic Structure (General Dynamic Images)
 ```json
 {
   "blockName": "etch/dynamic-image",
@@ -518,9 +526,46 @@ Dynamic image element for use with props. **This is the preferred method for ima
 }
 ```
 
+### Component Images with Media Picker
+
+When using a media picker property (with `"specialized": "image"`), use `mediaId` instead of `src`:
+
+```json
+{
+  "blockName": "etch/dynamic-image",
+  "attrs": {
+    "metadata": {"name": "Featured Image"},
+    "tag": "img",
+    "attributes": {
+      "class": "card__img",
+      "mediaId": "{props.featuredImage}",
+      "loading": "lazy"
+    }
+  }
+}
+```
+
+**Property definition for media picker:**
+```json
+{
+  "properties": [
+    {
+      "key": "featuredImage",
+      "name": "Featured Image",
+      "type": {
+        "primitive": "string",
+        "specialized": "image"
+      }
+    }
+  ]
+}
+```
+
 ### Key Points
-- Use `etch/dynamic-image` instead of `etch/element` with `tag: "img"` when the image source comes from props
-- Supports all standard `img` attributes: `src`, `alt`, `loading`, `width`, `height`, etc.
+- **Always** use `etch/dynamic-image` — never `etch/element` with `tag: "img"`
+- Use `src` for URL-based images (loops, dynamic data)
+- Use `mediaId` for WordPress media picker selections (components)
+- Supports all standard `img` attributes: `src`, `mediaId`, `alt`, `loading`, `width`, `height`, etc.
 - Props syntax works for dynamic values: `{props.imageUrl}`, `{post.featured_image}`, etc.
 
 ### Image with Figure Wrapper (Recommended Pattern)
@@ -564,28 +609,34 @@ For semantic markup and styling flexibility, wrap `etch/dynamic-image` in a `fig
 
 ### Component Properties for Images
 
-When defining image props in a component, use the `specialized: "image"` type:
+When defining image props in a component, use the `specialized: "image"` type. This enables the media picker in the Etch editor:
 
 ```json
 {
   "properties": [
     {
-      "key": "imageUrl",
-      "name": "Image URL",
+      "key": "featuredImage",
+      "name": "Featured Image",
+      "keyTouched": true,
       "type": {
         "primitive": "string",
         "specialized": "image"
       }
-    },
-    {
-      "key": "imageAlt",
-      "name": "Image Alt Text",
-      "type": {
-        "primitive": "string"
-      },
-      "default": ""
     }
   ]
+}
+```
+
+**Important:** When using `"specialized": "image"`, reference the image with `mediaId` in your component:
+```json
+{
+  "blockName": "etch/dynamic-image",
+  "attrs": {
+    "tag": "img",
+    "attributes": {
+      "mediaId": "{props.featuredImage}"
+    }
+  }
 }
 ```
 

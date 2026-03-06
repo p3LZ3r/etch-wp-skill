@@ -1,5 +1,128 @@
 # CSS Architecture Rules - Etch WP
 
+## ⚠️ CRITICAL: Style Object Structure Requirements
+
+**ALL style objects in Etch WP MUST include these 5 required fields:**
+
+```json
+{
+  "style-id": {
+    "type": "class",           // REQUIRED: "class" or "element"
+    "selector": ".my-class",   // REQUIRED: CSS selector
+    "collection": "default",   // REQUIRED: Always "default"
+    "css": "color: red;",      // REQUIRED: CSS properties
+    "readonly": false          // REQUIRED: true for built-in, false for custom
+  }
+}
+```
+
+### Missing Fields = CSS Not Applied ❌
+
+**If ANY of these fields are missing, the styles will NOT be applied when pasted into Etch WP.**
+
+Common mistakes that cause styles to fail:
+- Missing `"collection": "default"` ❌
+- Missing `"readonly": false` ❌
+- Missing `"type": "class"` ❌
+
+### Type Values
+
+**"class"** - For custom BEM classes (99% of styles):
+```json
+{
+  "q2fy3v0": {
+    "type": "class",
+    "selector": ".my-component__title",
+    "collection": "default",
+    "css": "font-size: var(--h2); color: var(--heading-color);",
+    "readonly": false
+  }
+}
+```
+
+**"element"** - For Etch's built-in element styles:
+```json
+{
+  "etch-section-style": {
+    "type": "element",
+    "selector": ":where([data-etch-element=\"section\"])",
+    "collection": "default",
+    "css": "inline-size: 100%; display: flex; flex-direction: column; align-items: center;",
+    "readonly": true
+  }
+}
+```
+
+### Including Built-in Etch Element Styles
+
+**You do NOT need to define or include `etch-section-style` or `etch-container-style` in your styles object.**
+
+These are automatically applied by Etch when you use the data attributes:
+- `data-etch-element="section"` → Automatically gets section styles
+- `data-etch-element="container"` → Automatically gets container styles
+
+**Correct usage:**
+```json
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "section",
+    "attributes": {
+      "data-etch-element": "section"
+    }
+    // No styles array needed for built-in behavior
+  }
+}
+```
+
+**Incorrect (don't do this):**
+```json
+{
+  "styles": {
+    "etch-section-style": {  // ❌ Don't include built-in styles
+      "type": "element",
+      "selector": ":where([data-etch-element=\"section\"])",
+      "collection": "default",
+      "css": "...",
+      "readonly": true
+    }
+  }
+}
+```
+
+### ⚠️ Don't Over-Engineer BEM Classes
+
+**NOT every element needs a unique class.** Use default ACSS styling wherever possible:
+
+```json
+// ❌ OVER-ENGINEERED - Every p has a class
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "p",
+    "attributes": { "class": "my-section__paragraph" },
+    "styles": ["my-paragraph-style"]
+  }
+}
+
+// ✅ CORRECT - Most paragraphs use default styling
+{
+  "blockName": "etch/element",
+  "attrs": {
+    "tag": "p"
+    // No class, no styles = uses ACSS default paragraph styles
+  }
+}
+```
+
+**Only create custom classes for elements that need specific styling:**
+- Headings with custom sizes/colors
+- Containers with custom spacing
+- Elements with custom backgrounds/borders
+- Interactive elements (links, buttons)
+
+---
+
 ## Golden Rule: One Component = One Style Definition
 
 **ABSOLUTELY FORBIDDEN: Never nest selectors in CSS blocks**

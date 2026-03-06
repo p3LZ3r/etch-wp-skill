@@ -7,8 +7,7 @@
       "tag": "section",
       "attributes": {
         "data-etch-element": "section"
-      },
-      "styles": ["etch-section-style"]
+      }
     },
     "innerBlocks": [
       {
@@ -18,8 +17,7 @@
           "tag": "div",
           "attributes": {
             "data-etch-element": "container"
-          },
-          "styles": ["etch-container-style"]
+          }
         },
         "innerBlocks": [
           {
@@ -57,20 +55,6 @@
   },
   "version": 2,
   "styles": {
-    "etch-section-style": {
-      "type": "element",
-      "selector": ":where([data-etch-element=\"section\"])",
-      "collection": "default",
-      "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;\n  align-items: center;",
-      "readonly": true
-    },
-    "etch-container-style": {
-      "type": "element",
-      "selector": ":where([data-etch-element=\"container\"])",
-      "collection": "default",
-      "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;\n  max-width: var(--content-width, 1366px);\n  align-self: center;",
-      "readonly": true
-    },
     "q2fy3v0": {
       "type": "class",
       "selector": ".section-heading",

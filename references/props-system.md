@@ -157,21 +157,23 @@ Properties are defined in the `properties` array of each component:
 
 ### In Conditional Logic
 
-**Note:** `isTruthy` without curly brackets is correct for `props.*`. For dynamic data (`this.metabox.*`, `post.*`, loop items), use `{field}` with `!== ""` — see `block-types.md`.
+Component properties are accessed using `this.propName` in conditions:
 
 ```json
 {
   "blockName": "etch/condition",
   "attrs": {
     "condition": {
-      "leftHand": "props.showElement",
-      "operator": "isTruthy",
-      "rightHand": null
+      "leftHand": "this.link",
+      "operator": "!=",
+      "rightHand": "\"\""
     },
-    "conditionString": "props.showElement"
+    "conditionString": "this.link != \"\""
   }
 }
 ```
+
+For dynamic data (`this.metabox.*`, `post.*`, loop items), use `{field}` with `!== ""` — see `block-types.md`.
 
 ## Passing Props to Components
 
