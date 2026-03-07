@@ -2,6 +2,39 @@
 
 This reference provides the complete ACSS v4 variable system for use in Etch WP component CSS.
 
+## ACSS Index (Auto-Generated)
+
+**After running `node scripts/init-project.js`, your project has an auto-generated ACSS index:**
+
+- **File**: `.etch-acss-index.json`
+- **Source**: Fetched from your site's `automatic.css`
+- **Contains**: All CSS variables and utility classes from your actual ACSS configuration
+
+### Using the ACSS Index
+
+The index provides project-specific variables:
+
+```bash
+# View indexed variables
+cat .etch-acss-index.json | jq '.variables'
+
+# View available utility classes
+cat .etch-acss-index.json | jq '.utilityClasses'
+```
+
+**The index includes:**
+- All CSS variables with their actual values
+- Categorized utility classes (buttons, grids, flex, typography, spacing, colors, containers)
+- Configuration warnings (missing fonts, colors, etc.)
+
+### Verification Priority
+
+When uncertain about a variable:
+
+1. **Check `.etch-acss-index.json` first** - Contains your site's actual variables
+2. **Check this reference file** - Common variables documented below
+3. **Use Context7 MCP** - Official ACSS documentation
+
 ---
 
 ## ⚠️ CRITICAL: ACSS Automatic Styles (DO NOT REDEFINE)
@@ -97,18 +130,22 @@ var(--grid-columns-3)    /* Wrong naming - use --grid-3 or --grid-auto-3 */
 
 **BEFORE using ANY ACSS variable:**
 
-1. **Check this reference file first**
+1. **Check `.etch-acss-index.json` first** (if available)
+   - This contains your site's actual ACSS variables
+   - Look in the `variables` object for the exact variable name
+
+2. **Check this reference file**
    - Is the variable listed in this document?
    - If YES → Use it
-   - If NO or UNSURE → Go to step 2
+   - If NO or UNSURE → Go to step 3
 
-2. **Verify via Context7 MCP** (MANDATORY if uncertain)
+3. **Verify via Context7 MCP** (MANDATORY if uncertain)
    - Call `mcp__context7__resolve-library-id` with "automatic css"
    - Call `mcp__context7__get-library-docs` with the library ID
    - Search for the specific variable name
    - Use ONLY the exact variable name from official docs
 
-3. **If variable doesn't exist**
+4. **If variable doesn't exist**
    - Use explicit CSS value instead
    - Example: `margin-top: 2rem;` for one-off spacing instead of inventing a variable
 
