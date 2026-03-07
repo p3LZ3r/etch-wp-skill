@@ -156,7 +156,25 @@ ACSS uses modern Container Queries instead of Media Queries:
 }
 ```
 
+**Advanced Pattern — Self-contained container query:**
+
+```css
+.card-grid {
+  /* Makes the parent a container, defined from the child */
+  :has(> &) {
+    container-type: inline-size;
+  }
+  /* Query that container */
+  @container (inline-size >= 900px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+```
+
 **Benefits:** Components are responsive independently of viewport.
+- The `:has(> &)` selector targets the parent of the current element
+- Combines container setup and query in one class
+- Self-contained, reusable responsive components
 
 ---
 
