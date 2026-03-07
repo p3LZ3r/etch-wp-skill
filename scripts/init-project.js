@@ -269,8 +269,6 @@ async function initProject() {
     prefix: prefix,
     created: new Date().toISOString().split('T')[0],
     acssConfigured: true,
-    devUrl: devUrl,
-    acssUrl: generateACSSUrl(devUrl),
     styles: {}
   };
 
@@ -283,13 +281,6 @@ async function initProject() {
   if (referenceSites) {
     config.styles.referenceSites = referenceSites.split(',').map(s => s.trim()).filter(s => s);
   }
-
-  config.api = {
-    baseUrl: `${normalizeBaseUrl(devUrl)}/wp-json/etch-api`,
-    authMethod: 'application-password',
-    credentialsReady: true,
-    username: apiUsername
-  };
 
   // Write config file
   fs.writeFileSync('.etch-project.json', JSON.stringify(config, null, 2));
@@ -312,8 +303,9 @@ async function initProject() {
   console.log('╚═══════════════════════════════════════════════════════════════╝\n');
 
   let acssIndex = null;
+  const acssUrl = generateACSSUrl(devUrl);
   try {
-    acssIndex = await fetchAndIndexACSS(config.acssUrl);
+    acssIndex = await fetchAndIndexACSS(acssUrl);
     saveIndex(acssIndex);
 
     if (acssIndex.config.warnings.length > 0) {
@@ -325,7 +317,7 @@ async function initProject() {
     }
   } catch (error) {
     console.error(`\n❌ ACSS indexing failed: ${error.message}`);
-    console.log('   You can retry later with: node scripts/lib/acss-indexer.js ' + config.acssUrl);
+    console.log('   You can retry later with: node scripts/lib/acss-indexer.js ' + acssUrl);
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -337,7 +329,7 @@ async function initProject() {
   console.log('║  GENERATING DOCUMENTATION                                     ║');
   console.log('╚═══════════════════════════════════════════════════════════════╝\n');
 
-  const agentsContent = generateAgentsMd(config, acssIndex);
+  const agentsContent = generateAgentsMd(config, acssIndex, { ETCH_DEV_URL: devUrl, ETCH_API_USERNAME: apiUsername });
   saveAgentsMd(agentsContent);
   createSymlink();
 
@@ -361,9 +353,9 @@ async function initProject() {
   console.log('📊 Project Summary:');
   console.log(`   Name:       ${config.name}`);
   console.log(`   Prefix:     ${config.prefix}`);
-  console.log(`   Dev URL:    ${config.devUrl}`);
-  console.log(`   ACSS URL:   ${config.acssUrl}`);
-  console.log(`   API URL:    ${config.api.baseUrl}`);
+  console.log(`   Dev URL:    ${devUrl} (stored in .env)`);
+  console.log(`   ACSS URL:   ${acssUrl}`);
+  console.log(`   API URL:    ${normalizeBaseUrl(devUrl)}/wp-json/etch-api`);
   console.log(`   ACSS Vars:  ${acssIndex ? acssIndex.summary.totalVariables : 'N/A'}`);
   console.log(`   ACSS Utils: ${acssIndex ? acssIndex.summary.totalClasses : 'N/A'}`);
   console.log(`   Aesthetic:  ${config.styles.aesthetic || 'Not specified'}`);

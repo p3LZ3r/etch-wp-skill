@@ -11,14 +11,50 @@ const fs = require('fs');
 const path = require('path');
 
 /**
+ * Parse .env file and return key-value pairs
+ * @param {string} envPath - Path to .env file
+ * @returns {Object} - Environment variables
+ */
+function parseEnvFile(envPath = '.env') {
+  const env = {};
+  if (!fs.existsSync(envPath)) {
+    return env;
+  }
+
+  const content = fs.readFileSync(envPath, 'utf8');
+  content.split('\n').forEach(line => {
+    // Skip comments and empty lines
+    if (!line || line.startsWith('#')) return;
+
+    const match = line.match(/^([A-Z_]+)=(.*)$/);
+    if (match) {
+      env[match[1]] = match[2].trim();
+    }
+  });
+
+  return env;
+}
+
+/**
  * Generate AGENTS.md content
  * @param {Object} config - Project configuration from .etch-project.json
  * @param {Object} acssIndex - ACSS index data (optional)
+ * @param {Object} env - Environment variables from .env (optional)
  * @returns {string} - Markdown content
  */
-function generateAgentsMd(config, acssIndex = null) {
+function generateAgentsMd(config, acssIndex = null, env = null) {
   const prefix = config.prefix;
   const projectName = config.name;
+
+  // Load env if not provided
+  if (!env) {
+    env = parseEnvFile();
+  }
+
+  // Get URLs from env or config (env takes precedence)
+  const devUrl = env.ETCH_DEV_URL || config.devUrl || 'Not configured';
+  const acssUrl = acssIndex?.source || (devUrl !== 'Not configured' ? `${devUrl.replace(/\/$/, '')}/wp-content/uploads/automatic-css/automatic.css` : 'Not configured');
+  const apiUrl = devUrl !== 'Not configured' ? `${devUrl.replace(/\/$/, '')}/wp-json/etch-api` : 'Not configured';
 
   let md = `---
 name: ${projectName}
@@ -34,7 +70,8 @@ description: Project-specific configuration for ${projectName} - Etch WP develop
 | **Name** | ${projectName} |
 | **Prefix** | ${prefix} |
 | **Created** | ${config.created} |
-| **Dev URL** | ${config.devUrl || 'Not configured'} |
+| **Dev URL** | ${devUrl} |
+| **ACSS URL** | ${acssUrl} |
 `;
 
   // Add style information if available
@@ -59,25 +96,19 @@ description: Project-specific configuration for ${projectName} - Etch WP develop
   }
 
   // Add API configuration
-  if (config.api) {
-    md += `\n## API Configuration\n\n`;
-    md += `- **Base URL**: ${config.api.baseUrl || 'Not configured'}\n`;
-    md += `- **Auth Method**: ${config.api.authMethod || 'Not configured'}\n`;
-    md += `- **Credentials Ready**: ${config.api.credentialsReady ? 'Yes' : 'No'}\n`;
-    if (config.api.username) {
-      md += `- **Username**: ${config.api.username}\n`;
-    }
-  }
+  md += `\n## API Configuration\n\n`;
+  md += `- **Base URL**: ${apiUrl}\n`;
+  md += `- **Auth Method**: ${env.ETCH_API_USERNAME ? 'application-password' : 'Not configured'}\n`;
+  md += `- **Username**: ${env.ETCH_API_USERNAME || config.api?.username || 'Not configured'}\n`;
 
   // Add ACSS configuration
-  if (config.acssUrl) {
-    md += `\n## ACSS Configuration\n\n`;
-    md += `- **ACSS URL**: ${config.acssUrl}\n`;
+  md += `\n## ACSS Configuration\n\n`;
+  md += `- **ACSS URL**: ${acssUrl}\n`;
 
-    if (acssIndex) {
-      md += `- **Indexed**: ${acssIndex.generated}\n`;
-      md += `- **Variables**: ${acssIndex.summary.totalVariables}\n`;
-      md += `- **Utility Classes**: ${acssIndex.summary.totalClasses}\n\n`;
+  if (acssIndex) {
+    md += `- **Indexed**: ${acssIndex.generated}\n`;
+    md += `- **Variables**: ${acssIndex.summary.totalVariables}\n`;
+    md += `- **Utility Classes**: ${acssIndex.summary.totalClasses}\n\n`;
 
       // Add common variables section
       if (acssIndex.variables && Object.keys(acssIndex.variables).length > 0) {

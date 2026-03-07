@@ -106,14 +106,13 @@ If the project is already initialized:
    node scripts/init-project.js
    ```
 
-4. **Create Project Config** - Generate `.etch-project.json` with:
+4. **Create Project Config** - The script generates `.etch-project.json` with:
    ```json
    {
      "name": "project-name",
      "prefix": "pn",
-     "devUrl": "https://project-name.torsten-linnecke.de",
-     "acssUrl": "https://project-name.torsten-linnecke.de/wp-content/uploads/automatic-css/automatic.css",
      "created": "2026-02-12",
+     "acssConfigured": true,
      "styles": {
        "aesthetic": "modern/minimal",
        "primaryColors": ["#007bff", "#6c757d"],
@@ -122,6 +121,13 @@ If the project is already initialized:
        "referenceSites": ["https://example.com"]
      }
    }
+   ```
+
+   **Credentials and URLs are stored in `.env`:**
+   ```
+   ETCH_API_USERNAME=your_username
+   ETCH_API_PASSWORD=your_app_password
+   ETCH_DEV_URL=https://project-name.torsten-linnecke.de
    ```
 
 ### Component Generation Workflow
