@@ -227,9 +227,8 @@ margin-block-start: calc(var(--section-space-m) * -1);
 2. **Never set default text colors** — Headings and body text already have colors set by ACSS
 3. **Never invent variables** — If unsure, check `.etch-acss-index.toon`
 4. **Prefer utility classes** — `btn--primary` instead of custom button CSS
-5. **Only define deviations** — If ACSS does it by default, don't repeat
-6. **Assignment > Brand** — `--bg-light` instead of `--base-ultra-light`
-7. **Use Container Queries** — For component-based responsiveness
+5. **Assignment > Brand** — `--bg-light` instead of `--base-ultra-light`
+6. **Use Container Queries** — For component-based responsiveness
 
 ---
 
@@ -260,6 +259,4 @@ grep "@classes" -A 50 .etch-acss-index.toon
 | **Container Queries** | Component-based responsiveness |
 | **Modern CSS** | Use `color-mix()`, `calc()`, native features |
 
-> **Golden Rule:** Only write CSS that deviates from the ACSS standard.
->
-> **Never set:** `color`, `padding-block` on sections, `max-width` on containers, or `gap` — these are automatic.
+> **Golden Rule:** Only write CSS that deviates from the ACSS standard. Never redefine automatic styles.
