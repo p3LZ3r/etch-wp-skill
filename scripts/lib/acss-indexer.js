@@ -188,23 +188,86 @@ function extractConfigHints(css) {
 }
 
 /**
+ * ACSS CSS files to fetch (in order of priority)
+ * @type {string[]}
+ */
+const ACSS_FILES = [
+  'automatic-token.css',
+  'automatic-variables.css',
+  'automatic.css'
+];
+
+/**
+ * Fetch multiple CSS files and combine them
+ * @param {string} baseUrl - Base URL to ACSS directory (e.g., https://example.com/wp-content/uploads/automatic-css/)
+ * @returns {Promise<{css: string, sources: string[], failed: string[]}>} - Combined CSS and metadata
+ */
+async function fetchMultipleCSS(baseUrl) {
+  // Ensure baseUrl ends with /
+  const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+
+  const results = await Promise.allSettled(
+    ACSS_FILES.map(file => fetchCSS(`${normalizedBase}${file}`))
+  );
+
+  const cssParts = [];
+  const sources = [];
+  const failed = [];
+
+  results.forEach((result, index) => {
+    const file = ACSS_FILES[index];
+    if (result.status === 'fulfilled') {
+      cssParts.push(`/* === ${file} === */\n${result.value}`);
+      sources.push(`${normalizedBase}${file}`);
+    } else {
+      failed.push(file);
+      console.log(`   ⚠️  Could not fetch ${file}: ${result.reason.message}`);
+    }
+  });
+
+  if (cssParts.length === 0) {
+    throw new Error(`Failed to fetch any ACSS files from ${normalizedBase}`);
+  }
+
+  return {
+    css: cssParts.join('\n\n'),
+    sources,
+    failed
+  };
+}
+
+/**
  * Create ACSS index from URL
- * @param {string} url - URL to automatic.css
+ * @param {string} url - URL to ACSS directory or automatic.css file
  * @returns {Promise<Object>} - Index object with variables, classes, and metadata
  */
 async function fetchAndIndexACSS(url) {
-  console.log(`🔍 Fetching ACSS from: ${url}`);
+  // If URL points to a specific file, get the base directory
+  let baseUrl = url;
+  if (url.endsWith('.css')) {
+    baseUrl = url.substring(0, url.lastIndexOf('/') + 1);
+  }
+
+  console.log(`🔍 Fetching ACSS from: ${baseUrl}`);
+  console.log(`   Looking for: ${ACSS_FILES.join(', ')}`);
 
   try {
-    const css = await fetchCSS(url);
-    console.log(`✅ Downloaded ${(css.length / 1024).toFixed(1)} KB of CSS`);
+    const { css, sources, failed } = await fetchMultipleCSS(baseUrl);
+    console.log(`✅ Downloaded ${(css.length / 1024).toFixed(1)} KB of CSS from ${sources.length} file(s)`);
+    if (failed.length > 0) {
+      console.log(`   ⚠️  Missing files: ${failed.join(', ')}`);
+    }
 
     const index = {
       generated: new Date().toISOString(),
-      source: url,
+      source: baseUrl,
+      sources,
+      failed,
       metadata: {
         cssSize: css.length,
-        cssSizeKb: Math.round(css.length / 1024 * 10) / 10
+        cssSizeKb: Math.round(css.length / 1024 * 10) / 10,
+        filesFetched: sources.length,
+        filesFailed: failed.length
       },
       variables: extractVariables(css),
       utilityClasses: extractUtilityClasses(css),
@@ -320,8 +383,16 @@ if (require.main === module) {
   const url = process.argv[2];
 
   if (!url) {
-    console.log('Usage: node acss-indexer.js <automatic-css-url>');
-    console.log('Example: node acss-indexer.js https://example.com/wp-content/uploads/automatic-css/automatic.css');
+    console.log('Usage: node acss-indexer.js <acss-directory-url>');
+    console.log('');
+    console.log('Examples:');
+    console.log('  node acss-indexer.js https://example.com/wp-content/uploads/automatic-css/');
+    console.log('  node acss-indexer.js https://example.com/wp-content/uploads/automatic-css/automatic.css');
+    console.log('');
+    console.log('Fetches these files (if available):');
+    console.log('  - automatic-token.css');
+    console.log('  - automatic-variables.css');
+    console.log('  - automatic.css');
     process.exit(1);
   }
 

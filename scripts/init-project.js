@@ -45,7 +45,7 @@ function normalizeBaseUrl(url) {
 
 function generateACSSUrl(devUrl) {
   const baseUrl = normalizeBaseUrl(devUrl);
-  return `${baseUrl}/wp-content/uploads/automatic-css/automatic.css`;
+  return `${baseUrl}/wp-content/uploads/automatic-css/`;
 }
 
 function isYesNo(answer) {
