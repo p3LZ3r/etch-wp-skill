@@ -1,140 +1,140 @@
-# Automatic.css v4 - Konzepte & Best Practices
+# Automatic.css v4 - Concepts & Best Practices
 
-> **Diese Referenz erklärt die ACSS-Philosophie und -Konzepte. Für projektspezifische Variablen und Klassen siehe `.etch-acss-index.json` (wird bei Initialisierung generiert).**
+> **This reference explains ACSS philosophy and concepts. For project-specific variables and classes, see `.etch-acss-index.json` (generated during initialization).**
 
 ---
 
-## Kernphilosophie: Kontext statt Konkret
+## Core Philosophy: Context Over Concrete
 
-ACSS verwendet **Assignment Variables** - Variablen, die einen Kontext beschreiben, nicht einen konkreten Wert.
+ACSS uses **Assignment Variables** — variables that describe a context, not a concrete value.
 
 ```css
-/* ❌ FALSCH: Konkrete Farbe */
+/* ❌ WRONG: Concrete color */
 background: var(--base-ultra-light);
 color: var(--base-ultra-dark);
 
-/* ✅ RICHTIG: Kontextuelle Zuweisung */
-background: var(--bg-light);     /* "Heller Hintergrund" */
-color: var(--text-dark);         /* "Dunkler Text für helle BGs" */
+/* ✅ RIGHT: Contextual assignment */
+background: var(--bg-light);     /* "Light background" */
+color: var(--text-dark);         /* "Dark text for light backgrounds" */
 ```
 
-**Warum?** Wenn sich die Farbpalette ändert, passen sich `--bg-light` und `--text-dark` automatisch an. Konkrete Farben bleiben fest.
+**Why?** When the color palette changes, `--bg-light` and `--text-dark` adapt automatically. Concrete colors remain fixed.
 
 ---
 
 ## Variable Hierarchy
 
-### 1. Assignment Variables (Primär)
-Für Hintergründe und Text - immer diese verwenden:
+### 1. Assignment Variables (Primary)
+For backgrounds and text — always use these:
 
 ```css
-/* Hintergründe - von hell nach dunkel */
+/* Backgrounds — from light to dark */
 var(--bg-ultra-light)
 var(--bg-light)
-var(--body-bg-color)      /* Standard */
+var(--body-bg-color)      /* Default */
 var(--bg-dark)
 var(--bg-ultra-dark)
 
-/* Text - für entsprechende Hintergründe */
-var(--text-light)         /* Für dunkle Hintergründe */
-var(--text-dark)          /* Für helle Hintergründe */
-var(--text-dark-muted)    /* Sekundärer Text */
-var(--heading-color)      /* Überschriften */
+/* Text — for corresponding backgrounds */
+var(--text-light)         /* For dark backgrounds */
+var(--text-dark)          /* For light backgrounds */
+var(--text-dark-muted)    /* Secondary text */
+var(--heading-color)      /* Headings */
 ```
 
-### 2. Funktionale Variablen (Sekundär)
-Für Layout, Abstand, Typografie:
+### 2. Functional Variables (Secondary)
+For layout, spacing, typography:
 
 ```css
 /* Spacing */
 var(--space-s) through var(--space-2xl)
-var(--section-space-m)    /* Standard-Section-Padding */
-var(--gutter)             /* Horizontaler Seitenabstand */
+var(--section-space-m)    /* Default section padding */
+var(--gutter)             /* Horizontal page padding */
 
 /* Grid */
-var(--grid-auto-3)        /* Auto-responsive 3-Spalten */
-var(--grid-2-1)           /* 2:1 Ratio */
+var(--grid-auto-3)        /* Auto-responsive 3 columns */
+var(--grid-2-1)           /* 2:1 ratio */
 var(--grid-gap)
 
-/* Typografie */
+/* Typography */
 var(--h1) through var(--h6)
-var(--text-m)             /* Basis-Paragraph */
+var(--text-m)             /* Base paragraph */
 var(--heading-font-family)
 ```
 
-### 3. Brand Colors (Ausnahmen)
-Nur für explizite Brand-Elemente:
+### 3. Brand Colors (Exceptions)
+Only for explicit brand elements:
 
 ```css
-var(--primary)            /* CTA-Buttons, Brand-Akzente */
-var(--accent)             /* Hervorhebungen */
-var(--success)            /* Status-Indikatoren */
+var(--primary)            /* CTA buttons, brand accents */
+var(--accent)             /* Highlights */
+var(--success)            /* Status indicators */
 ```
 
 ---
 
-## Automatisch Angewendete Styles
+## Automatically Applied Styles
 
-**ACSS wendet diese Styles automatisch an - nie manuell definieren:**
+**ACSS applies these styles automatically — never define manually:**
 
 ### Container (`data-etch-element="container"`)
 ```css
-/* Diese Styles sind REDUNDANT - ACSS setzt sie automatisch: */
+/* These styles are REDUNDANT — ACSS sets them automatically: */
 max-width: var(--content-width);
 width: 100%;
 margin-inline: auto;
 
-/* Nur überschreiben wenn abweichend: */
-max-width: var(--width-800);     /* Schmaler */
-max-width: none;                  /* Volle Breite */
-margin-inline: 0;                 /* Links ausgerichtet */
+/* Only override when deviating: */
+max-width: var(--width-800);     /* Narrower */
+max-width: none;                  /* Full width */
+margin-inline: 0;                 /* Left-aligned */
 ```
 
 ### Section (`data-etch-element="section"`)
 ```css
-/* Automatisch gesetzt: */
+/* Automatically set: */
 padding-block: var(--section-space-m);
 padding-inline: var(--gutter);
 
-/* Nur bei Abweichung definieren: */
-padding-block: var(--section-space-xl);   /* Mehr Abstand */
-padding-block: 0;                          /* Kein Padding */
-background: var(--bg-dark);                /* Dunkler Hintergrund */
+/* Only define when deviating: */
+padding-block: var(--section-space-xl);   /* More spacing */
+padding-block: 0;                          /* No padding */
+background: var(--bg-dark);                /* Dark background */
 ```
 
 ### Text
 ```css
-/* Automatisch: */
-/* - Überschriften: var(--heading-color) */
-/* - Body-Text: Default-Farbe */
+/* Automatic: */
+/* - Headings: var(--heading-color) */
+/* - Body text: Default color */
 
-/* Nur bei Abweichung: */
-color: var(--text-light);        /* Auf dunklem Hintergrund */
-color: var(--text-dark-muted);   /* Sekundärer Text */
+/* Only when deviating: */
+color: var(--text-light);        /* On dark background */
+color: var(--text-dark-muted);   /* Secondary text */
 ```
 
 ### Gaps (ACSS 2.6+)
 ```css
-/* Automatisch zwischen: */
-/* - Containern in Sections: var(--container-gap) */
-/* - Direkten Children von Sections: var(--content-gap) */
-/* - Grid-Elementen: var(--grid-gap) */
+/* Automatically between: */
+/* - Containers in sections: var(--container-gap) */
+/* - Direct children of sections: var(--content-gap) */
+/* - Grid elements: var(--grid-gap) */
 ```
 
 ---
 
 ## Container Queries
 
-ACSS nutzt moderne Container Queries statt Media Queries:
+ACSS uses modern Container Queries instead of Media Queries:
 
 ```css
-/* Der Container definiert den Query-Context */
+/* Container defines the query context */
 .container {
   container-type: inline-size;
   container-name: card;
 }
 
-/* Responsive Styles basierend auf Container-Breite */
+/* Responsive styles based on container width */
 @container card (max-width: 400px) {
   .card {
     flex-direction: column;
@@ -142,48 +142,48 @@ ACSS nutzt moderne Container Queries statt Media Queries:
 }
 ```
 
-**Vorteile:** Komponenten sind unabhängig vom Viewport responsive.
+**Benefits:** Components are responsive independently of viewport.
 
 ---
 
 ## Utility Classes vs Custom CSS
 
-### Utility Classes verwenden für:
+### Use Utility Classes for:
 
-| Aufgabe | ACSS Utility | Niemals Custom |
-|---------|--------------|----------------|
+| Task | ACSS Utility | Never Custom |
+|------|--------------|--------------|
 | Buttons | `btn--primary`, `btn--large` | `.my-button` |
-| Grid | `grid--3`, `grid--auto-3` | Custom Grid-CSS |
+| Grid | `grid--3`, `grid--auto-3` | Custom Grid CSS |
 | Spacing | `space--m`, `pad-section--l` | `padding: 2rem` |
 | Flex | `flex--row`, `flex--center` | `display: flex` |
 | Visibility | `hide`, `hide-on--m` | Custom Media Queries |
 
-### Custom CSS nur für:
-- Komponenten-spezifisches Layout
-- Visuelle Details (Borders, Shadows)
-- Animationen/Transitions
-- Z-Index und Positioning
+### Custom CSS only for:
+- Component-specific layout
+- Visual details (borders, shadows)
+- Animations/transitions
+- Z-index and positioning
 
 ---
 
-## Modernes CSS mit ACSS
+## Modern CSS with ACSS
 
-### color-mix() statt Transparenz-Token
+### color-mix() instead of transparency tokens
 ```css
-/* ✅ ACSS v4: color-mix für Transparenz */
+/* ✅ ACSS v4: color-mix for transparency */
 background: color-mix(in oklch, var(--primary) 60%, transparent);
 box-shadow: 0 2px 8px color-mix(in oklch, var(--base) 30%, transparent);
 
-/* ❌ Veraltet: Transparenz-Variablen */
-background: var(--primary-60);   /* Gibt es nicht mehr */
+/* ❌ Legacy: transparency variables */
+background: var(--primary-60);   /* No longer exists */
 ```
 
-### calc() für Feinabstimmung
+### calc() for fine-tuning
 ```css
-/* 10% größer */
+/* 10% larger */
 padding: calc(var(--space-l) * 1.1);
 
-/* Überlappung erzeugen */
+/* Create overlap */
 margin-block-start: calc(var(--section-space-m) * -1);
 ```
 
@@ -191,40 +191,40 @@ margin-block-start: calc(var(--section-space-m) * -1);
 
 ## Best Practices
 
-1. **Denk in Kontexten** - "Light section with dark text" statt "White background with black text"
-2. **Nie Variablen erfinden** - Wenn unsicher, in `.etch-acss-index.json` nachschlagen
-3. **Utility Classes bevorzugen** - `btn--primary` statt Custom Button-CSS
-4. **Nur Abweichungen definieren** - Wenn ACSS es standardmäßig macht, nicht wiederholen
-5. **Assignment > Brand** - `--bg-light` statt `--base-ultra-light`
-6. **Container Queries nutzen** - Für komponentenbasierte Responsiveness
+1. **Think in contexts** — "Light section with dark text" not "White background with black text"
+2. **Never invent variables** — If unsure, check `.etch-acss-index.json`
+3. **Prefer utility classes** — `btn--primary` instead of custom button CSS
+4. **Only define deviations** — If ACSS does it by default, don't repeat
+5. **Assignment > Brand** — `--bg-light` instead of `--base-ultra-light`
+6. **Use Container Queries** — For component-based responsiveness
 
 ---
 
-## Projekt-spezifische Referenz
+## Project-Specific Reference
 
-**Nach `node scripts/init-project.js` verfügbar:**
+**Available after `node scripts/init-project.js`:**
 
 ```bash
-# Alle projektspezifischen Variablen
+# All project-specific variables
 cat .etch-acss-index.json | jq '.variables'
 
-# Verfügbare Utility-Klassen
+# Available utility classes
 cat .etch-acss-index.json | jq '.utilityClasses'
 
-# ACSS-Konfigurations-Warnungen
+# ACSS configuration warnings
 cat .etch-acss-index.json | jq '.config.warnings'
 ```
 
 ---
 
-## Zusammenfassung
+## Summary
 
-| Konzept | Prinzip |
-|---------|---------|
-| **Assignment Variables** | Kontext beschreiben (`--bg-light`), nicht konkrete Werte (`--white`) |
-| **Automatische Styles** | Nie manuell definieren was ACSS automatisch macht |
-| **Utility First** | ACSS-Klassen bevorzugen, Custom CSS minimieren |
-| **Container Queries** | Komponenten-basierte Responsiveness |
-| **Modern CSS** | `color-mix()`, `calc()`, native Features nutzen |
+| Concept | Principle |
+|---------|-----------|
+| **Assignment Variables** | Describe context (`--bg-light`), not concrete values (`--white`) |
+| **Automatic Styles** | Never manually define what ACSS does automatically |
+| **Utility First** | Prefer ACSS classes, minimize custom CSS |
+| **Container Queries** | Component-based responsiveness |
+| **Modern CSS** | Use `color-mix()`, `calc()`, native features |
 
-> **Golden Rule:** Nur CSS schreiben, das vom ACSS-Standard abweicht. Wenn das Design dem Standard entspricht, ist kein CSS nötig.
+> **Golden Rule:** Only write CSS that deviates from the ACSS standard. If the design matches standard ACSS behavior, no CSS is needed.
