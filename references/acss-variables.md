@@ -139,28 +139,11 @@ gap: var(--grid-gap);         /* Between grid items */
 
 ## Container Queries
 
-ACSS uses modern Container Queries instead of Media Queries:
-
-```css
-/* Container defines the query context */
-.container {
-  container-type: inline-size;
-  container-name: card;
-}
-
-/* Responsive styles based on container width */
-@container card (max-width: 400px) {
-  .card {
-    flex-direction: column;
-  }
-}
-```
-
-**Advanced Pattern — Self-contained container query:**
+ACSS uses modern Container Queries for component-based responsiveness:
 
 ```css
 .card-grid {
-  /* Makes the parent a container, defined from the child */
+  /* Makes the parent a container from the child */
   :has(> &) {
     container-type: inline-size;
   }
@@ -171,10 +154,12 @@ ACSS uses modern Container Queries instead of Media Queries:
 }
 ```
 
-**Benefits:** Components are responsive independently of viewport.
-- The `:has(> &)` selector targets the parent of the current element
-- Combines container setup and query in one class
-- Self-contained, reusable responsive components
+**The `:has(> &)` selector** targets the parent element, allowing self-contained responsive components without external container setup.
+
+**Benefits:**
+- Component is responsive independently of viewport
+- No need to modify parent markup
+- Reusable, encapsulated responsive behavior
 
 ---
 
