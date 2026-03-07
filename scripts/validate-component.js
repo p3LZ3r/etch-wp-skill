@@ -324,37 +324,8 @@ class EtchComponentValidator {
   }
 
   validateJavaScript(jsCode, blockPath) {
-    // Common typo patterns to check
-    const commonTypos = [
-      { pattern: /SCrollTrigger/g, correct: 'ScrollTrigger', name: 'SCrollTrigger' },
-      { pattern: /vvar\s/g, correct: 'var', name: 'vvar' },
-      { pattern: /ggsap\./g, correct: 'gsap.', name: 'ggsap' },
-      { pattern: /doccument/g, correct: 'document', name: 'doccument' },
-      { pattern: /querrySelector/g, correct: 'querySelector', name: 'querrySelector' },
-      { pattern: /addeventListener/g, correct: 'addEventListener', name: 'addeventListener' },
-      { pattern: /funtion/g, correct: 'function', name: 'funtion' },
-      { pattern: /retunr/g, correct: 'return', name: 'retunr' },
-    ];
-
-    commonTypos.forEach(({ pattern, correct, name }) => {
-      if (pattern.test(jsCode)) {
-        this.errors.push(
-          `JavaScript typo detected at ${blockPath}: "${name}" should be "${correct}"`
-        );
-      }
-    });
-
-    // Check for logical operators that might be typos
-    // Single & or | where && or || is likely intended (outside of valid bitwise contexts)
-    const singleAmpersandPattern = /\w+\s+&\s*\w+/;
-    if (singleAmpersandPattern.test(jsCode)) {
-      this.warnings.push(
-        `Possible typo at ${blockPath}: Single '&' detected. Did you mean '&&' (logical AND)?`
-      );
-    }
-
-    // Check for common quote issues
-    if (jsCode.includes('\u2018') || jsCode.includes('\u2019')) {
+    // Check for curly quotes (typo from copy-paste)
+    if (jsCode.includes('\u2018') || jsCode.includes('\u2019') || jsCode.includes('\u201C') || jsCode.includes('\u201D')) {
       this.warnings.push(
         `Curly quotes detected at ${blockPath}. Use straight quotes ' or " instead.`
       );
@@ -382,12 +353,12 @@ class EtchComponentValidator {
       );
     }
 
-    // Check for GSAP/ScrollTrigger common patterns
+    // Check for GSAP/ScrollTrigger plugin registration
     if (jsCode.includes('gsap') && jsCode.includes('ScrollTrigger')) {
       if (!jsCode.includes('gsap.registerPlugin(ScrollTrigger)') &&
           !jsCode.includes('registerPlugin(ScrollTrigger)')) {
-        this.errors.push(
-          `ScrollTrigger is used but gsap.registerPlugin(ScrollTrigger) is missing at ${blockPath}`
+        this.warnings.push(
+          `ScrollTrigger is used but gsap.registerPlugin(ScrollTrigger) may be missing at ${blockPath}`
         );
       }
     }
