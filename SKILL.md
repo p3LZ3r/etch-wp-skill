@@ -9,8 +9,6 @@ metadata:
   updated: 2026-03-06
   category: wordpress
   tags: wordpress, gutenberg, etch-wp, acss, component-generator
-  homepage: https://etchwp.com
-  documentation: https://docs.etchwp.com
   license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ---
 
@@ -71,8 +69,32 @@ Etch WP requires components and patterns in a specific JSON format based on Gute
 
 ### Project Initialization (REQUIRED)
 
-**CRITICAL**: Before working on any Etch WP project, verify project setup:
+**CRITICAL**: Before working on any Etch WP project, run the initialization script:
 
+```bash
+node scripts/init-project.js
+```
+
+This interactive script will create:
+- `.etch-project.json` - Project configuration (name, prefix, dev URL, styles)
+- `.etch-acss-index.json` - Searchable index of ACSS variables and utility classes
+- `.env` - API credentials (gitignored)
+- `AGENTS.md` - Project-specific documentation
+- `CLAUDE.md` - Symlink to AGENTS.md
+
+**The initialization script:**
+1. Guides you through project setup questionnaire
+2. Fetches and indexes ACSS variables from your WordPress site
+3. Validates ACSS configuration completeness
+4. Generates project documentation with ACSS reference
+5. Creates secure credential storage
+
+After running the script, verify the setup:
+```bash
+ls -la CLAUDE.md  # Should show: CLAUDE.md -> AGENTS.md
+```
+
+If the project is already initialized:
 1. **Check for CLAUDE.md** - Look for `CLAUDE.md` file in the project root
 2. **Verify Symlink** - Ensure `CLAUDE.md` is symlinked to `AGENTS.md`:
    ```bash
@@ -83,7 +105,6 @@ Etch WP requires components and patterns in a specific JSON format based on Gute
    ```bash
    node scripts/init-project.js
    ```
-   This interactive script collects: project name, 2-4 letter CSS prefix, dev URL, design requirements (aesthetic, colors, typography, target audience, references), and ACSS configuration status.
 
 4. **Create Project Config** - Generate `.etch-project.json` with:
    ```json
@@ -101,11 +122,6 @@ Etch WP requires components and patterns in a specific JSON format based on Gute
        "referenceSites": ["https://example.com"]
      }
    }
-   ```
-
-5. **Symlink CLAUDE.md**: After creating AGENTS.md, create the symlink:
-   ```bash
-   ln -s AGENTS.md CLAUDE.md
    ```
 
 ### Component Generation Workflow

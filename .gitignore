@@ -58,8 +58,14 @@ tmp/
 temp/
 *.tmp
 
+# Environment variables (credentials)
+.env
+
 # Claude Code specific
 .claude/
 
 # Etch WP plugin source (reference only)
 etch/
+
+# ACSS index (auto-generated)
+.etch-acss-index.json

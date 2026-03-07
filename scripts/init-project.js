@@ -2,14 +2,18 @@
 
 /**
  * Etch WP Project Initialization Script
- * Creates .etch-project.json and sets up CLAUDE.md symlink
+ * Creates .etch-project.json, .etch-acss-index.json, .env, and AGENTS.md
  *
- * Usage: node init-project.js
+ * Usage: node scripts/init-project.js
  */
 
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
+
+// Import our new modules
+const { fetchAndIndexACSS, saveIndex } = require('./lib/acss-indexer');
+const { generateAgentsMd, saveAgentsMd, createSymlink } = require('./lib/agents-generator');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -23,7 +27,6 @@ function ask(question) {
 }
 
 function validatePrefix(prefix) {
-  // Must be 2-4 lowercase letters
   return /^[a-z]{2,4}$/.test(prefix);
 }
 
@@ -37,11 +40,10 @@ function validateUrl(url) {
 }
 
 function normalizeBaseUrl(url) {
-  return String(url || '').replace(/\/$/, '');
+  return String(url || '').replace(/\/+$/, '');
 }
 
 function generateACSSUrl(devUrl) {
-  // Convert https://domain.com to https://domain.com/wp-content/uploads/automatic-css/automatic.css
   const baseUrl = normalizeBaseUrl(devUrl);
   return `${baseUrl}/wp-content/uploads/automatic-css/automatic.css`;
 }
@@ -54,15 +56,70 @@ function isExit(answer) {
   return ['exit', 'quit', 'cancel'].includes(answer);
 }
 
+/**
+ * Create .env file with credentials
+ */
+function createEnvFile(username, password, devUrl) {
+  const envContent = `# Etch WP API Credentials
+# Generated on ${new Date().toISOString().split('T')[0]}
+
+ETCH_API_USERNAME=${username}
+ETCH_API_PASSWORD=${password}
+
+# Development URL
+ETCH_DEV_URL=${devUrl}
+`;
+
+  fs.writeFileSync('.env', envContent);
+  console.log('🔐 Created: .env (credentials saved securely)');
+}
+
+/**
+ * Create .env.example if it doesn't exist
+ */
+function createEnvExample() {
+  const examplePath = '.env.example';
+  if (fs.existsSync(examplePath)) {
+    return;
+  }
+
+  const exampleContent = `# Etch WP API Credentials
+# Copy this file to .env and fill in your credentials
+# .env is gitignored - never commit credentials!
+
+# WordPress Application Password Authentication
+ETCH_API_USERNAME=your_username
+ETCH_API_PASSWORD=your_application_password
+
+# Optional: Development URL override
+# ETCH_DEV_URL=https://your-site.de
+`;
+
+  fs.writeFileSync(examplePath, exampleContent);
+  console.log('📋 Created: .env.example (template for credentials)');
+}
+
 async function initProject() {
   console.log('\n┌─────────────────────────────────────────────────────────────┐');
   console.log('│         Etch WP Project Initialization                      │');
+  console.log('│         Creates: .etch-project.json | .etch-acss-index.json │');
+  console.log('│                  .env | AGENTS.md | CLAUDE.md               │');
   console.log('└─────────────────────────────────────────────────────────────┘\n');
 
   // Check if already initialized
-  if (fs.existsSync('.etch-project.json')) {
-    console.log('⚠️  .etch-project.json already exists!');
-    const overwrite = await ask('Overwrite? (yes/no): ');
+  const hasProjectJson = fs.existsSync('.etch-project.json');
+  const hasAcssIndex = fs.existsSync('.etch-acss-index.json');
+  const hasAgentsMd = fs.existsSync('AGENTS.md');
+  const hasEnv = fs.existsSync('.env');
+
+  if (hasProjectJson) {
+    console.log('⚠️  Project files already exist:');
+    if (hasProjectJson) console.log('   - .etch-project.json');
+    if (hasAcssIndex) console.log('   - .etch-acss-index.json');
+    if (hasAgentsMd) console.log('   - AGENTS.md');
+    if (hasEnv) console.log('   - .env');
+
+    const overwrite = await ask('\nOverwrite existing files? (yes/no): ');
     if (overwrite.toLowerCase() !== 'yes') {
       console.log('Aborted.');
       rl.close();
@@ -74,7 +131,7 @@ async function initProject() {
   // STANDARDIZED PROJECT QUESTIONNAIRE
   // ─────────────────────────────────────────────────────────────────
 
-  console.log('╔═══════════════════════════════════════════════════════════════╗');
+  console.log('\n╔═══════════════════════════════════════════════════════════════╗');
   console.log('║  STANDARDIZED PROJECT QUESTIONNAIRE                           ║');
   console.log('╚═══════════════════════════════════════════════════════════════╝\n');
 
@@ -126,12 +183,16 @@ async function initProject() {
   console.log('─'.repeat(65));
   console.log('Q4 - DEVELOPMENT URL');
   console.log('─'.repeat(65));
-  console.log('Used to fetch actual ACSS variables from automatic.css\n');
+  console.log('Used to fetch ACSS variables from automatic.css\n');
 
   let devUrl = await ask('Development site URL (e.g., https://project.torsten-linnecke.de): ');
-  while (devUrl && !validateUrl(devUrl)) {
-    console.log('❌ Invalid URL format');
-    devUrl = await ask('Dev URL (or leave empty): ');
+  while (!devUrl || !validateUrl(devUrl)) {
+    if (!devUrl) {
+      console.log('❌ Development URL is required for ACSS indexing.');
+    } else {
+      console.log('❌ Invalid URL format');
+    }
+    devUrl = await ask('Development site URL: ');
   }
 
   // Q5 - Visual Style
@@ -176,100 +237,28 @@ async function initProject() {
   console.log('─'.repeat(65));
   const referenceSites = await ask('Reference sites (comma-separated URLs): ');
 
-  // Q10 - API Setup
+  // Q10 - API Credentials
   console.log('\n─'.repeat(65));
-  console.log('Q10 - TARGET SITE API ACCESS');
+  console.log('Q10 - API CREDENTIALS');
   console.log('─'.repeat(65));
-  console.log('This is REQUIRED. Setup cannot continue without target-site API access info.');
-  console.log('API checks avoid rebuilding components/patterns/styles that already exist.\n');
+  console.log('WordPress Application Password for API access\n');
 
-  let continueAnswer = await ask('Press Enter or type "yes" to continue with required API setup (or exit/quit/cancel to abort): ');
-  while (true) {
-    if (isExit(continueAnswer.toLowerCase())) {
-      console.log('Aborted. API access info is required for project setup.');
-      rl.close();
-      return;
-    }
-    if (continueAnswer === '' || continueAnswer.toLowerCase() === 'yes') {
-      break;
-    }
-    console.log('Invalid input. Please press Enter, type "yes", or use exit/quit/cancel.');
-    continueAnswer = await ask('Press Enter to continue (or exit/quit/cancel to abort): ');
-  }
-  const useEtchApi = true;
-
-  let authMethod = '';
-  let credentialsReady = false;
   let apiUsername = '';
+  let apiPassword = '';
 
-  while (!devUrl) {
-    console.log('❌ Development URL is required for API checks.');
-    devUrl = await ask('Development site URL (e.g., https://example.com): ');
-    while (devUrl && !validateUrl(devUrl)) {
-      console.log('❌ Invalid URL format');
-      devUrl = await ask('Development site URL: ');
-    }
+  while (true) {
+    apiUsername = await ask('WordPress username: ');
+    if (apiUsername) break;
+    console.log('❌ Username is required');
   }
 
-  authMethod = await ask('Auth method (application-password/wp-admin-browser): ');
-  while (!['application-password', 'wp-admin-browser'].includes(authMethod)) {
-    if (isExit(authMethod.toLowerCase())) {
-      console.log('Aborted. API access info is required for project setup.');
-      rl.close();
-      return;
-    }
-    authMethod = await ask('Choose "application-password" or "wp-admin-browser" (or exit/quit/cancel to abort): ');
+  while (true) {
+    apiPassword = await ask('Application password: ');
+    if (apiPassword) break;
+    console.log('❌ Password is required');
   }
 
-  let readyAnswer = await ask('Do you already have required credentials/access? (yes/no): ');
-  while (!isYesNo(readyAnswer.toLowerCase())) {
-    if (isExit(readyAnswer.toLowerCase())) {
-      console.log('Aborted. API credentials/access are required for project setup.');
-      rl.close();
-      return;
-    }
-    readyAnswer = await ask('Please answer "yes" or "no" (or exit/quit/cancel to abort): ');
-  }
-  credentialsReady = readyAnswer.toLowerCase() === 'yes';
-
-  while (!credentialsReady) {
-    if (authMethod === 'application-password') {
-      console.log('\nℹ️  To create credentials:');
-      console.log('   1. Log into /wp-admin');
-      console.log('   2. Go to Users → Profile');
-      console.log('   3. Create an Application Password');
-      console.log('   4. Use username:application-password for HTTPS Basic Auth\n');
-    } else {
-      console.log('\nℹ️  Ask site admin for wp-admin access and valid session/nonce permissions.\n');
-    }
-    readyAnswer = await ask('Are credentials/access ready now? (yes/no): ');
-    while (!isYesNo(readyAnswer.toLowerCase())) {
-      if (isExit(readyAnswer.toLowerCase())) {
-        console.log('Aborted. API credentials/access are required for project setup.');
-        rl.close();
-        return;
-      }
-      readyAnswer = await ask('Please answer "yes" or "no" (or exit/quit/cancel to abort): ');
-    }
-    credentialsReady = readyAnswer.toLowerCase() === 'yes';
-  }
-
-  if (authMethod === 'application-password') {
-    while (true) {
-      apiUsername = await ask('WordPress username for API calls (or exit/quit/cancel to abort): ');
-      if (isExit(apiUsername.toLowerCase())) {
-        console.log('Aborted. API access info is required for project setup.');
-        rl.close();
-        return;
-      }
-      if (apiUsername) {
-        break;
-      }
-      console.log('Username is required.');
-    }
-  } else {
-    console.log('\n✅ Browser-based auth access confirmed.\n');
-  }
+  console.log('✅ Credentials captured\n');
 
   // ─────────────────────────────────────────────────────────────────
   // BUILD PROJECT CONFIG
@@ -280,13 +269,10 @@ async function initProject() {
     prefix: prefix,
     created: new Date().toISOString().split('T')[0],
     acssConfigured: true,
+    devUrl: devUrl,
+    acssUrl: generateACSSUrl(devUrl),
     styles: {}
   };
-
-  if (devUrl) {
-    config.devUrl = devUrl;
-    config.acssUrl = generateACSSUrl(devUrl);
-  }
 
   if (aesthetic) config.styles.aesthetic = aesthetic;
   if (primaryColors) {
@@ -299,15 +285,61 @@ async function initProject() {
   }
 
   config.api = {
-    required: useEtchApi,
-    baseUrl: useEtchApi ? `${normalizeBaseUrl(devUrl)}/wp-json/etch-api` : null,
-    authMethod: authMethod || null,
-    credentialsReady
+    baseUrl: `${normalizeBaseUrl(devUrl)}/wp-json/etch-api`,
+    authMethod: 'application-password',
+    credentialsReady: true,
+    username: apiUsername
   };
-  if (apiUsername) config.api.username = apiUsername;
 
   // Write config file
   fs.writeFileSync('.etch-project.json', JSON.stringify(config, null, 2));
+  console.log('💾 Created: .etch-project.json');
+
+  // ─────────────────────────────────────────────────────────────────
+  // CREATE .env FILE
+  // ─────────────────────────────────────────────────────────────────
+
+  createEnvFile(apiUsername, apiPassword, devUrl);
+  createEnvExample();
+
+  // ─────────────────────────────────────────────────────────────────
+  // INDEX ACSS
+  // ─────────────────────────────────────────────────────────────────
+
+  console.log('\n');
+  console.log('╔═══════════════════════════════════════════════════════════════╗');
+  console.log('║  INDEXING ACSS                                                ║');
+  console.log('╚═══════════════════════════════════════════════════════════════╝\n');
+
+  let acssIndex = null;
+  try {
+    acssIndex = await fetchAndIndexACSS(config.acssUrl);
+    saveIndex(acssIndex);
+
+    if (acssIndex.config.warnings.length > 0) {
+      console.log('\n⚠️  ACSS Configuration Warnings:');
+      acssIndex.config.warnings.forEach(w => console.log(`   - ${w}`));
+      console.log('\n💡 Visit your ACSS Dashboard to complete configuration');
+    } else {
+      console.log('✅ ACSS configuration looks good!');
+    }
+  } catch (error) {
+    console.error(`\n❌ ACSS indexing failed: ${error.message}`);
+    console.log('   You can retry later with: node scripts/lib/acss-indexer.js ' + config.acssUrl);
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // GENERATE AGENTS.md
+  // ─────────────────────────────────────────────────────────────────
+
+  console.log('\n');
+  console.log('╔═══════════════════════════════════════════════════════════════╗');
+  console.log('║  GENERATING DOCUMENTATION                                     ║');
+  console.log('╚═══════════════════════════════════════════════════════════════╝\n');
+
+  const agentsContent = generateAgentsMd(config, acssIndex);
+  saveAgentsMd(agentsContent);
+  createSymlink();
 
   // ─────────────────────────────────────────────────────────────────
   // SUMMARY
@@ -315,25 +347,32 @@ async function initProject() {
 
   console.log('\n');
   console.log('╔═══════════════════════════════════════════════════════════════╗');
-  console.log('║  PROJECT CONFIGURATION CREATED                                ║');
+  console.log('║  PROJECT INITIALIZATION COMPLETE                              ║');
   console.log('╚═══════════════════════════════════════════════════════════════╝\n');
 
-  console.log(`📄 Created .etch-project.json\n`);
-  console.log('Configuration Summary:');
-  console.log(`  Name:       ${config.name}`);
-  console.log(`  Prefix:     ${config.prefix}`);
-  if (config.devUrl) {
-    console.log(`  Dev URL:    ${config.devUrl}`);
-    console.log(`  ACSS URL:   ${config.acssUrl}`);
-  }
-  if (config.api.required) {
-    console.log(`  API URL:    ${config.api.baseUrl}`);
-    console.log(`  API Auth:   ${config.api.authMethod}`);
-    console.log(`  API Ready:  ${config.api.credentialsReady ? 'Yes' : 'No'}`);
-  }
-  console.log(`  Aesthetic:  ${config.styles.aesthetic || 'Not specified'}`);
-  console.log(`  Typography: ${config.styles.typography || 'Not specified'}`);
-  console.log();
+  console.log('📁 Generated Files:');
+  console.log('   ✓ .etch-project.json    - Project configuration');
+  console.log('   ✓ .etch-acss-index.json - ACSS variables index');
+  console.log('   ✓ .env                  - API credentials (gitignored)');
+  console.log('   ✓ .env.example          - Credentials template');
+  console.log('   ✓ AGENTS.md             - Project documentation');
+  console.log('   ✓ CLAUDE.md             - Symlink to AGENTS.md\n');
+
+  console.log('📊 Project Summary:');
+  console.log(`   Name:       ${config.name}`);
+  console.log(`   Prefix:     ${config.prefix}`);
+  console.log(`   Dev URL:    ${config.devUrl}`);
+  console.log(`   ACSS URL:   ${config.acssUrl}`);
+  console.log(`   API URL:    ${config.api.baseUrl}`);
+  console.log(`   ACSS Vars:  ${acssIndex ? acssIndex.summary.totalVariables : 'N/A'}`);
+  console.log(`   ACSS Utils: ${acssIndex ? acssIndex.summary.totalClasses : 'N/A'}`);
+  console.log(`   Aesthetic:  ${config.styles.aesthetic || 'Not specified'}`);
+  console.log(`   Typography: ${config.styles.typography || 'Not specified'}\n`);
+
+  console.log('🔐 Credentials:');
+  console.log(`   Username:   ${apiUsername}`);
+  console.log(`   Password:   ${'*'.repeat(apiPassword.length)}`);
+  console.log(`   Stored in:  .env (gitignored)\n`);
 
   // BEM Naming Guide
   console.log('╔═══════════════════════════════════════════════════════════════╗');
@@ -353,59 +392,34 @@ async function initProject() {
   console.log('  ✅ Use: class="btn--secondary btn--large"');
   console.log(`  ❌ Never: class="${prefix}-hero__button" with custom CSS\n`);
 
-  // Documentation Setup
-  console.log('╔═══════════════════════════════════════════════════════════════╗');
-  console.log('║  DOCUMENTATION SETUP                                          ║');
-  console.log('╚═══════════════════════════════════════════════════════════════╝\n');
-
-  const hasClaudeMd = fs.existsSync('CLAUDE.md');
-  const hasAgentMd = fs.existsSync('AGENTS.md');
-
-  if (hasAgentMd) {
-    if (hasClaudeMd) {
-      const stats = fs.lstatSync('CLAUDE.md');
-      if (stats.isSymbolicLink()) {
-        console.log('✅ CLAUDE.md is already symlinked to AGENTS.md\n');
-      } else {
-        console.log('⚠️  CLAUDE.md exists but is not a symlink');
-        const makeSymlink = await ask('Replace with symlink to AGENTS.md? (yes/no): ');
-        if (makeSymlink.toLowerCase() === 'yes') {
-          fs.unlinkSync('CLAUDE.md');
-          fs.symlinkSync('AGENTS.md', 'CLAUDE.md');
-          console.log('✅ Created CLAUDE.md -> AGENTS.md symlink\n');
-        }
-      }
-    } else {
-      fs.symlinkSync('AGENTS.md', 'CLAUDE.md');
-      console.log('✅ Created CLAUDE.md -> AGENTS.md symlink\n');
-    }
-  } else {
-    console.log('⚠️  No AGENTS.md found');
-    console.log('   Create AGENTS.md with project-specific instructions, then run:');
-    console.log('   ln -s AGENTS.md CLAUDE.md\n');
-  }
-
   // Next Steps
   console.log('╔═══════════════════════════════════════════════════════════════╗');
   console.log('║  NEXT STEPS                                                   ║');
   console.log('╚═══════════════════════════════════════════════════════════════╝\n');
 
-  console.log('1. If not done above, create the symlink:');
-  console.log('   ln -s AGENTS.md CLAUDE.md\n');
-
-  if (config.acssUrl) {
-    console.log('2. Verify ACSS is accessible:');
-    console.log(`   curl -s "${config.acssUrl}" | head -50\n`);
+  if (acssIndex && acssIndex.config.warnings.length > 0) {
+    console.log('⚠️  IMPORTANT: Complete ACSS Configuration');
+    console.log('   Your ACSS index has warnings. Before generating components:');
+    console.log('   1. Go to WordPress Admin → ACSS Dashboard');
+    console.log('   2. Configure missing items listed above');
+    console.log('   3. Regenerate automatic.css');
+    console.log('   4. Re-run: node scripts/lib/acss-indexer.js ' + config.acssUrl);
+    console.log('');
   }
 
-  console.log('3. Query Context7 for ACSS utility classes:');
-  console.log('   Library: /websites/automaticcss');
-  console.log('   Query: "List all button utility classes"\n');
+  console.log('1. Verify ACSS is accessible:');
+  console.log(`   curl -s "${config.acssUrl}" | head -20\n`);
 
-  console.log('4. Start creating components with:');
+  console.log('2. Query Etch API for existing components:');
+  console.log(`   curl -u ${apiUsername}:<password> "${config.api.baseUrl}/components/list"\n`);
+
+  console.log('3. Start creating components with:');
   console.log(`   - BEM naming: .${prefix}-{block}__{element}--{modifier}`);
   console.log('   - ACSS utility classes for buttons');
   console.log('   - ACSS variables for colors/spacing\n');
+
+  console.log('4. Validate generated JSON:');
+  console.log('   node scripts/validate-component.js <filename>.json\n');
 
   console.log('✨ Project initialization complete!\n');
 
@@ -418,12 +432,20 @@ if (process.argv.includes('--help') || process.argv.includes('-h')) {
 Etch WP Project Initialization
 
 Usage:
-  node init-project.js          Interactive project setup
-  node init-project.js --help   Show this help
+  node scripts/init-project.js          Interactive project setup
+  node scripts/init-project.js --help   Show this help
+
+What Gets Created:
+  .etch-project.json         Project configuration
+  .etch-acss-index.json      ACSS variables index
+  .env                       API credentials (gitignored)
+  .env.example               Credentials template
+  AGENTS.md                  Project documentation
+  CLAUDE.md                  Symlink to AGENTS.md
 
 Standardized Questionnaire:
-  Q1. ACSS Configuration Check   Verify dashboard settings are complete
-  Q2. Project Name               Unique identifier for the project
+  Q1. ACSS Configuration Check   Verify dashboard settings
+  Q2. Project Name               Unique identifier
   Q3. Unique Prefix              2-4 letter CSS class prefix
   Q4. Development URL            For fetching ACSS variables
   Q5. Visual Style               Aesthetic direction
@@ -431,14 +453,10 @@ Standardized Questionnaire:
   Q7. Typography                 Font families
   Q8. Target Audience            Who the site is for
   Q9. Reference Sites            Inspiration URLs
-  Q10. Target Site API Access    REQUIRED endpoint auth readiness for /wp-json/etch-api
-
-What Gets Created:
-  .etch-project.json             Project configuration
-  CLAUDE.md -> AGENTS.md          Symlink (if AGENTS.md exists)
+  Q10. API Credentials           WordPress application password
 
 Pre-Configuration Requirements:
-  Before running this script, you MUST configure in ACSS Dashboard:
+  Before running this script, configure in ACSS Dashboard:
   - Brand colors (primary, secondary, accent)
   - Typography scale and fonts
   - Button styles (default, primary, secondary)
