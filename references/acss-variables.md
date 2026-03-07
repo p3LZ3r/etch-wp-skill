@@ -1,6 +1,6 @@
 # Automatic.css v4 - Concepts & Best Practices
 
-> **This reference explains ACSS philosophy and concepts. For project-specific variables and classes, see `.etch-acss-index.json` (generated during initialization).**
+> **This reference explains ACSS philosophy and concepts. For project-specific variables and classes, see `.etch-acss-index.toon` (generated during initialization).**
 
 ---
 
@@ -192,7 +192,7 @@ margin-block-start: calc(var(--section-space-m) * -1);
 ## Best Practices
 
 1. **Think in contexts** — "Light section with dark text" not "White background with black text"
-2. **Never invent variables** — If unsure, check `.etch-acss-index.json`
+2. **Never invent variables** — If unsure, check `.etch-acss-index.toon`
 3. **Prefer utility classes** — `btn--primary` instead of custom button CSS
 4. **Only define deviations** — If ACSS does it by default, don't repeat
 5. **Assignment > Brand** — `--bg-light` instead of `--base-ultra-light`
@@ -205,14 +205,14 @@ margin-block-start: calc(var(--section-space-m) * -1);
 **Available after `node scripts/init-project.js`:**
 
 ```bash
-# All project-specific variables
-cat .etch-acss-index.json | jq '.variables'
+# View the TOON index (human-readable, token-efficient format)
+cat .etch-acss-index.toon
 
-# Available utility classes
-cat .etch-acss-index.json | jq '.utilityClasses'
+# Search for specific variables
+grep "primary" .etch-acss-index.toon
 
-# ACSS configuration warnings
-cat .etch-acss-index.json | jq '.config.warnings'
+# View all utility classes
+grep "@classes" -A 50 .etch-acss-index.toon
 ```
 
 ---

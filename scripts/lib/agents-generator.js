@@ -268,7 +268,7 @@ description: Project-specific configuration for ${projectName} - Etch WP develop
   md += '| File | Purpose |\n';
   md += '|------|---------|\n';
   md += '| `.etch-project.json` | Project configuration |\n';
-  md += '| `.etch-acss-index.json` | ACSS variables index |\n';
+  md += '| `.etch-acss-index.toon` | ACSS variables index (TOON format) |\n';
   md += '| `.env` | API credentials (gitignored) |\n';
   md += '| `AGENTS.md` | This file |\n';
   md += '| `CLAUDE.md` | Symlink to AGENTS.md |\n\n';
@@ -329,7 +329,7 @@ module.exports = {
 // CLI usage
 if (require.main === module) {
   const configPath = process.argv[2] || '.etch-project.json';
-  const indexPath = process.argv[3] || '.etch-acss-index.json';
+  const indexPath = process.argv[3] || '.etch-acss-index.toon';
 
   if (!fs.existsSync(configPath)) {
     console.error(`❌ Config not found: ${configPath}`);

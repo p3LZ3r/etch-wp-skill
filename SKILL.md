@@ -77,7 +77,7 @@ node scripts/init-project.js
 
 This interactive script will create:
 - `.etch-project.json` - Project configuration (name, prefix, dev URL, styles)
-- `.etch-acss-index.json` - Searchable index of ACSS variables and utility classes
+- `.etch-acss-index.toon` - ACSS variables and classes (TOON format for LLM efficiency)
 - `.env` - API credentials (gitignored)
 - `AGENTS.md` - Project-specific documentation
 - `CLAUDE.md` - Symlink to AGENTS.md

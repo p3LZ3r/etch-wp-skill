@@ -2,7 +2,7 @@
 
 /**
  * Etch WP Project Initialization Script
- * Creates .etch-project.json, .etch-acss-index.json, .env, and AGENTS.md
+ * Creates .etch-project.json, .etch-acss-index.toon, .env, and AGENTS.md
  *
  * Usage: node scripts/init-project.js
  */
@@ -102,20 +102,20 @@ ETCH_API_PASSWORD=your_application_password
 async function initProject() {
   console.log('\n┌─────────────────────────────────────────────────────────────┐');
   console.log('│         Etch WP Project Initialization                      │');
-  console.log('│         Creates: .etch-project.json | .etch-acss-index.json │');
+  console.log('│         Creates: .etch-project.json | .etch-acss-index.toon │');
   console.log('│                  .env | AGENTS.md | CLAUDE.md               │');
   console.log('└─────────────────────────────────────────────────────────────┘\n');
 
   // Check if already initialized
   const hasProjectJson = fs.existsSync('.etch-project.json');
-  const hasAcssIndex = fs.existsSync('.etch-acss-index.json');
+  const hasAcssIndex = fs.existsSync('.etch-acss-index.toon');
   const hasAgentsMd = fs.existsSync('AGENTS.md');
   const hasEnv = fs.existsSync('.env');
 
   if (hasProjectJson) {
     console.log('⚠️  Project files already exist:');
     if (hasProjectJson) console.log('   - .etch-project.json');
-    if (hasAcssIndex) console.log('   - .etch-acss-index.json');
+    if (hasAcssIndex) console.log('   - .etch-acss-index.toon');
     if (hasAgentsMd) console.log('   - AGENTS.md');
     if (hasEnv) console.log('   - .env');
 
@@ -344,7 +344,7 @@ async function initProject() {
 
   console.log('📁 Generated Files:');
   console.log('   ✓ .etch-project.json    - Project configuration');
-  console.log('   ✓ .etch-acss-index.json - ACSS variables index');
+  console.log('   ✓ .etch-acss-index.toon - ACSS variables index (TOON format)');
   console.log('   ✓ .env                  - API credentials (gitignored)');
   console.log('   ✓ .env.example          - Credentials template');
   console.log('   ✓ AGENTS.md             - Project documentation');
@@ -429,7 +429,7 @@ Usage:
 
 What Gets Created:
   .etch-project.json         Project configuration
-  .etch-acss-index.json      ACSS variables index
+  .etch-acss-index.toon      ACSS variables index (TOON format)
   .env                       API credentials (gitignored)
   .env.example               Credentials template
   AGENTS.md                  Project documentation

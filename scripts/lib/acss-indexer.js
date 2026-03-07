@@ -294,14 +294,99 @@ async function fetchAndIndexACSS(url) {
 }
 
 /**
- * Save index to file
+ * Convert index to TOON (Token-Oriented Object Notation) format
+ * TOON minimizes tokens for LLM context efficiency
  * @param {Object} index - ACSS index object
- * @param {string} outputPath - Path to save file (default: .etch-acss-index.json)
+ * @returns {string} - TOON formatted string
  */
-function saveIndex(index, outputPath = '.etch-acss-index.json') {
+function toTOON(index) {
+  const lines = [];
+
+  // Header
+  lines.push(`# ACSS Index v1`);
+  lines.push(`# Generated: ${index.generated}`);
+  lines.push(`# Source: ${index.source}`);
+  lines.push('');
+
+  // Metadata section
+  lines.push('@meta');
+  lines.push(`  cssSize:${index.metadata.cssSizeKb}KB`);
+  lines.push(`  files:${index.metadata.filesFetched}`);
+  if (index.failed?.length) {
+    lines.push(`  missing:${index.failed.join(',')}`);
+  }
+  lines.push('');
+
+  // Config warnings
+  if (index.config?.warnings?.length) {
+    lines.push('@warnings');
+    index.config.warnings.forEach(w => lines.push(`  ${w}`));
+    lines.push('');
+  }
+
+  // Variables section - grouped by prefix
+  lines.push('@vars');
+  const varGroups = {};
+  Object.entries(index.variables).forEach(([name, value]) => {
+    const prefix = name.split('-')[0] || 'other';
+    if (!varGroups[prefix]) varGroups[prefix] = [];
+    varGroups[prefix].push([name, value]);
+  });
+
+  Object.entries(varGroups).forEach(([prefix, vars]) => {
+    lines.push(`  [${prefix}]`);
+    vars.forEach(([name, value]) => {
+      lines.push(`    ${name}:${value}`);
+    });
+  });
+  lines.push('');
+
+  // Utility classes section
+  lines.push('@classes');
+  Object.entries(index.utilityClasses).forEach(([category, classes]) => {
+    if (classes.length > 0) {
+      lines.push(`  [${category}]`);
+      // Group by prefix pattern for compactness
+      const groups = {};
+      classes.forEach(cls => {
+        const base = cls.split('--')[0] || cls;
+        if (!groups[base]) groups[base] = [];
+        groups[base].push(cls);
+      });
+
+      Object.entries(groups).forEach(([base, items]) => {
+        if (items.length === 1) {
+          lines.push(`    ${items[0]}`);
+        } else {
+          lines.push(`    ${base}--{${items.map(i => i.split('--').slice(1).join('--')).join(',')}}`);
+        }
+      });
+    }
+  });
+  lines.push('');
+
+  // Summary
+  lines.push('@summary');
+  lines.push(`  variables:${index.summary.totalVariables}`);
+  lines.push(`  classes:${index.summary.totalClasses}`);
+  Object.entries(index.summary.categories).forEach(([cat, count]) => {
+    lines.push(`  ${cat}:${count}`);
+  });
+
+  return lines.join('\n');
+}
+
+/**
+ * Save index to file in TOON format
+ * @param {Object} index - ACSS index object
+ * @param {string} outputPath - Path to save file (default: .etch-acss-index.toon)
+ */
+function saveIndex(index, outputPath = '.etch-acss-index.toon') {
   const fs = require('fs');
-  fs.writeFileSync(outputPath, JSON.stringify(index, null, 2));
+  const toonContent = toTOON(index);
+  fs.writeFileSync(outputPath, toonContent);
   console.log(`💾 Saved ACSS index to: ${outputPath}`);
+  console.log(`   Format: TOON (Token-Oriented Object Notation)`);
   console.log(`   - ${index.summary.totalVariables} variables`);
   console.log(`   - ${index.summary.totalClasses} utility classes`);
 }
@@ -311,15 +396,28 @@ function saveIndex(index, outputPath = '.etch-acss-index.json') {
  * @param {string} indexPath - Path to index file
  * @returns {Object|null} - Index object or null if not found
  */
-function loadIndex(indexPath = '.etch-acss-index.json') {
+function loadIndex(indexPath = '.etch-acss-index.toon') {
   const fs = require('fs');
 
   if (!fs.existsSync(indexPath)) {
+    // Try legacy JSON path
+    const jsonPath = indexPath.replace('.toon', '.json');
+    if (fs.existsSync(jsonPath)) {
+      try {
+        return JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+      } catch (e) {
+        return null;
+      }
+    }
     return null;
   }
 
   try {
-    return JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+    // For now, return null as we don't parse TOON back
+    // In future, implement fromTOON() if needed
+    const content = fs.readFileSync(indexPath, 'utf8');
+    console.log('ℹ️  TOON format is for LLM context only. Regenerate index for programmatic use.');
+    return null;
   } catch (error) {
     console.error(`❌ Failed to load index: ${error.message}`);
     return null;
