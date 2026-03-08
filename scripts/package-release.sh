@@ -36,11 +36,15 @@ cp SKILL.md dist/temp/
 cp LICENSE dist/temp/ 2>/dev/null || echo "No LICENSE file found"
 cp README.md dist/temp/ 2>/dev/null || echo "No README.md file found"
 
-# Copy only necessary scripts (exclude dev/build scripts)
+# Copy all necessary scripts
 mkdir -p dist/temp/scripts
 cp scripts/validate-component.js dist/temp/scripts/ 2>/dev/null || true
 cp scripts/collect-patterns.js dist/temp/scripts/ 2>/dev/null || true
+cp scripts/init-project.js dist/temp/scripts/ 2>/dev/null || true
 cp scripts/encode-safe.js dist/temp/scripts/ 2>/dev/null || true
+
+# Copy lib directory (required by init-project.js)
+cp -r scripts/lib dist/temp/scripts/ 2>/dev/null || true
 
 # Copy references
 cp -r references dist/temp/

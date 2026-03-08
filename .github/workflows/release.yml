@@ -35,10 +35,15 @@ jobs:
         cp LICENSE temp_release/ 2>/dev/null || true
         cp README.md temp_release/ 2>/dev/null || true
 
-        # Copy only necessary scripts (exclude dev/build scripts)
+        # Copy all necessary scripts
         mkdir -p temp_release/scripts
         cp scripts/validate-component.js temp_release/scripts/ 2>/dev/null || true
         cp scripts/collect-patterns.js temp_release/scripts/ 2>/dev/null || true
+        cp scripts/init-project.js temp_release/scripts/ 2>/dev/null || true
+        cp scripts/encode-safe.js temp_release/scripts/ 2>/dev/null || true
+
+        # Copy lib directory (required by init-project.js)
+        cp -r scripts/lib temp_release/scripts/ 2>/dev/null || true
 
         # Copy references and assets
         cp -r references temp_release/
