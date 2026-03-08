@@ -188,13 +188,14 @@ function extractConfigHints(css) {
 }
 
 /**
- * ACSS CSS files to fetch (in order of priority)
+ * ACSS CSS files to fetch (in order of priority - most specific first)
+ * Most specific file's variables should take precedence
  * @type {string[]}
  */
 const ACSS_FILES = [
-  'automatic-token.css',
-  'automatic-variables.css',
-  'automatic.css'
+  'automatic.css',           // Most specific - loaded first
+  'automatic-variables.css', // Middle
+  'automatic-tokens.css'     // Most generic - loaded last
 ];
 
 /**
