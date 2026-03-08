@@ -2,31 +2,25 @@
   "type": "block",
   "gutenbergBlock": {
     "blockName": "etch/component",
-    "attrs": {
-      "ref": 89,
-      "attributes": {
-        "title": "Dialog Title"
-      }
-    },
+    "attrs": { "ref": 955, "attributes": { "title": "Dialog Title" } },
     "innerBlocks": [
       {
         "blockName": "etch/slot-content",
-        "attrs": {
-          "name": "content"
-        },
+        "attrs": { "name": "content" },
         "innerBlocks": [
           {
             "blockName": "etch/element",
             "attrs": {
+              "metadata": { "name": "Text Content" },
               "tag": "p",
-              "attributes": {
-                "class": "dialog-text"
-              }
+              "attributes": { "class": "dialog-text" },
+              "styles": ["zfymkvn"]
             },
             "innerBlocks": [
               {
                 "blockName": "etch/text",
                 "attrs": {
+                  "metadata": { "name": "Text" },
                   "content": "This is custom dialog content inserted via slot."
                 },
                 "innerBlocks": [],
@@ -45,44 +39,75 @@
     "innerHTML": "\n\n",
     "innerContent": ["\n", null, "\n"]
   },
-  "version": 2,
+  "version": 2.1,
+  "timestamp": "2026-03-08T11:56:40.763Z",
   "styles": {
-    "x1y2z3a": {
+    "xagql7e": {
       "type": "class",
       "selector": ".dialog",
       "collection": "default",
-      "css": "background: var(--bg-light);\n  padding: var(--space-l);\n  border-radius: var(--radius-m);\n  box-shadow: var(--shadow-xl);\n  max-width: var(--width-600);",
+      "css": "background: var(--bg-light);\n  padding: var(--space-l);\n  border-radius: var(--radius);\n  box-shadow: var(--shadow-xl);\n  max-width: calc(var(--content-width) * 0.6);",
       "readonly": false
     },
-    "b4c5d6e": {
+    "15gfjjh": {
       "type": "class",
       "selector": ".dialog__header",
       "collection": "default",
-      "css": "display: flex;\n  justify-content: space-between;\n  align-items: center;\n  margin-bottom: var(--space-m);\n  padding-bottom: var(--space-s);\n  border-bottom: var(--border);",
+      "css": "display: flex;\n  flex-direction: column;\n\tgap: var(--content-gap);",
       "readonly": false
     },
-    "f7g8h9i": {
-      "type": "class",
-      "selector": ".dialog__title",
+    "k44srnj": {
+      "type": "id",
+      "selector": "#dialog-title",
       "collection": "default",
-      "css": "font-size: var(--h3);\n  color: var(--text-dark);\n  margin: 0;",
+      "css": "",
       "readonly": false
     },
-    "j0k1l2m": {
+    "kdtrboh": {
+      "type": "class",
+      "selector": ".dialog__header-title",
+      "collection": "default",
+      "css": "font-size: var(--h2);",
+      "readonly": false
+    },
+    "oz4g4s8": {
+      "type": "class",
+      "selector": ".dialog__header-divider",
+      "collection": "default",
+      "css": "border: var(--border);",
+      "readonly": false
+    },
+    "60yxphf": {
       "type": "class",
       "selector": ".dialog__content",
       "collection": "default",
-      "css": "color: var(--text-medium);",
+      "css": "",
+      "readonly": false
+    },
+    "zfymkvn": {
+      "type": "class",
+      "selector": ".dialog-text",
+      "collection": "default",
+      "css": "",
       "readonly": false
     }
   },
   "components": {
-    "89": {
-      "id": 89,
+    "955": {
+      "id": 955,
       "name": "Dialog",
       "key": "Dialog",
       "description": "",
       "legacyId": "",
+      "properties": [
+        {
+          "key": "title",
+          "name": "Title",
+          "keyTouched": true,
+          "type": { "primitive": "string" },
+          "default": "Dialog Title"
+        }
+      ],
       "blocks": [
         {
           "blockName": "etch/element",
@@ -94,18 +119,16 @@
               "role": "dialog",
               "aria-labelledby": "dialog-title"
             },
-            "styles": ["x1y2z3a"]
+            "styles": ["xagql7e"]
           },
           "innerBlocks": [
             {
               "blockName": "etch/element",
               "attrs": {
                 "metadata": { "name": "Header" },
-                "tag": "div",
-                "attributes": {
-                  "class": "dialog__header"
-                },
-                "styles": ["b4c5d6e"]
+                "tag": "header",
+                "attributes": { "class": "dialog__header" },
+                "styles": ["15gfjjh"]
               },
               "innerBlocks": [
                 {
@@ -114,15 +137,16 @@
                     "metadata": { "name": "Title" },
                     "tag": "h3",
                     "attributes": {
-                      "class": "dialog__title",
-                      "id": "dialog-title"
+                      "id": "dialog-title",
+                      "class": "dialog__header-title"
                     },
-                    "styles": ["f7g8h9i"]
+                    "styles": ["k44srnj", "kdtrboh"]
                   },
                   "innerBlocks": [
                     {
                       "blockName": "etch/text",
                       "attrs": {
+                        "metadata": { "name": "Text" },
                         "content": "{props.title}"
                       },
                       "innerBlocks": [],
@@ -132,27 +156,35 @@
                   ],
                   "innerHTML": "\n\n",
                   "innerContent": ["\n", null, "\n"]
+                },
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": { "name": "Divider" },
+                    "tag": "hr",
+                    "attributes": { "class": "dialog__header-divider" },
+                    "styles": ["oz4g4s8"]
+                  },
+                  "innerBlocks": [],
+                  "innerHTML": "\n\n",
+                  "innerContent": ["\n", "\n"]
                 }
               ],
-              "innerHTML": "\n\n",
-              "innerContent": ["\n", null, "\n"]
+              "innerHTML": "\n\n\n\n",
+              "innerContent": ["\n", null, "\n\n", null, "\n"]
             },
             {
               "blockName": "etch/element",
               "attrs": {
                 "metadata": { "name": "Content" },
                 "tag": "div",
-                "attributes": {
-                  "class": "dialog__content"
-                },
-                "styles": ["j0k1l2m"]
+                "attributes": { "class": "dialog__content" },
+                "styles": ["60yxphf"]
               },
               "innerBlocks": [
                 {
                   "blockName": "etch/slot-placeholder",
-                  "attrs": {
-                    "name": "content"
-                  },
+                  "attrs": { "name": "content" },
                   "innerBlocks": [],
                   "innerHTML": "\n\n",
                   "innerContent": ["\n", "\n"]
@@ -164,15 +196,6 @@
           ],
           "innerHTML": "\n\n\n\n",
           "innerContent": ["\n", null, "\n\n", null, "\n"]
-        }
-      ],
-      "properties": [
-        {
-          "key": "title",
-          "name": "Title",
-          "keyTouched": true,
-          "type": { "primitive": "string" },
-          "default": "Dialog Title"
         }
       ]
     }

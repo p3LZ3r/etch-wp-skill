@@ -3,7 +3,8 @@
   "gutenbergBlock": {
     "blockName": "etch/loop",
     "attrs": {
-      "loopId": "posts123",
+      "metadata": { "name": "Post Loop" },
+      "loopId": "hz2wc6o",
       "itemId": "post"
     },
     "innerBlocks": [
@@ -12,10 +13,8 @@
         "attrs": {
           "metadata": { "name": "Post Card" },
           "tag": "article",
-          "attributes": {
-            "class": "post-card"
-          },
-          "styles": ["n3o4p5q"]
+          "attributes": { "class": "post-card" },
+          "styles": ["uqp8o80"]
         },
         "innerBlocks": [
           {
@@ -23,15 +22,14 @@
             "attrs": {
               "metadata": { "name": "Title" },
               "tag": "h3",
-              "attributes": {
-                "class": "post-card__title"
-              },
-              "styles": ["r6s7t8u"]
+              "attributes": { "class": "post-card__title" },
+              "styles": ["36i1r80"]
             },
             "innerBlocks": [
               {
                 "blockName": "etch/text",
                 "attrs": {
+                  "metadata": { "name": "Text" },
                   "content": "{post.title}"
                 },
                 "innerBlocks": [],
@@ -47,15 +45,14 @@
             "attrs": {
               "metadata": { "name": "Excerpt" },
               "tag": "p",
-              "attributes": {
-                "class": "post-card__excerpt"
-              },
-              "styles": ["v9w0x1y"]
+              "attributes": { "class": "post-card__excerpt" },
+              "styles": ["eht5ecm"]
             },
             "innerBlocks": [
               {
                 "blockName": "etch/text",
                 "attrs": {
+                  "metadata": { "name": "Text" },
                   "content": "{post.excerpt}"
                 },
                 "innerBlocks": [],
@@ -75,12 +72,13 @@
                 "class": "post-card__link",
                 "href": "{post.permalink}"
               },
-              "styles": ["z2a3b4c"]
+              "styles": ["df9us5r"]
             },
             "innerBlocks": [
               {
                 "blockName": "etch/text",
                 "attrs": {
+                  "metadata": { "name": "Text" },
                   "content": "Read More"
                 },
                 "innerBlocks": [],
@@ -92,56 +90,58 @@
             "innerContent": ["\n", null, "\n"]
           }
         ],
-        "innerHTML": "\n\n\n\n",
+        "innerHTML": "\n\n\n\n\n\n",
         "innerContent": ["\n", null, "\n\n", null, "\n\n", null, "\n"]
       }
     ],
     "innerHTML": "\n\n",
     "innerContent": ["\n", null, "\n"]
   },
-  "version": 2,
+  "version": 2.1,
+  "timestamp": "2026-03-08T11:47:35.278Z",
   "styles": {
-    "n3o4p5q": {
+    "uqp8o80": {
       "type": "class",
       "selector": ".post-card",
       "collection": "default",
-      "css": "background: var(--bg-light);\n  padding: var(--space-m);\n  border-radius: var(--radius-m);\n  box-shadow: var(--shadow-s);\n\n  @container (width >= 600px) {\n    display: grid;\n    grid-template-columns: 1fr auto;\n    gap: var(--space-m);\n  }",
+      "css": ":has(> &) {\n    container-type: inline-size;\n  }\n\n  background: var(--bg-light);\n  padding: var(--space-l);\n  border-radius: var(--radius-m);\n  box-shadow: var(--shadow-s);\n  display: flex;\n  flex-direction: column;\n  gap: calc(var(--content-gap) / 2);\n\n  @container (inline-size <= to-rem(900px)) {\n    padding: var(--space-m);\n    gap: calc(var(--content-gap) / 4);\n  }",
       "readonly": false
     },
-    "r6s7t8u": {
+    "36i1r80": {
       "type": "class",
       "selector": ".post-card__title",
       "collection": "default",
       "css": "font-size: var(--h4);\n  color: var(--text-dark);\n  margin-bottom: var(--space-xs);",
       "readonly": false
     },
-    "v9w0x1y": {
+    "eht5ecm": {
       "type": "class",
       "selector": ".post-card__excerpt",
       "collection": "default",
-      "css": "color: var(--text-medium);\n  margin-bottom: var(--space-s);",
+      "css": "",
       "readonly": false
     },
-    "z2a3b4c": {
+    "df9us5r": {
       "type": "class",
       "selector": ".post-card__link",
       "collection": "default",
-      "css": "color: var(--primary);\n  text-decoration: none;\n  font-weight: 600;\n\n  &:hover {\n    text-decoration: underline;\n  }\n\n  &:focus-visible {\n    outline: 2px solid var(--primary);\n    outline-offset: 2px;\n  }",
+      "css": "color: var(--primary);\n  text-decoration: none;\n  font-weight: 600;\n\n  &:hover {\n    text-decoration: underline;\n    color: var(--primary-hover);\n  }\n\n  &:focus-visible {\n    outline: 2px solid var(--primary);\n    outline-offset: 2px;\n  }",
       "readonly": false
     }
   },
   "loops": {
-    "posts123": {
+    "hz2wc6o": {
       "name": "Recent Posts",
-      "key": "posts",
+      "key": "recent_posts",
       "global": true,
       "config": {
         "type": "wp-query",
         "args": {
           "post_type": "post",
-          "posts_per_page": 6,
+          "posts_per_page": 10,
           "orderby": "date",
-          "order": "DESC"
+          "order": "ASC",
+          "post_status": "publish"
         }
       }
     }

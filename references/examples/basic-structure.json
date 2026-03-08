@@ -5,9 +5,7 @@
     "attrs": {
       "metadata": { "name": "Section" },
       "tag": "section",
-      "attributes": {
-        "data-etch-element": "section"
-      }
+      "attributes": { "data-etch-element": "section" }
     },
     "innerBlocks": [
       {
@@ -15,9 +13,7 @@
         "attrs": {
           "metadata": { "name": "Container" },
           "tag": "div",
-          "attributes": {
-            "data-etch-element": "container"
-          }
+          "attributes": { "data-etch-element": "container" }
         },
         "innerBlocks": [
           {
@@ -25,10 +21,8 @@
             "attrs": {
               "metadata": { "name": "Heading" },
               "tag": "h2",
-              "attributes": {
-                "class": "section-heading"
-              },
-              "styles": ["q2fy3v0"]
+              "attributes": { "class": "section-heading" },
+              "styles": ["fbgtzj1"]
             },
             "innerBlocks": [
               {
@@ -53,13 +47,14 @@
     "innerHTML": "\n\n",
     "innerContent": ["\n", null, "\n"]
   },
-  "version": 2,
+  "version": 2.1,
+  "timestamp": "2026-03-08T12:00:13.444Z",
   "styles": {
-    "q2fy3v0": {
+    "fbgtzj1": {
       "type": "class",
       "selector": ".section-heading",
       "collection": "default",
-      "css": "font-size: var(--h2);\n  color: var(--text-dark);\n  margin-bottom: var(--space-m);",
+      "css": "font-size: var(--h1);",
       "readonly": false
     }
   }

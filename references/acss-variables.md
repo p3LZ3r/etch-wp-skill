@@ -82,7 +82,6 @@ var(--success)            /* Status indicators */
 ```css
 /* ❌ FORBIDDEN — ACSS sets these automatically: */
 color: var(--heading-color);     /* Headings already use this */
-color: var(--text-dark);         /* Body text already uses this */
 color: var(--body-color);        /* Default is already applied */
 
 /* ✅ ONLY override when design requires it: */
@@ -92,8 +91,8 @@ color: var(--accent);             /* Special accent text */
 ```
 
 **Default Behavior:**
-- Headings automatically use `var(--heading-color)`
-- Body text automatically uses the default text color
+- Headings automatically use `var(--heading-color)` which is usually `var(--text-dark)`
+- Body text is the default text color (`var(--text-dark-muted)`)
 - These are inherited from the ACSS dashboard configuration
 
 **Only Set Color When:**
@@ -110,7 +109,7 @@ width: 100%;
 margin-inline: auto;
 
 /* ✅ ONLY override when deviating: */
-max-width: var(--width-800);     /* Narrower than default */
+max-width: calc(var(--content-width) * 0.8);     /* Narrower than default */
 max-width: none;                  /* Full width */
 margin-inline: 0;                 /* Left-aligned instead of centered */
 ```
@@ -127,14 +126,6 @@ padding-block: 0;                          /* Remove default padding */
 background: var(--bg-dark);                /* Different background */
 ```
 
-### Gaps (ACSS 2.6+)
-```css
-/* ❌ REDUNDANT — ACSS sets these automatically: */
-gap: var(--container-gap);    /* Between containers in sections */
-gap: var(--content-gap);      /* Between direct children of sections */
-gap: var(--grid-gap);         /* Between grid items */
-```
-
 ---
 
 ## Container Queries
@@ -148,7 +139,7 @@ ACSS uses modern Container Queries for component-based responsiveness:
     container-type: inline-size;
   }
   /* Query that container */
-  @container (inline-size >= 900px) {
+  @container (inline-size >= to-rem(900px)) {
     grid-template-columns: repeat(3, 1fr);
   }
 }
@@ -170,10 +161,8 @@ ACSS uses modern Container Queries for component-based responsiveness:
 | Task | ACSS Utility | Never Custom |
 |------|--------------|--------------|
 | Buttons | `btn--primary`, `btn--large` | `.my-button` |
-| Grid | `grid--3`, `grid--auto-3` | Custom Grid CSS |
-| Spacing | `space--m`, `pad-section--l` | `padding: 2rem` |
-| Flex | `flex--row`, `flex--center` | `display: flex` |
 | Visibility | `hide`, `hide-on--m` | Custom Media Queries |
+| Accessibility | `sr-only`, `visually-hidden` | Custom CSS |
 
 ### Custom CSS only for:
 - Component-specific layout
@@ -189,11 +178,8 @@ ACSS uses modern Container Queries for component-based responsiveness:
 ```css
 /* ✅ ACSS v4: color-mix for transparency */
 background: color-mix(in oklch, var(--primary) 60%, transparent);
-box-shadow: 0 2px 8px color-mix(in oklch, var(--base) 30%, transparent);
+box-shadow: 0 2px 8px color-mix(in oklch, var(--neutral) 30%, transparent);
 
-/* ❌ Legacy: transparency variables */
-background: var(--primary-60);   /* No longer exists */
-```
 
 ### calc() for fine-tuning
 ```css

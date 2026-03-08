@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * Etch WP Component Validator (Improved)
- * Enhanced validation with Base64 and JavaScript checks
+ * Etch WP Component Validator
+ * Validates JSON format, Base64 encoding, and JavaScript syntax
  *
- * Usage: node validate-component-improved.js <file.json>
+ * Usage: node validate-component.js <file.json>
  */
 
 const fs = require('fs');
@@ -352,16 +352,6 @@ class EtchComponentValidator {
         `Unmatched parentheses at ${blockPath}: ${openParens} opening, ${closeParens} closing`
       );
     }
-
-    // Check for GSAP/ScrollTrigger plugin registration
-    if (jsCode.includes('gsap') && jsCode.includes('ScrollTrigger')) {
-      if (!jsCode.includes('gsap.registerPlugin(ScrollTrigger)') &&
-          !jsCode.includes('registerPlugin(ScrollTrigger)')) {
-        this.warnings.push(
-          `ScrollTrigger is used but gsap.registerPlugin(ScrollTrigger) may be missing at ${blockPath}`
-        );
-      }
-    }
   }
 
   validateComponentUsage(block, blockPath) {
@@ -661,12 +651,11 @@ class EtchComponentValidator {
 // CLI execution
 if (require.main === module) {
   if (process.argv.length < 3) {
-    console.log('Usage: node validate-component-improved.js <file.json>');
-    console.log('\nValidates Etch WP component JSON files for common issues.');
-    console.log('\nEnhanced checks include:');
+    console.log('Usage: node validate-component.js <file.json>');
+    console.log('\nValidates Etch WP component JSON files for common issues:');
+    console.log('  • JSON format detection (API component vs paste/layout)');
     console.log('  • Base64 validity (no line breaks, valid characters)');
     console.log('  • JavaScript syntax and common typos');
-    console.log('  • GSAP/ScrollTrigger patterns');
     console.log('  • Quote consistency');
     console.log('  • Brace/parenthesis matching');
     process.exit(1);

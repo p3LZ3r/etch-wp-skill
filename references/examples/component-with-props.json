@@ -3,7 +3,7 @@
   "gutenbergBlock": {
     "blockName": "etch/component",
     "attrs": {
-      "ref": 67,
+      "ref": 960,
       "attributes": {
         "title": "My Card Title",
         "description": "This is a card description",
@@ -16,150 +16,45 @@
     "innerHTML": "\n\n",
     "innerContent": ["\n", "\n"]
   },
-  "version": 2,
+  "version": 2.1,
+  "timestamp": "2026-03-08T11:59:16.650Z",
   "styles": {
-    "a1b2c3d": {
+    "ihw2xpg": {
       "type": "class",
       "selector": ".card",
       "collection": "default",
-      "css": "background: var(--bg-light);\n  padding: var(--space-l);\n  border-radius: var(--radius-m);\n  box-shadow: var(--shadow-m);",
+      "css": "background: var(--bg-light);\n  padding: var(--space-l);\n  border-radius: var(--radius);\n  box-shadow: var(--shadow-m);\n  display: flex;\n  flex-direction: column;\n\tgap: var(--content-gap);",
       "readonly": false
     },
-    "e4f5g6h": {
+    "t3mk2jt": {
       "type": "class",
       "selector": ".card__title",
       "collection": "default",
-      "css": "font-size: var(--h3);\n  color: var(--text-dark);\n  margin-bottom: var(--space-s);",
+      "css": "font-size: var(--h2);",
       "readonly": false
     },
-    "i7j8k9l": {
+    "46mc8sm": {
       "type": "class",
       "selector": ".card__description",
       "collection": "default",
-      "css": "color: var(--text-medium);\n  margin-bottom: var(--space-m);",
+      "css": "",
       "readonly": false
     },
-    "m0n1o2p": {
+    "p8yp70d": {
       "type": "class",
-      "selector": ".card__button",
+      "selector": ".btn--secondary",
       "collection": "default",
-      "css": "background: var(--primary);\n  color: var(--text-light);\n  padding: var(--space-xs) var(--space-m);\n  border-radius: var(--radius-s);\n  text-decoration: none;\n  display: inline-block;\n\n  &:hover {\n    opacity: 0.9;\n  }\n\n  &:focus-visible {\n    outline: 2px solid var(--primary);\n    outline-offset: 2px;\n  }",
+      "css": "",
       "readonly": false
     }
   },
   "components": {
-    "67": {
-      "id": 67,
+    "960": {
+      "id": 960,
       "name": "Card",
       "key": "Card",
       "description": "",
       "legacyId": "",
-      "blocks": [
-        {
-          "blockName": "etch/element",
-          "attrs": {
-            "metadata": { "name": "Card" },
-            "tag": "div",
-            "attributes": {
-              "class": "card"
-            },
-            "styles": ["a1b2c3d"]
-          },
-          "innerBlocks": [
-            {
-              "blockName": "etch/element",
-              "attrs": {
-                "metadata": { "name": "Title" },
-                "tag": "h3",
-                "attributes": {
-                  "class": "card__title"
-                },
-                "styles": ["e4f5g6h"]
-              },
-              "innerBlocks": [
-                {
-                  "blockName": "etch/text",
-                  "attrs": {
-                    "content": "{props.title}"
-                  },
-                  "innerBlocks": [],
-                  "innerHTML": "",
-                  "innerContent": []
-                }
-              ],
-              "innerHTML": "\n\n",
-              "innerContent": ["\n", null, "\n"]
-            },
-            {
-              "blockName": "etch/element",
-              "attrs": {
-                "metadata": { "name": "Description" },
-                "tag": "p",
-                "attributes": {
-                  "class": "card__description"
-                },
-                "styles": ["i7j8k9l"]
-              },
-              "innerBlocks": [
-                {
-                  "blockName": "etch/text",
-                  "attrs": {
-                    "content": "{props.description}"
-                  },
-                  "innerBlocks": [],
-                  "innerHTML": "",
-                  "innerContent": []
-                }
-              ],
-              "innerHTML": "\n\n",
-              "innerContent": ["\n", null, "\n"]
-            },
-            {
-              "blockName": "etch/condition",
-              "attrs": {
-                "metadata": { "name": "If (Show Button)" },
-                "condition": {
-                  "leftHand": "props.showButton",
-                  "operator": "===",
-                  "rightHand": "true"
-                },
-                "conditionString": "props.showButton === true"
-              },
-              "innerBlocks": [
-                {
-                  "blockName": "etch/element",
-                  "attrs": {
-                    "metadata": { "name": "Button" },
-                    "tag": "a",
-                    "attributes": {
-                      "class": "card__button",
-                      "href": "{props.buttonUrl}"
-                    },
-                    "styles": ["m0n1o2p"]
-                  },
-                  "innerBlocks": [
-                    {
-                      "blockName": "etch/text",
-                      "attrs": {
-                        "content": "{props.buttonText}"
-                      },
-                      "innerBlocks": [],
-                      "innerHTML": "",
-                      "innerContent": []
-                    }
-                  ],
-                  "innerHTML": "\n\n",
-                  "innerContent": ["\n", null, "\n"]
-                }
-              ],
-              "innerHTML": "\n\n",
-              "innerContent": ["\n", null, "\n"]
-            }
-          ],
-          "innerHTML": "\n\n\n\n",
-          "innerContent": ["\n", null, "\n\n", null, "\n\n", null, "\n"]
-        }
-      ],
       "properties": [
         {
           "key": "title",
@@ -176,6 +71,13 @@
           "default": "Card description text"
         },
         {
+          "key": "showButton",
+          "name": "Show Button",
+          "keyTouched": true,
+          "type": { "primitive": "boolean" },
+          "default": true
+        },
+        {
           "key": "buttonText",
           "name": "Button Text",
           "keyTouched": true,
@@ -188,13 +90,109 @@
           "keyTouched": true,
           "type": { "primitive": "string" },
           "default": "#"
-        },
+        }
+      ],
+      "blocks": [
         {
-          "key": "showButton",
-          "name": "Show Button",
-          "keyTouched": true,
-          "type": { "primitive": "boolean" },
-          "default": true
+          "blockName": "etch/element",
+          "attrs": {
+            "metadata": { "name": "Card" },
+            "tag": "div",
+            "attributes": { "class": "card" },
+            "styles": ["ihw2xpg"]
+          },
+          "innerBlocks": [
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": { "name": "Title" },
+                "tag": "h3",
+                "attributes": { "class": "card__title" },
+                "styles": ["t3mk2jt"]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/text",
+                  "attrs": {
+                    "metadata": { "name": "Text" },
+                    "content": "{props.title}"
+                  },
+                  "innerBlocks": [],
+                  "innerHTML": "",
+                  "innerContent": []
+                }
+              ],
+              "innerHTML": "\n\n",
+              "innerContent": ["\n", null, "\n"]
+            },
+            {
+              "blockName": "etch/element",
+              "attrs": {
+                "metadata": { "name": "Description" },
+                "tag": "p",
+                "attributes": { "class": "card__description" },
+                "styles": ["46mc8sm"]
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/text",
+                  "attrs": {
+                    "metadata": { "name": "Text" },
+                    "content": "{props.description}"
+                  },
+                  "innerBlocks": [],
+                  "innerHTML": "",
+                  "innerContent": []
+                }
+              ],
+              "innerHTML": "\n\n",
+              "innerContent": ["\n", null, "\n"]
+            },
+            {
+              "blockName": "etch/condition",
+              "attrs": {
+                "metadata": { "name": "If (Show Button)" },
+                "condition": {
+                  "leftHand": "props.showButton",
+                  "operator": "isTruthy",
+                  "rightHand": null
+                },
+                "conditionString": "props.showButton"
+              },
+              "innerBlocks": [
+                {
+                  "blockName": "etch/element",
+                  "attrs": {
+                    "metadata": { "name": "Button" },
+                    "tag": "a",
+                    "attributes": {
+                      "href": "{props.buttonUrl}",
+                      "class": "btn--secondary"
+                    },
+                    "styles": ["p8yp70d"]
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/text",
+                      "attrs": {
+                        "metadata": { "name": "Text" },
+                        "content": "{props.buttonText}"
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "",
+                      "innerContent": []
+                    }
+                  ],
+                  "innerHTML": "\n\n",
+                  "innerContent": ["\n", null, "\n"]
+                }
+              ],
+              "innerHTML": "\n\n",
+              "innerContent": ["\n", null, "\n"]
+            }
+          ],
+          "innerHTML": "\n\n\n\n\n\n",
+          "innerContent": ["\n", null, "\n\n", null, "\n\n", null, "\n"]
         }
       ]
     }

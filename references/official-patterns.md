@@ -150,9 +150,8 @@ This is a separate phase from official pattern lookup. If the user provides a Wo
 
 1. Use the Etch namespace: `https://example.com/wp-json/etch-api` (replace with the real site URL)
 2. Check `GET /components/list`, then `GET /components` and `GET /patterns` to find reusable building blocks
-3. Check styles before creating new style systems: `GET /styles` and `GET /stylesheets`
-4. For data-driven components, inspect `GET /loops`, `GET /queries`, `GET /post-types`, and `GET /taxonomies`
-5. Reuse or adapt existing components/patterns/styles first
+3. For data-driven components, inspect `GET /loops`, `GET /queries`, `GET /post-types`, and `GET /taxonomies`
+4. Reuse or adapt existing components/patterns first
 6. Build a new component only when no suitable reusable option exists
 
 ### On-Demand Pattern Fetching

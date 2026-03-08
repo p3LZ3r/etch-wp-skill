@@ -12,9 +12,7 @@ const readline = require('readline');
 
 // Known typos that break Etch WP scripts
 const TYPO_PATTERNS = [
-  { regex: /SCrollTrigger/g, name: 'SCrollTrigger', fix: 'ScrollTrigger' },
   { regex: /vvar\s/g, name: 'vvar', fix: 'var' },
-  { regex: /ggsap\./g, name: 'ggsap', fix: 'gsap' },
   { regex: /doccument/g, name: 'doccument', fix: 'document' },
   { regex: /querrySelector/g, name: 'querrySelector', fix: 'querySelector' },
   { regex: /addeventListener/g, name: 'addeventListener', fix: 'addEventListener' },
@@ -100,11 +98,6 @@ function main() {
       console.log(`   ( ): ${braces.counts['(']} / ${braces.counts[')']}`);
       console.log(`   [ ]: ${braces.counts['[']} / ${braces.counts[']']}`);
       process.exit(1);
-    }
-
-    // Check ScrollTrigger plugin registration
-    if (fixed.includes('ScrollTrigger') && !fixed.includes('registerPlugin')) {
-      console.log('⚠️  Warning: ScrollTrigger used but registerPlugin not found');
     }
 
     // Encode
