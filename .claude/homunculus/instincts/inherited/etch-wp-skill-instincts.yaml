@@ -1,0 +1,651 @@
+# Instincts generated from https://github.com/p3LZ3r/etch-wp-skill
+# Generated: 2026-03-08T15:03:27.048Z
+# Version: 2.0
+
+---
+id: etch-wp-skill-commit-conventional
+trigger: "when writing a commit message"
+confidence: 0.85
+domain: git
+source: repo-analysis
+source_repo: https://github.com/p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Commit Conventional
+
+## Action
+
+Use conventional commit format with prefixes: docs, feat, fix, refactor, chore
+
+## Evidence
+
+- 46 commits analyzed
+- Detected conventional commit pattern
+- Examples: docs: Consolidate container query examples into one, feat: Save ACSS index in TOON format for LLM context efficiency
+
+---
+id: etch-wp-skill-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Commit Length
+
+## Action
+
+Write moderate-length commit messages (~50 characters)
+
+## Evidence
+
+- Average commit message length: 58 chars
+- Based on 46 commits
+
+---
+id: etch-wp-skill-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Naming Files
+
+## Action
+
+Use kebab-case naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: kebab-case
+
+---
+id: etch-wp-skill-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Export Style
+
+## Action
+
+Prefer mixed exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: mixed
+
+---
+id: etch-wp-skill-test-separate
+trigger: "when writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Test Separate
+
+## Action
+
+Place tests in the tests/ or __tests__/ directory, mirroring src structure
+
+## Evidence
+
+- Separate test directory pattern detected
+- Tests live in dedicated test folders
+
+---
+id: etch-wp-skill-workflow-feature-development
+trigger: "when implementing a new feature"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Workflow Feature Development
+
+## Action
+
+Follow the feature-development workflow:
+1. Add feature implementation
+2. Add tests for feature
+3. Update documentation
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~17x per month
+- Files: references/*, references/examples/*, scripts/*
+
+---
+id: etch-wp-skill-workflow-refactoring
+trigger: "when refactoring code"
+confidence: 0.65
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Workflow Refactoring
+
+## Action
+
+Follow the refactoring workflow:
+1. Ensure tests pass before refactor
+2. Refactor code structure
+3. Verify tests still pass
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~3x per month
+- Files: src/**/*
+
+---
+id: etch-wp-skill-workflow-documentation-update
+trigger: "when doing documentation update"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Workflow Documentation Update
+
+## Action
+
+Follow the documentation-update workflow:
+1. Update SKILL.md
+2. Update reference files
+3. Fix examples
+4. Update version numbers
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~15x per month
+- Files: SKILL.md, references/*.md, references/examples/*.json
+
+---
+id: etch-wp-skill-workflow-version-release
+trigger: "when doing version release"
+confidence: 0.7
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Workflow Version Release
+
+## Action
+
+Follow the version-release workflow:
+1. Update README.md version
+2. Update SKILL.md version
+3. Update package/release scripts
+4. Add changelog entries
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~4x per month
+- Files: README.md, SKILL.md, scripts/package-release.sh
+
+---
+id: etch-wp-skill-workflow-example-component-update
+trigger: "when doing example component update"
+confidence: 0.65
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Workflow Example Component Update
+
+## Action
+
+Follow the example-component-update workflow:
+1. Update component JSON structure
+2. Add accessibility attributes
+3. Fix ACSS variable usage
+4. Update related documentation
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~3x per month
+- Files: references/examples/*.json, references/component-examples.md, references/block-types.md
+
+---
+id: etch-wp-skill-workflow-validation-script-enhancement
+trigger: "when doing validation script enhancement"
+confidence: 0.65
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Workflow Validation Script Enhancement
+
+## Action
+
+Follow the validation-script-enhancement workflow:
+1. Update validate-component.js
+2. Add new validation checks
+3. Improve error messages
+4. Update documentation
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~3x per month
+- Files: scripts/validate-component.js, SKILL.md
+
+---
+id: etch-wp-skill-workflow-acss-variables-documentation
+trigger: "when doing acss variables documentation"
+confidence: 0.8
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Workflow Acss Variables Documentation
+
+## Action
+
+Follow the acss-variables-documentation workflow:
+1. Update acss-variables.md
+2. Add new variable examples
+3. Update conceptual explanations
+4. Update related references
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~6x per month
+- Files: references/acss-variables.md, SKILL.md
+
+---
+id: etch-wp-skill-workflow-api-safety-hardening
+trigger: "when doing api safety hardening"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Workflow Api Safety Hardening
+
+## Action
+
+Follow the api-safety-hardening workflow:
+1. Update API endpoint restrictions
+2. Add safety warnings to documentation
+3. Update validation rules
+4. Add human-in-the-loop requirements
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: SKILL.md, references/api-endpoints.md
+
+---
+id: etch-wp-skill-workflow-project-initialization-enhancement
+trigger: "when doing project initialization enhancement"
+confidence: 0.65
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Workflow Project Initialization Enhancement
+
+## Action
+
+Follow the project-initialization-enhancement workflow:
+1. Update init-project.js
+2. Add new configuration options
+3. Enhance validation
+4. Update documentation
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~3x per month
+- Files: scripts/init-project.js, scripts/lib/*.js, SKILL.md
+
+---
+id: etch-wp-skill-kebab-case-files
+trigger: "When creating new files"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Kebab Case Files
+
+## Action
+
+Use kebab-case naming convention
+
+## Evidence
+
+- Files like 'acss-variables.md', 'api-endpoints.md', 'init-project.js'
+- Consistent pattern across all repository files
+
+---
+id: etch-wp-skill-camelcase-functions
+trigger: "When defining JavaScript functions"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Camelcase Functions
+
+## Action
+
+Use camelCase naming convention
+
+## Evidence
+
+- JavaScript files in scripts/ directory
+- Standard JS convention observed in codebase
+
+---
+id: etch-wp-skill-pascalcase-classes
+trigger: "When defining JavaScript classes"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Pascalcase Classes
+
+## Action
+
+Use PascalCase naming convention
+
+## Evidence
+
+- JavaScript pattern analysis
+- Standard convention in validation scripts
+
+---
+id: etch-wp-skill-try-catch-errors
+trigger: "When handling errors in JavaScript"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Try Catch Errors
+
+## Action
+
+Use try-catch blocks for error handling
+
+## Evidence
+
+- Error handling style detected in scripts
+- No custom error classes found
+
+---
+id: etch-wp-skill-conventional-commits
+trigger: "When making commits"
+confidence: 0.9
+domain: git
+source: repo-analysis
+source_repo: p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Conventional Commits
+
+## Action
+
+Use conventional commit format with prefixes: docs, feat, fix, refactor, chore
+
+## Evidence
+
+- docs: Consolidate container query examples
+- feat: Save ACSS index in TOON format
+- fix: Correct agent.md to AGENTS.md
+- refactor: Remove typo checking
+- chore: Bump version to v2.5.0
+
+---
+id: etch-wp-skill-58-char-commit-length
+trigger: "When writing commit messages"
+confidence: 0.8
+domain: git
+source: repo-analysis
+source_repo: p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill 58 Char Commit Length
+
+## Action
+
+Keep commit messages around 58 characters average length
+
+## Evidence
+
+- Average commit length analyzed as 58 characters
+- Consistent pattern in commit history
+
+---
+id: etch-wp-skill-update-skill-md-first
+trigger: "When updating documentation"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Update Skill Md First
+
+## Action
+
+Start by updating SKILL.md as the primary documentation file
+
+## Evidence
+
+- SKILL.md appears in 15 documentation update commits
+- Consistent first step in documentation workflow
+
+---
+id: etch-wp-skill-version-sync-release
+trigger: "When preparing version release"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Version Sync Release
+
+## Action
+
+Update version numbers in README.md, SKILL.md, and release scripts simultaneously
+
+## Evidence
+
+- Version release workflow shows 4 occurrences
+- Files consistently updated together: README.md, SKILL.md, scripts/package-release.sh
+
+---
+id: etch-wp-skill-json-structure-accessibility
+trigger: "When updating component examples"
+confidence: 0.8
+domain: workflow
+source: repo-analysis
+source_repo: p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Json Structure Accessibility
+
+## Action
+
+Include accessibility attributes in JSON component structures
+
+## Evidence
+
+- Example component update workflow mentions accessibility
+- Pattern in references/examples/*.json files
+
+---
+id: etch-wp-skill-validation-before-refactor
+trigger: "When starting code refactoring"
+confidence: 0.8
+domain: workflow
+source: repo-analysis
+source_repo: p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Validation Before Refactor
+
+## Action
+
+Ensure tests pass before beginning refactor work
+
+## Evidence
+
+- Refactoring workflow shows 'Ensure tests pass before refactor'
+- 3 refactoring instances follow this pattern
+
+---
+id: etch-wp-skill-acss-variables-frequent-update
+trigger: "When working with ACSS documentation"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Acss Variables Frequent Update
+
+## Action
+
+Update acss-variables.md with conceptual explanations and examples
+
+## Evidence
+
+- ACSS variables documentation workflow occurs 6x/month
+- High frequency pattern in references/acss-variables.md
+
+---
+id: etch-wp-skill-api-safety-warnings
+trigger: "When modifying API endpoints"
+confidence: 0.8
+domain: workflow
+source: repo-analysis
+source_repo: p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Api Safety Warnings
+
+## Action
+
+Add safety warnings and human-in-the-loop requirements to prevent data loss
+
+## Evidence
+
+- API safety hardening workflow identified
+- Safety measures pattern in SKILL.md and references/api-endpoints.md
+
+---
+id: etch-wp-skill-validate-component-enhancement
+trigger: "When improving validation scripts"
+confidence: 0.8
+domain: workflow
+source: repo-analysis
+source_repo: p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Validate Component Enhancement
+
+## Action
+
+Enhance error messages and add new validation checks in validate-component.js
+
+## Evidence
+
+- Validation script enhancement workflow occurs 3x/month
+- Pattern in scripts/validate-component.js updates
+
+---
+id: etch-wp-skill-init-project-config-options
+trigger: "When enhancing project initialization"
+confidence: 0.8
+domain: workflow
+source: repo-analysis
+source_repo: p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Init Project Config Options
+
+## Action
+
+Add configuration options and validation to init-project.js script
+
+## Evidence
+
+- Project initialization enhancement workflow
+- Pattern in scripts/init-project.js and scripts/lib/ files
+
+---
+id: etch-wp-skill-references-folder-structure
+trigger: "When organizing documentation files"
+confidence: 0.9
+domain: architecture
+source: repo-analysis
+source_repo: p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill References Folder Structure
+
+## Action
+
+Place reference materials in references/ folder with examples/ subfolder
+
+## Evidence
+
+- Common folders include 'references'
+- Files like references/acss-variables.md, references/examples/*.json
+
+---
+id: etch-wp-skill-github-workflows-config
+trigger: "When setting up CI/CD"
+confidence: 0.8
+domain: architecture
+source: repo-analysis
+source_repo: p3LZ3r/etch-wp-skill
+---
+
+# Etch Wp Skill Github Workflows Config
+
+## Action
+
+Use .github/workflows/release.yml for release automation
+
+## Evidence
+
+- Config file: .github/workflows/release.yml
+- Appears in version release workflow
+
