@@ -27,7 +27,7 @@ class EtchComponentValidator {
    * Detect JSON format: 'api' (component for POST to /components) or 'paste' (layout/section for frontend editor)
    *
    * API format:  { name, key, blocks, properties, styles? }
-   * Paste format: { type: "block", gutenbergBlock, version, styles, components? }
+   * Paste format: { type: "block", gutenbergBlock, styles, components? }
    */
   detectFormat(data) {
     if (data.type === 'block' && data.gutenbergBlock) {
@@ -85,7 +85,7 @@ class EtchComponentValidator {
         this.errors.push(
           'Unrecognized JSON format. Expected either:\n' +
           '   • API component: { name, key, blocks, properties }\n' +
-          '   • Paste/layout:  { type: "block", gutenbergBlock, version: 2, styles }'
+          '   • Paste/layout:  { type: "block", gutenbergBlock, styles }'
         );
       }
 
@@ -103,7 +103,7 @@ class EtchComponentValidator {
   }
 
   /**
-   * Validate paste/layout format: { type, gutenbergBlock, version, styles }
+   * Validate paste/layout format: { type, gutenbergBlock, styles }
    */
   validatePasteStructure(data) {
     if (!data.type || data.type !== 'block') {
@@ -114,10 +114,7 @@ class EtchComponentValidator {
       this.errors.push('Missing "gutenbergBlock" property');
     }
 
-    // Version field is optional for paste format
-    if (data.version !== undefined && data.version !== 2) {
-      this.warnings.push('Unexpected version value (should be 2 if provided, or omitted)');
-    }
+    // Note: version field is deprecated and no longer checked
 
     if (!data.styles || typeof data.styles !== 'object') {
       this.warnings.push('Missing "styles" object (usually required)');
@@ -178,7 +175,8 @@ class EtchComponentValidator {
     // Validate block type
     const validBlockNames = [
       'etch/element', 'etch/text', 'etch/svg', 'etch/component',
-      'etch/loop', 'etch/condition', 'etch/slot-content', 'etch/slot-placeholder'
+      'etch/loop', 'etch/condition', 'etch/slot-content', 'etch/slot-placeholder',
+      'etch/dynamic-image'
     ];
 
     if (!validBlockNames.includes(block.blockName) && !block.blockName.startsWith('core/')) {
@@ -235,19 +233,8 @@ class EtchComponentValidator {
         );
       }
 
-      // Validate corresponding system style
-      const expectedStyles = {
-        'section': 'etch-section-style',
-        'container': 'etch-container-style',
-        'iframe': 'etch-iframe-style'
-      };
-
-      const expectedStyle = expectedStyles[etchElement];
-      if (expectedStyle && (!attrs.styles || !attrs.styles.includes(expectedStyle))) {
-        this.warnings.push(
-          `data-etch-element="${etchElement}" should include "${expectedStyle}" in styles array at ${blockPath}`
-        );
-      }
+      // Note: System styles (etch-section-style, etch-container-style, etch-iframe-style)
+      // are automatically applied by Etch WP. Manual configuration is not required.
     }
 
     // Check for script placement
