@@ -150,22 +150,22 @@ function extractConfigHints(css) {
   const variables = extractVariables(css);
 
   // Check for font variables
-  if (variables['--font-primary'] || variables['--body-font']) {
+  if ('--font-primary' in variables || '--body-font' in variables || '--text-font-family' in variables) {
     hints.hasFonts = true;
   }
 
   // Check for color variables
-  if (variables['--primary'] || variables['--action-primary']) {
+  if ('--primary' in variables || '--action-primary' in variables) {
     hints.hasColors = true;
   }
 
   // Check for button-related variables
-  if (variables['--btn-padding'] || css.includes('.btn--primary')) {
+  if ('--btn-padding' in variables || css.includes('.btn--primary')) {
     hints.hasButtons = true;
   }
 
   // Check for spacing variables
-  if (variables['--space-m'] || variables['--section-space-m']) {
+  if ('--space-m' in variables || '--section-space-m' in variables) {
     hints.hasSpacing = true;
   }
 
