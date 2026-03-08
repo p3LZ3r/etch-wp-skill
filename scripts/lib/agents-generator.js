@@ -115,36 +115,37 @@ description: Project-specific configuration for ${projectName} - Etch WP develop
         md += `### Common ACSS Variables\n\n`;
 
         const vars = acssIndex.variables;
+        const hasVar = (name) => name in vars;
 
         // Colors
         md += `**Colors:**\n`;
-        md += `- \`--primary\`: ${vars['--primary'] || vars['--action-primary'] || 'N/A'}\n`;
-        md += `- \`--secondary\`: ${vars['--secondary'] || vars['--action-secondary'] || 'N/A'}\n`;
-        md += `- \`--accent\`: ${vars['--accent'] || 'N/A'}\n`;
-        md += `- \`--heading-color\`: ${vars['--heading-color'] || 'N/A'}\n`;
-        md += `- \`--text-color\`: ${vars['--text-color'] || vars['--body-color'] || 'N/A'}\n\n`;
+        md += `- \`--primary\`${hasVar('--primary') || hasVar('--action-primary') ? ' ✓' : ''}\n`;
+        md += `- \`--secondary\`${hasVar('--secondary') || hasVar('--action-secondary') ? ' ✓' : ''}\n`;
+        md += `- \`--accent\`${hasVar('--accent') ? ' ✓' : ''}\n`;
+        md += `- \`--heading-color\`${hasVar('--heading-color') ? ' ✓' : ''}\n`;
+        md += `- \`--text-color\`${hasVar('--text-color') || hasVar('--body-color') ? ' ✓' : ''}\n\n`;
 
         // Typography
         md += `**Typography:**\n`;
-        md += `- \`--font-primary\`: ${vars['--font-primary'] || vars['--body-font'] || 'N/A'}\n`;
-        md += `- \`--font-heading\`: ${vars['--font-heading'] || 'N/A'}\n`;
-        md += `- \`--h1\`: ${vars['--h1'] || 'N/A'}\n`;
-        md += `- \`--h2\`: ${vars['--h2'] || 'N/A'}\n`;
-        md += `- \`--text-m\`: ${vars['--text-m'] || vars['--body-font-size'] || 'N/A'}\n\n`;
+        md += `- \`--font-primary\`${hasVar('--font-primary') || hasVar('--body-font') ? ' ✓' : ''}\n`;
+        md += `- \`--font-heading\`${hasVar('--font-heading') ? ' ✓' : ''}\n`;
+        md += `- \`--h1\`${hasVar('--h1') ? ' ✓' : ''}\n`;
+        md += `- \`--h2\`${hasVar('--h2') ? ' ✓' : ''}\n`;
+        md += `- \`--text-m\`${hasVar('--text-m') || hasVar('--body-font-size') ? ' ✓' : ''}\n\n`;
 
         // Spacing
         md += `**Spacing:**\n`;
-        md += `- \`--space-xs\`: ${vars['--space-xs'] || 'N/A'}\n`;
-        md += `- \`--space-s\`: ${vars['--space-s'] || 'N/A'}\n`;
-        md += `- \`--space-m\`: ${vars['--space-m'] || 'N/A'}\n`;
-        md += `- \`--space-l\`: ${vars['--space-l'] || 'N/A'}\n`;
-        md += `- \`--space-xl\`: ${vars['--space-xl'] || 'N/A'}\n`;
-        md += `- \`--section-space-m\`: ${vars['--section-space-m'] || 'N/A'}\n\n`;
+        md += `- \`--space-xs\`${hasVar('--space-xs') ? ' ✓' : ''}\n`;
+        md += `- \`--space-s\`${hasVar('--space-s') ? ' ✓' : ''}\n`;
+        md += `- \`--space-m\`${hasVar('--space-m') ? ' ✓' : ''}\n`;
+        md += `- \`--space-l\`${hasVar('--space-l') ? ' ✓' : ''}\n`;
+        md += `- \`--space-xl\`${hasVar('--space-xl') ? ' ✓' : ''}\n`;
+        md += `- \`--section-space-m\`${hasVar('--section-space-m') ? ' ✓' : ''}\n\n`;
 
         // Container
         md += `**Container:**\n`;
-        md += `- \`--content-width\`: ${vars['--content-width'] || 'N/A'}\n`;
-        md += `- \`--container-padding\`: ${vars['--container-padding'] || 'N/A'}\n\n`;
+        md += `- \`--content-width\`${hasVar('--content-width') ? ' ✓' : ''}\n`;
+        md += `- \`--container-padding\`${hasVar('--container-padding') ? ' ✓' : ''}\n\n`;
       }
 
       // Add utility classes section

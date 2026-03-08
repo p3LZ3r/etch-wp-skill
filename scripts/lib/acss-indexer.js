@@ -46,9 +46,9 @@ function fetchCSS(url) {
 }
 
 /**
- * Extract CSS custom properties (variables) from CSS content
+ * Extract CSS custom property names from CSS content (names only, no values)
  * @param {string} css - CSS content
- * @returns {Object} - Object with variable names as keys and values
+ * @returns {Object} - Object with variable names as keys (values are null/empty)
  */
 function extractVariables(css) {
   const variables = {};
@@ -59,11 +59,10 @@ function extractVariables(css) {
 
   while ((match = varRegex.exec(css)) !== null) {
     const name = `--${match[1]}`;
-    const value = match[2].trim();
 
     // Skip if already captured (keep first occurrence - usually :root)
     if (!variables[name]) {
-      variables[name] = value;
+      variables[name] = null; // Store null instead of value
     }
   }
 
@@ -325,19 +324,19 @@ function toTOON(index) {
     lines.push('');
   }
 
-  // Variables section - grouped by prefix
+  // Variables section - grouped by prefix (names only, no values)
   lines.push('@vars');
   const varGroups = {};
-  Object.entries(index.variables).forEach(([name, value]) => {
+  Object.keys(index.variables).forEach(name => {
     const prefix = name.split('-')[0] || 'other';
     if (!varGroups[prefix]) varGroups[prefix] = [];
-    varGroups[prefix].push([name, value]);
+    varGroups[prefix].push(name);
   });
 
   Object.entries(varGroups).forEach(([prefix, vars]) => {
     lines.push(`  [${prefix}]`);
-    vars.forEach(([name, value]) => {
-      lines.push(`    ${name}:${value}`);
+    vars.forEach(name => {
+      lines.push(`    ${name}`);
     });
   });
   lines.push('');
@@ -426,43 +425,44 @@ function loadIndex(indexPath = '.etch-acss-index.toon') {
 }
 
 /**
- * Get commonly used ACSS variables for quick reference
+ * Get commonly used ACSS variable names for quick reference
  * @param {Object} index - ACSS index object
- * @returns {Object} - Categorized common variables
+ * @returns {Object} - Categorized common variable names
  */
 function getCommonVariables(index) {
   const vars = index.variables;
+  const has = (name) => name in vars ? name : null;
 
   return {
     colors: {
-      primary: vars['--primary'] || vars['--action-primary'],
-      secondary: vars['--secondary'] || vars['--action-secondary'],
-      accent: vars['--accent'],
-      heading: vars['--heading-color'],
-      text: vars['--text-color'] || vars['--body-color']
+      primary: has('--primary') || has('--action-primary'),
+      secondary: has('--secondary') || has('--action-secondary'),
+      accent: has('--accent'),
+      heading: has('--heading-color'),
+      text: has('--text-color') || has('--body-color')
     },
     fonts: {
-      primary: vars['--font-primary'] || vars['--body-font'],
-      heading: vars['--font-heading'],
-      accent: vars['--font-accent']
+      primary: has('--font-primary') || has('--body-font'),
+      heading: has('--font-heading'),
+      accent: has('--font-accent')
     },
     spacing: {
-      xs: vars['--space-xs'],
-      s: vars['--space-s'],
-      m: vars['--space-m'],
-      l: vars['--space-l'],
-      xl: vars['--space-xl']
+      xs: has('--space-xs'),
+      s: has('--space-s'),
+      m: has('--space-m'),
+      l: has('--space-l'),
+      xl: has('--space-xl')
     },
     typography: {
-      h1: vars['--h1'],
-      h2: vars['--h2'],
-      h3: vars['--h3'],
-      body: vars['--text-m'] || vars['--body-font-size']
+      h1: has('--h1'),
+      h2: has('--h2'),
+      h3: has('--h3'),
+      body: has('--text-m') || has('--body-font-size')
     },
     containers: {
-      width: vars['--content-width'],
-      wide: vars['--wide-width'],
-      full: vars['--full-width']
+      width: has('--content-width'),
+      wide: has('--wide-width'),
+      full: has('--full-width')
     }
   };
 }
