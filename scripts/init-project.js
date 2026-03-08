@@ -91,8 +91,8 @@ function createEnvExample() {
 ETCH_API_USERNAME=your_username
 ETCH_API_PASSWORD=your_application_password
 
-# Optional: Development URL override
-# ETCH_DEV_URL=https://your-site.de
+# Development URL (required - used for ACSS indexing and API calls)
+ETCH_DEV_URL=https://your-site.de
 `;
 
   fs.writeFileSync(examplePath, exampleContent);

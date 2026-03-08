@@ -51,8 +51,8 @@ function generateAgentsMd(config, acssIndex = null, env = null) {
     env = parseEnvFile();
   }
 
-  // Get URLs from env or config (env takes precedence)
-  const devUrl = env.ETCH_DEV_URL || config.devUrl || 'Not configured';
+  // Get URLs from env ONLY (single source of truth)
+  const devUrl = env.ETCH_DEV_URL || 'Not configured';
   const acssUrl = acssIndex?.source || (devUrl !== 'Not configured' ? `${devUrl.replace(/\/$/, '')}/wp-content/uploads/automatic-css/automatic.css` : 'Not configured');
   const apiUrl = devUrl !== 'Not configured' ? `${devUrl.replace(/\/$/, '')}/wp-json/etch-api` : 'Not configured';
 
@@ -99,7 +99,7 @@ description: Project-specific configuration for ${projectName} - Etch WP develop
   md += `\n## API Configuration\n\n`;
   md += `- **Base URL**: ${apiUrl}\n`;
   md += `- **Auth Method**: ${env.ETCH_API_USERNAME ? 'application-password' : 'Not configured'}\n`;
-  md += `- **Username**: ${env.ETCH_API_USERNAME || config.api?.username || 'Not configured'}\n`;
+  md += `- **Username**: ${env.ETCH_API_USERNAME || 'Not configured'}\n`;
 
   // Add ACSS configuration
   md += `\n## ACSS Configuration\n\n`;
@@ -218,12 +218,12 @@ description: Project-specific configuration for ${projectName} - Etch WP develop
   md += `## API Workflow\n\n`;
   md += `### Before Creating Components\n`;
   md += `1. Check official patterns: https://patterns.etchwp.com/\n`;
-  md += `2. Query target site API: GET ${config.api?.baseUrl || '/wp-json/etch-api'}/components/list\n`;
+  md += `2. Query target site API: GET ${apiUrl}/components/list\n`;
   md += `3. Reuse existing components when possible\n\n`;
 
   md += `### Creating Components\n`;
   md += `- Use API format for components\n`;
-  md += `- POST to \`${config.api?.baseUrl || '/wp-json/etch-api'}/components\`\n`;
+  md += `- POST to \`${apiUrl}/components\`\n`;
   md += `- NEVER save API component JSON as files\n`;
   md += `- Styles inline in \`etchData.styles\` only\n\n`;
 
