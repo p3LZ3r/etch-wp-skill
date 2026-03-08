@@ -178,9 +178,8 @@ description: Project-specific configuration for ${projectName} - Etch WP develop
         });
         md += `\n> **Action Required**: Configure these settings in the ACSS Dashboard before generating components.\n\n`;
       }
-    } else {
-      md += `\n> ⚠️ ACSS index not found. Run project initialization to index ACSS variables.\n\n`;
-    }
+  } else {
+    md += `\n> ⚠️ ACSS index not found. Run project initialization to index ACSS variables.\n\n`;
   }
 
   // Add BEM naming guide
