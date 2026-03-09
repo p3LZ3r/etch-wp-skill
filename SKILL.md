@@ -26,8 +26,14 @@ Etch WP is a visual development environment for WordPress that uses Gutenberg bl
 
 **Before generating any components**, you MUST initialize the project:
 
+**macOS/Linux:**
 ```bash
-node scripts/init-project.js
+node ~/.claude/skills/etch-wp/scripts/init-project.js
+```
+
+**Windows:**
+```bash
+node %USERPROFILE%\.claude\skills\etch-wp\scripts\init-project.js
 ```
 
 This script creates:
@@ -86,8 +92,14 @@ Once project is initialized:
 
 **CRITICAL**: After generating any Etch WP JSON, ALWAYS run:
 
+**macOS/Linux:**
 ```bash
-node scripts/validate-component.js <filename>.json
+node ~/.claude/skills/etch-wp/scripts/validate-component.js <filename>.json
+```
+
+**Windows:**
+```bash
+node %USERPROFILE%\.claude\skills\etch-wp\scripts\validate-component.js <filename>.json
 ```
 
 The validator auto-detects the format and includes Base64 encoding checks and JavaScript syntax validation.
