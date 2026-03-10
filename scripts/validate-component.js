@@ -591,12 +591,13 @@ class EtchComponentValidator {
       return; // Skip validation if ACSS index not available
     }
 
-    // Extract var() usage
-    const varPattern = /var\(--[\w-]+/g;
+    // Extract var() usage - match complete var(--name) pattern
+    const varPattern = /var\(--[\w-]+\)/g;
     const foundVars = css.match(varPattern) || [];
 
     for (const varRef of foundVars) {
-      const varName = varRef; // Already includes "var(--"
+      // Extract just the variable name (--name) from var(--name)
+      const varName = varRef.slice(4, -1); // Remove 'var(' and ')'
       if (!this.acssIndex.variables[varName]) {
         this.warnings.push(
           `Style "${styleId}" uses unknown ACSS variable "${varName}". Check .etch-acss-index.toon for available variables.`
