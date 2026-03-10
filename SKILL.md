@@ -4,9 +4,9 @@ description: Expert knowledge for Etch WP - a Unified Visual Development Environ
 license: CC BY-NC-SA 4.0
 metadata:
   author: Torsten Linnecke
-  version: 3.0.0
+  version: 3.0.6
   created: 2025-12-20
-  updated: 2026-03-08
+  updated: 2026-03-10
   category: wordpress
   tags: wordpress, gutenberg, etch-wp, acss, component-generator
   license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/
@@ -16,11 +16,10 @@ metadata:
 
 ## Overview
 
-Etch WP is a visual development environment for WordPress that uses Gutenberg blocks in a specific JSON format. This skill generates complete, pasteable or API-pushable JSON structures using Automatic.css (ACSS) v4 variables.
+Etch WP is a visual development environment for WordPress that uses Gutenberg blocks in a specific JSON format. This skill generates complete JSON structures using Automatic.css (ACSS) v4 variables.
 
-**Output Formats:**
-- **Paste**: Direct JSON for Etch WP editor paste
-- **API**: Push components directly via REST API
+**Output:**
+- Complete JSON for Etch WP editor (paste) or REST API (push)
 
 ## Project Initialization (REQUIRED)
 
@@ -76,17 +75,17 @@ Once project is initialized:
 
 8. **Validate** - Run validation script automatically after generation
 
-### Output Formats: API vs Paste
+### Output Formats
 
-**Two distinct JSON formats exist. Use the right one:**
+Components and patterns use the same JSON structure. Delivery method depends on target:
 
-| What | Format | Delivery |
-|------|--------|----------|
-| **Components** (reusable blocks) | API format | `POST /wp-json/etch-api/components` |
-| **Layouts / Sections / Pages** | Paste format | Copy-paste into Etch frontend editor |
+| Target | Delivery |
+|--------|----------|
+| **Components** (reusable blocks) | `POST /wp-json/etch-api/components` |
+| **Layouts / Sections / Pages** | Copy-paste into Etch frontend editor |
 
 - Save as `.json` file
-- The validator auto-detects both formats
+- The validator handles all formats
 
 ### Post-Generation Validation
 
@@ -140,50 +139,15 @@ When referencing component properties, ALWAYS use the `props.` prefix:
 
 ### 3. data-etch-element — ONLY 3 Values Exist
 
-⚠️ **CRITICAL: Only these values are valid:**
-
-| Value | Use For | Required Style |
-|-------|---------|----------------|
-| `section` | Full-width sections | `etch-section-style` |
-| `container` | Content containers | `etch-container-style` |
-| `iframe` | iFrames | `etch-iframe-style` |
-
-**See:** `references/block-types.md` → "Valid Etch WP Elements"
+**See:** `references/css-architecture-rules.md` → "Including Built-in Etch Element Styles"
 
 ### 4. Style Object — 5 Required Fields
 
-Every style object MUST have exactly these 5 fields:
-
-```json
-"style-id": {
-  "type": "class",           // or "element"
-  "selector": ".my-class",
-  "collection": "default",
-  "css": "display: flex;",
-  "readonly": false          // true for built-in styles
-}
-```
-
-Missing any field = styles won't apply.
-
-**See:** `references/css-architecture-rules.md`
+**See:** `references/css-architecture-rules.md` → "CRITICAL: Style Object Structure Requirements"
 
 ### 5. BEM Naming Convention
 
-Use BEM (Block Element Modifier) for all custom classes:
-
-```css
-.block              /* Block */
-.block__element     /* Element */
-.block--modifier   /* Modifier */
-.block__element--modifier
-```
-
-**Examples:**
-- `.hero`, `.hero__title`, `.hero--dark`
-- `.card`, `.card__image`, `.card__title--featured`
-
-**See:** `references/block-types.md` → "CSS Formatting and BEM"
+**See:** `references/css-architecture-rules.md` → "Naming Conventions"
 
 ---
 
@@ -204,13 +168,12 @@ Use BEM (Block Element Modifier) for all custom classes:
 
 | File | Purpose |
 |------|---------|
-| `references/json-structure.md` | Complete JSON structure, root fields, innerContent patterns |
+| `references/json-structure.md` | Complete JSON structure, root fields, innerContent patterns, block types, conditions, style system |
 | `references/block-types.md` | All block types (etch/element, etch/text, etch/condition, etch/loop, etc.) |
 | `references/props-system.md` | Props, slots, property types, passing props to components |
 | `references/dynamic-data.md` | Loops, nested loops, data modifiers, gallery fields |
-| `references/css-architecture-rules.md` | Style object structure, including built-in Etch styles |
-| `references/acss-variables.md` | ACSS v4 variables (colors, spacing, typography) |
-| `references/technical-reference.md` | EtchData, conditions, advanced patterns |
+| `references/css-architecture-rules.md` | Style object structure, BEM naming, built-in Etch styles |
+| `references/acss-variables.md` | ACSS v4 philosophy, assignment variables, automatic styles, container queries |
 | `references/api-endpoints.md` | REST API endpoints with curl examples |
 | `references/native-components.md` | Native component documentation |
 | `references/official-patterns.md` | Official patterns library guide |

@@ -8,21 +8,43 @@
   "gutenbergBlock": {
     "blockName": "etch/element",
     "attrs": {
-      "metadata": {"name": "Element Name"},
-      "tag": "section",
+      "metadata": {"name": "Card"},
+      "tag": "div",
       "attributes": {
-        "data-etch-element": "section",
-        "class": "my-section"
+        "class": "card"
       },
-      "styles": ["etch-section-style", "custom-style-id"],
-      "options": {}
+      "styles": ["random-7-digit-style-id"]
     },
-    "innerBlocks": [],
+    "innerBlocks": [
+      {
+        "blockName": "etch/element",
+        "attrs": {
+          "metadata": { "name": "Heading" },
+          "tag": "h2",
+          "attributes": { "class": "heading" },
+          "styles": ["another-random-7-digit-style-id"]
+        }
+      }
+    ],
     "innerHTML": "\n\n",
     "innerContent": ["\n", null, "\n"]
   },
-  "version": 2,
-  "styles": {},
+  "styles": {
+    "random-7-digit-style-id": {
+      "type": "class",
+      "selector": ".card",
+      "collection": "default",
+      "css": "background: var(--bg-light);\n  padding: var(--space-l);\n  border-radius: var(--radius);\n  box-shadow: var(--shadow-m);\n  display: flex;\n  flex-direction: column;\n  gap: var(--content-gap);",
+      "readonly": false
+    },
+    "another-random-7-digit-style-id": {
+      "type": "class",
+      "selector": ".heading",
+      "collection": "default",
+      "css": "font-size: var(--h1);",
+      "readonly": false
+    }
+  },
   "components": {}
 }
 ```
@@ -35,42 +57,47 @@ Always `"block"` for Etch elements
 ### gutenbergBlock
 Main content structure - contains the actual element/component
 
-### version
-Always `2` for current Etch format
-
 ### styles
-Object containing all CSS class definitions referenced in the structure
+Object containing all CSS class definitions referenced in the structure. Stored in WordPress options (`etch_styles`).
 
 ### components
 Object containing all component definitions referenced by `ref` in etch/component blocks
 
-## gutenbergBlock Structure
+## Block Types
 
-### blockName
-Specifies the type of block:
-- `etch/element` - HTML elements
-- `etch/component` - Component instances
-- `etch/text` - Text content
-- `etch/condition` - Conditional logic
-- `etch/svg` - SVG elements
-- `etch/loop` - Loop structures
+### Block Name → PHP Class Mapping
 
-### attrs
+| Block Name | PHP Class | Purpose |
+|------------|-----------|---------|
+| `etch/element` | ElementBlock | Standard HTML elements (div, section, etc.) |
+| `etch/text` | TextBlock | Text content with dynamic replacement |
+| `etch/dynamic-image` | DynamicImageBlock | WordPress media images with mediaId |
+| `etch/component` | ComponentBlock | Reusable component references |
+| `etch/condition` | ConditionBlock | Conditional rendering |
+| `etch/loop` | LoopBlock | Loop/repeat content |
+| `etch/svg` | SvgBlock | SVG icons |
+| `etch/slot` | SlotContentBlock | Component slots (content insertion) |
+| `etch/slot-placeholder` | SlotPlaceholderBlock | Slot placeholders in components |
+| `etch/raw-html` | RawHtmlBlock | Raw HTML output |
+| `etch/dynamic-element` | DynamicElementBlock | Dynamic element variations |
+
+## Block Attributes (attrs)
+
 Block attributes object containing:
 
-#### metadata
+### metadata
 ```json
 "metadata": {"name": "Descriptive Name"}
 ```
 Used for identification in Etch editor structure panel
 
-#### tag
+### tag
 HTML tag name (for etch/element):
 ```json
 "tag": "div" | "section" | "article" | "header" | "footer" | etc.
 ```
 
-#### attributes
+### attributes
 HTML attributes object:
 ```json
 "attributes": {
@@ -82,22 +109,55 @@ HTML attributes object:
 }
 ```
 
-#### styles
-Array of style IDs referencing the styles object:
+### data-etch-element Values
+
+**⚠️ ONLY 3 values exist:**
+
+| Value | Use For | Required Style |
+|-------|---------|----------------|
+| `section` | Full-width sections | `etch-section-style` |
+| `container` | Content containers | `etch-container-style` |
+| `iframe` | iFrames | `etch-iframe-style` |
+
+### styles
+Array of style IDs referencing the styles object via their unique 7-character IDs:
 ```json
-"styles": ["etch-section-style", "pzfpn8v"]
+"styles": ["pzfpn8v"]
 ```
 
-#### options
+### options
 Additional configuration (for images, etc.):
 ```json
 "options": {
   "imageData": {
     "attachmentId": 34,
-    "size": ""
+    "size": "full"
   }
 }
 ```
+
+### Field Reference
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `origin` | string | Must be `"etch"` (or `"gutenberg"` for legacy) |
+| `name` | string | Display name in Etch editor |
+| `type` | string | Block type: `html`, `loop`, `component`, `condition`, `slot`, `slot-placeholder` |
+| `tag` | string | HTML tag (default: `"div"`) |
+| `attributes` | object | HTML attributes as key-value strings |
+| `styles` | string[] | Array of 7-character style IDs |
+| `hidden` | boolean | Whether block is hidden |
+| `removeWrapper` | boolean | Remove wrapper element |
+| `block` | object | Block definition with `type`, `tag`, `specialized` |
+| `script` | object | JavaScript with `id` and base64 `code` |
+| `misc` | object | Miscellaneous data |
+| `nestedData` | object | Nested EtchData objects |
+| `loop` | object | Loop configuration |
+| `component` | integer | Component post ID |
+| `condition` | object | Condition with `leftHand`, `operator`, `rightHand` |
+| `slot` | string | Slot name for slot/placeholder blocks |
+
+## Nested Content Structure
 
 ### innerBlocks
 Array of nested blocks - each block has same structure
@@ -111,58 +171,74 @@ Array mixing strings and nulls:
 - `null`: Placeholder for innerBlocks
 - Pattern: `["\n", null, "\n", null, "\n"]` for multiple blocks
 
-## innerContent Patterns
+#### innerContent Patterns
 
-### Single inner block:
+**Single inner block:**
 ```json
 "innerContent": ["\n", null, "\n"]
 ```
 
-### Multiple inner blocks:
+**Multiple inner blocks:**
 ```json
 "innerContent": ["\n", null, "\n\n", null, "\n\n", null, "\n"]
 ```
 
-### No inner blocks:
+**No inner blocks:**
 ```json
 "innerContent": ["\n", "\n"]
 ```
 
-### With text:
+**With text:**
 ```json
 "innerContent": ["Text here ", null, " more text"]
 ```
 
-## Styles Object Format
+## Styles System
+
+### Style Object Format
 
 ```json
 "styles": {
-  "style-id": {
+  "pzfpn8v": {
     "type": "class",
     "selector": ".class-name",
     "collection": "default",
     "css": "display: flex;\n  gap: 1em;",
     "readonly": false
-  },
-  "etch-section-style": {
-    "type": "element",
-    "selector": ":where([data-etch-element=\"section\"])",
-    "collection": "default",
-    "css": "inline-size: 100%;\n  display: flex;",
-    "readonly": true
+  }
+}
+```
+
+Styles are stored in WordPress options (`etch_styles`) with this structure:
+
+```json
+{
+  "style-id-123": {
+    "type": "class",
+    "selector": ".class-name",
+    "collection": "default|custom",
+    "css": "property: value;",
+    "readonly": false|true
   }
 }
 ```
 
 ### Style Fields
 
-- **type**: "class" | "element"
+- **type**: `"class"` | `"element"`
 - **selector**: CSS selector string
-- **collection**: Usually "default"
+- **collection**: `"default"` for built-in/plugin styles, or custom collection name
 - **css**: CSS rules as multi-line string
-- **readonly**: true for system styles, false for custom
+- **readonly**: `true` for system styles (auto-update), `false` for user-customizable
 
-## Components Object Format
+### Style Collections
+
+- `collection: "default"` - Built-in and plugin styles
+- Custom collections can be created for organization
+
+## Components
+
+### Components Object Format
 
 ```json
 "components": {
@@ -194,13 +270,32 @@ Array mixing strings and nulls:
 
 ### Component Fields
 
-- **id**: Numeric ID (referenced by etch/component ref)
+- **id**: Numeric ID (referenced by etch/component `ref`)
 - **name**: Display name
 - **key**: PascalCase key
 - **blocks**: Array of block structures (component content)
 - **properties**: Array of prop definitions
 - **description**: Optional description
 - **legacyId**: Usually empty string
+
+### Component Reference Structure
+
+```json
+{
+  "blockName": "etch/component",
+  "attrs": {
+    "ref": 123,
+    "attributes": {
+      "propName": "value",
+      "dynamicProp": "{post.title}",
+      "booleanProp": "{true}"
+    }
+  },
+  "innerBlocks": [],
+  "innerHTML": "\n\n",
+  "innerContent": ["\n", "\n"]
+}
+```
 
 ## Property Types
 
@@ -260,7 +355,9 @@ Array mixing strings and nulls:
 }
 ```
 
-## Using Props in Content
+## Props and Dynamic Data
+
+### Using Props in Content
 
 Props are referenced using curly braces:
 ```json
@@ -282,23 +379,32 @@ Or in attributes:
 }
 ```
 
-## Conditional Logic Structure
+### Data Source References
 
-**⚠️ Condition format differs for props vs dynamic data. See `block-types.md` for full reference.**
+| Source | Syntax | Curly brackets in condition? |
+|--------|--------|------------------------------|
+| Component props | `props.fieldName` | No |
+| MetaBox fields | `this.metabox.field_name` | Yes: `{this.metabox.field_name}` |
+| MetaBox group subfield | `this.metabox.group.subfield` | Yes |
+| Post data | `post.fieldName` | Yes: `{post.featuredImage.url}` |
+| Loop item | `item.fieldName` | Yes |
+| User data | `user.field` | Depends on context |
+
+## Conditional Logic
 
 ### Component Props Condition
-For component props, use `this.propName` with `!= ""`:
+
 ```json
 {
   "blockName": "etch/condition",
   "attrs": {
-    "metadata": {"name": "If (Condition)"},
+    "metadata": { "name": "If (Show Button)" },
     "condition": {
-      "leftHand": "this.showElement",
-      "operator": "!=",
-      "rightHand": "\"\""
+      "leftHand": "props.showButton",
+      "operator": "isTruthy",
+      "rightHand": null
     },
-    "conditionString": "this.showElement != \"\""
+    "conditionString": "props.showButton"
   },
   "innerBlocks": [
     // Content shown when condition is true
@@ -306,19 +412,21 @@ For component props, use `this.propName` with `!= ""`:
 }
 ```
 
-### Dynamic Data Condition (MetaBox fields, post data)
+### Dynamic Data Condition
+
 For `this.metabox.*`, `post.*`, loop items — wrap leftHand in `{}` and use `!== ""`:
+
 ```json
 {
   "blockName": "etch/condition",
   "attrs": {
     "metadata": {"name": "If (Condition)"},
     "condition": {
-      "leftHand": "{this.metabox.field_name}",
+      "leftHand": "this.metabox.field_name",
       "operator": "!==",
       "rightHand": "\"\""
     },
-    "conditionString": "{this.metabox.field_name} !== \"\""
+    "conditionString": "this.metabox.field_name !== \"\""
   },
   "innerBlocks": [
     // Content shown when field has value
@@ -328,14 +436,22 @@ For `this.metabox.*`, `post.*`, loop items — wrap leftHand in `{}` and use `!=
 
 ### Condition Operators
 
-- `!=` - Not equal (loose) - use for component props: `this.prop != ""`
-- `!==` - Not equal (strict) - use for dynamic data: `{this.metabox.field} !== ""`
-- `===` - Strict equality
-- `>`, `<`, `>=`, `<=` - Numeric comparisons
-- `||` - OR (combine conditions)
-- `&&` - AND (combine conditions)
+| Operator | Description | Right Hand Required |
+|----------|-------------|---------------------|
+| `==` | Loose equality | Yes |
+| `===` | Strict equality | Yes |
+| `!=` | Loose inequality | Yes |
+| `!==` | Strict inequality | Yes |
+| `<` | Less than | Yes |
+| `>` | Greater than | Yes |
+| `<=` | Less than or equal | Yes |
+| `>=` | Greater than or equal | Yes |
+| `\|\|` | Logical OR | Yes |
+| `&&` | Logical AND | Yes |
+| `isTruthy` | Truthy check | No |
+| `isFalsy` | Falsy check | No |
 
-### Complex Conditions (OR — Dynamic Data)
+### Complex Conditions (OR)
 
 ```json
 {
@@ -356,52 +472,120 @@ For `this.metabox.*`, `post.*`, loop items — wrap leftHand in `{}` and use `!=
 }
 ```
 
-### Data Source References
+### Condition Evaluation Details
 
-| Source | Syntax | Curly brackets in condition? |
-|--------|--------|----------------------------|
-| Component props | `props.fieldName` | No |
-| MetaBox fields | `this.metabox.field_name` | Yes: `{this.metabox.field_name}` |
-| MetaBox group subfield | `this.metabox.group.subfield` | Yes |
-| Post data | `post.fieldName` | Yes: `{post.featuredImage.url}` |
-| Loop item | `item.fieldName` | Yes |
-| User data | `user.field` | Depends on context |
+#### Truthiness Rules
 
-## Component Reference Structure
+- Empty values (`empty()` in PHP) are **falsy**
+- String `"false"` (case-insensitive) is explicitly **falsy**
+- Everything else follows PHP's truthiness rules
+
+#### Operator Encoding
+
+Operators can be Unicode-encoded in condition strings:
+- `u0026u0026` → `&&`
+- `u007cu007c` → `||`
+- `u003e` → `>`
+- `u003c` → `<`
+- `u003d` → `=`
+- `u0021` → `!`
+
+#### Value Decoding
+
+Values are automatically decoded:
+- `u0022` (Unicode quote) is removed
+- `&#8217;` (WordPress apostrophe) is normalized to `'`
+
+## Loops
+
+### Loop Configuration
 
 ```json
 {
-  "blockName": "etch/component",
-  "attrs": {
-    "ref": 123,
-    "attributes": {
-      "propName": "value",
-      "dynamicProp": "{post.title}",
-      "booleanProp": "{true}"
-    }
-  },
-  "innerBlocks": [],
-  "innerHTML": "\n\n",
-  "innerContent": ["\n", "\n"]
+  "target": "loop-target-field",
+  "itemId": "item",
+  "indexId": "index",
+  "loopParams": {},
+  "version": 2
 }
 ```
 
-## data-etch-element Values
+### Loop Fields
 
-**⚠️ ONLY 3 values exist:**
-- `section` - Full-width sections (requires `etch-section-style`)
-- `container` - Content containers (requires `etch-container-style`)
-- `iframe` - iFrames (requires `etch-iframe-style`)
+| Field | Description |
+|-------|-------------|
+| `target` | The data source to loop over |
+| `itemId` | Variable name for each item (default: `"item"`) |
+| `indexId` | Variable name for index (default: `"index"`) |
+| `loopParams` | Additional loop parameters |
+| `version` | Loop format version (usually 2) |
 
-❌ `flex-div` is DEPRECATED. Use a standard `div` instead.
-❌ `grid` does NOT exist as a data-etch-element value. Use a standard `div` with CSS grid styles instead.
+## Dynamic Images
+
+### etch/dynamic-image Block
+
+| Feature | Description |
+|---------|-------------|
+| **Default placeholder** | Uses `https://placehold.co/1920x1080` if no image |
+| **mediaId** | Resolves WordPress attachment metadata |
+| **useSrcSet** | Boolean for responsive images (string values: `"true"`, `"1"`, `"yes"`, `"on"`) |
+| **maximumSize** | Image size to use (default: `"full"`) |
+| **Fallback** | Returns `<img/>` if attachment not found |
+
+## Slots
+
+### Slot System Architecture
+
+The slot system involves three components:
+
+1. **etch/slot (SlotContentBlock)** - Used in component instances to provide content
+2. **etch/slot-placeholder (SlotPlaceholderBlock)** - Used in component definitions to mark insertion point
+3. **ComponentSlotContextProvider** - Manages slot context during rendering
+
+### Slot Rendering Behavior
+
+- Slot content uses **parent context** (not component context) to avoid props leakage
+- Recursion guard prevents infinite slot rendering
+- Dynamic content entries are preserved and restored after slot rendering
+- Empty slot content renders nothing (no placeholder)
+
+## JavaScript
+
+### JavaScript Handling
+
+Scripts in Etch WP are:
+1. Stored as **Base64-encoded** JavaScript
+2. Registered during block processing
+3. Output in `wp_head` as `<script type="module" defer>`
+4. Deduplicated based on content hash
+
+**Important:** JavaScript code must be Base64 encoded (no line breaks) when stored in JSON.
+
+## Important Implementation Details
+
+1. **Component Properties:** Properties with `{props.xxx}` in their default value return empty string to prevent infinite loops.
+
+2. **Slot Content Context:** Slot content uses parent context (from before component processing), not component context.
+
+3. **Array Property Resolution:** Array properties can reference:
+   - Global loop presets by key
+   - Context expressions
+   - JSON-encoded strings
+   - Comma-separated values
+
+4. **Style IDs:** Style IDs are 7-character alphanumeric strings stored in `etchData.styles` array.
+
+5. **Dynamic Images:** Must use `etch/dynamic-image` block type with `mediaId` attribute, never `etch/element` with `tag: "img"`.
+
+6. **Text Content:** All text must use `etch/text` blocks with `{props.propertyName}` or `{this.field}` syntax. Never put raw text in `innerHTML`.
+
+7. **Inner Content:** The `innerContent` array uses `null` placeholders for child blocks. One `null` per child in `innerBlocks`.
 
 ## Best Practices
 
 1. **Always include metadata.name** - For editor clarity
 2. **Use semantic tags** - article, section, header, nav, etc.
-3. **Consistent style IDs** - Use readable, unique IDs
+3. **Unique random style IDs** - Use unique IDs like pzfpn8v
 4. **Proper innerContent** - Match innerBlocks count
-5. **Complete components object** - Include all referenced components
-6. **Type-safe props** - Use correct primitive types
-7. **Descriptive names** - Clear component and prop names
+5. **Type-safe props** - Use correct primitive types
+6. **Descriptive names** - Clear component and prop names

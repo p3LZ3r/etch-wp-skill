@@ -56,7 +56,7 @@ Returns all components with full details.
     "blocks": [...],
     "properties": [...],
     "description": "A reusable card component",
-    "legacyId": "old_id_if_migrated"
+    "legacyId": ""
   }
 ]
 ```
@@ -78,28 +78,17 @@ Returns lightweight list (id, key, name, legacyId only) for quick lookup.
       "blockName": "etch/element",
       "attrs": {
         "metadata": {
-          "name": "Card Container",
-          "etchData": {
-            "origin": "etch",
-            "component": "div",
-            "styles": ["a1b2c3d"],
-            "attributes": {
-              "class": "tl-card"
-            },
-            "block": {
-              "type": "html",
-              "tag": "div"
-            }
-          }
+          "name": "Card Container"
         },
         "tag": "div",
         "attributes": {
           "class": "tl-card"
-        }
+        },
+        "styles": ["a1b2c3d"]
       },
       "innerBlocks": [...],
-      "innerHTML": "<div class=\"tl-card\"></div>",
-      "innerContent": ["<div class=\"tl-card\">", null, "</div>"]
+      "innerHTML": "\n\n",
+      "innerContent": ["\n", null, "\n"]
     }
   ],
   "properties": [
@@ -116,6 +105,7 @@ Returns lightweight list (id, key, name, legacyId only) for quick lookup.
 **Important Notes:**
 - `key` must be PascalCase (e.g., `FeatureCard`)
 - `blocks` must be valid WordPress block objects with `blockName`, `attrs`, `innerBlocks`, `innerHTML`, `innerContent`
+- `styles` inside `attrs` is an array of 7-character style IDs
 
 ### GET /components/{id}
 Returns single component by ID.
@@ -190,7 +180,7 @@ Converts Gutenberg HTML block comments into JSON block objects.
 
 ## Complete Component Creation Example
 
-### Step 1: Prepare Component JSON
+### Component JSON Structure
 ```json
 {
   "name": "Hero Section",
@@ -200,25 +190,12 @@ Converts Gutenberg HTML block comments into JSON block objects.
     {
       "blockName": "etch/element",
       "attrs": {
-        "metadata": {
-          "name": "Hero Container",
-          "etchData": {
-            "origin": "etch",
-            "component": "section",
-            "styles": ["section-style-id"],
-            "attributes": {
-              "class": "tl-hero"
-            },
-            "block": {
-              "type": "html",
-              "tag": "section"
-            }
-          }
-        },
+        "metadata": {"name": "Hero Container"},
         "tag": "section",
         "attributes": {
           "class": "tl-hero"
-        }
+        },
+        "styles": ["section-style-id"]
       },
       "innerBlocks": [
         {
@@ -231,8 +208,8 @@ Converts Gutenberg HTML block comments into JSON block objects.
           "innerContent": []
         }
       ],
-      "innerHTML": "<section class=\"tl-hero\"></section>",
-      "innerContent": ["<section class=\"tl-hero\">", null, "</section>"]
+      "innerHTML": "\n\n",
+      "innerContent": ["\n", null, "\n"]
     }
   ],
   "properties": [
@@ -246,7 +223,7 @@ Converts Gutenberg HTML block comments into JSON block objects.
 }
 ```
 
-### Step 2: POST Component
+### POST Component
 ```bash
 curl -u "user:pass" \
   -X POST \
@@ -255,51 +232,13 @@ curl -u "user:pass" \
   "https://site.com/wp-json/etch-api/components"
 ```
 
-**Done!** The component is created with inline styles. No separate style push needed.
+**Done!** The component is created with style IDs referencing existing styles stored in WordPress options (`etch_styles`).
 
 ---
 
-## Inline Styles (Correct Approach)
+## Styles
 
-Styles must ALWAYS be provided inline within each block's `etchData.styles` array:
-
-```json
-{
-  "blockName": "etch/element",
-  "attrs": {
-    "metadata": {
-      "name": "Hero Container",
-      "etchData": {
-        "origin": "etch",
-        "component": "section",
-        "styles": ["a1b2c3d", "etch-section-style"],
-        "attributes": {
-          "class": "tl-hero",
-          "data-etch-element": "section"
-        },
-        "block": {
-          "type": "html",
-          "tag": "section"
-        }
-      }
-    },
-    "tag": "section",
-    "attributes": {
-      "class": "tl-hero",
-      "data-etch-element": "section"
-    }
-  },
-  "innerBlocks": [...],
-  "innerHTML": "<section class=\"tl-hero\" data-etch-element=\"section\"></section>",
-  "innerContent": ["<section class=\"tl-hero\" data-etch-element=\"section\">", null, "</section>"]
-}
-```
-
-Style definitions are stored in a separate `styles` object (for paste format) or referenced by ID. The style IDs in `etchData.styles` reference these definitions.
-
-**Key points:**
-- `etchData.styles` is an array of style IDs (7-char alphanumeric)
-- Style definitions travel with the component JSON (paste format) or are referenced (API format)
+Styles are referenced via 7-character alphanumeric IDs in block `attrs.styles` arrays. See [JSON Structure Reference](./json-structure.md) for complete style format details.
 
 ---
 
