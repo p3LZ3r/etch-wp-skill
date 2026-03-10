@@ -11,8 +11,8 @@ const fs = require('fs');
 const path = require('path');
 
 class EtchComponentValidator {
-  // Component key must be PascalCase (e.g., FeatureCard, HeroSection)
-  static PASCAL_CASE_PATTERN = /^[A-Z][A-Za-z0-9]*$/;
+  // Style ID must be 7 random alphanumeric characters (lowercase) or etch- prefixed system styles
+  static STYLE_ID_PATTERN = /^[a-z0-9]{7}$/;
 
   constructor() {
     this.errors = [];
@@ -21,6 +21,7 @@ class EtchComponentValidator {
     this.base64LineBreakCheck = true;
     this.projectConfig = this.loadProjectConfig();
     this.projectPrefix = this.projectConfig?.prefix || null;
+    this.acssIndex = this.loadAcssIndex();
   }
 
   /**
@@ -222,6 +223,13 @@ class EtchComponentValidator {
       this.errors.push(`Missing "tag" attribute for etch/element at ${blockPath}`);
     }
 
+    // Validate styles array if present
+    if (attrs.styles && Array.isArray(attrs.styles)) {
+      attrs.styles.forEach((styleId, index) => {
+        this.validateStyleId(styleId, `${blockPath}.attrs.styles[${index}]`);
+      });
+    }
+
     // Check for data-etch-element usage
     if (attrs.attributes && attrs.attributes['data-etch-element']) {
       const etchElement = attrs.attributes['data-etch-element'];
@@ -298,45 +306,13 @@ class EtchComponentValidator {
         `Script ID "${script.id}" should be 7 random alphanumeric characters at ${blockPath}`
       );
     }
-
-    // Try to decode and validate JavaScript
-    try {
-      const decoded = Buffer.from(code, 'base64').toString('utf8');
-      this.validateJavaScript(decoded, blockPath);
-    } catch (e) {
-      this.errors.push(
-        `Base64 decoding failed at ${blockPath}: ${e.message}`
-      );
-    }
   }
 
-  validateJavaScript(jsCode, blockPath) {
-    // Check for curly quotes (typo from copy-paste)
-    if (jsCode.includes('\u2018') || jsCode.includes('\u2019') || jsCode.includes('\u201C') || jsCode.includes('\u201D')) {
-      this.warnings.push(
-        `Curly quotes detected at ${blockPath}. Use straight quotes ' or " instead.`
-      );
-    }
-
-    // Check for console.log (warning for production)
-    if (/console\.log\s*\(/.test(jsCode)) {
-      this.info.push(`console.log found at ${blockPath}. Consider removing for production.`);
-    }
-
-    // Basic syntax check - try to find unclosed braces/parens
-    const openBraces = (jsCode.match(/\{/g) || []).length;
-    const closeBraces = (jsCode.match(/\}/g) || []).length;
-    if (openBraces !== closeBraces) {
+  validateStyleId(styleId, path) {
+    // Check style ID format (7 random alphanumeric chars) or etch- prefixed system styles
+    if (!EtchComponentValidator.STYLE_ID_PATTERN.test(styleId) && !styleId.startsWith('etch-')) {
       this.errors.push(
-        `Unmatched braces at ${blockPath}: ${openBraces} opening, ${closeBraces} closing`
-      );
-    }
-
-    const openParens = (jsCode.match(/\(/g) || []).length;
-    const closeParens = (jsCode.match(/\)/g) || []).length;
-    if (openParens !== closeParens) {
-      this.errors.push(
-        `Unmatched parentheses at ${blockPath}: ${openParens} opening, ${closeParens} closing`
+        `Style ID "${styleId}" at ${path} must be 7 random alphanumeric characters (e.g., "q2fy3v0") or etch- prefixed system style`
       );
     }
   }
@@ -362,10 +338,10 @@ class EtchComponentValidator {
 
   validateStyles(styles) {
     Object.entries(styles).forEach(([id, style]) => {
-      // Check style ID format (7 random alphanumeric chars)
-      if (!/^[a-z0-9]{7}$/.test(id) && !id.startsWith('etch-')) {
-        this.warnings.push(
-          `Style ID "${id}" should be 7 random alphanumeric characters (e.g., "q2fy3v0")`
+      // Check style ID format (7 random alphanumeric chars) or etch- prefixed system styles
+      if (!EtchComponentValidator.STYLE_ID_PATTERN.test(id) && !id.startsWith('etch-')) {
+        this.errors.push(
+          `Style ID "${id}" must be 7 random alphanumeric characters (e.g., "q2fy3v0") or etch- prefixed system style`
         );
       }
 
@@ -386,13 +362,8 @@ class EtchComponentValidator {
   }
 
   validateCSS(css, styleId, projectPrefix = null) {
-    // Check for nested component classes (common error)
-    const nestedComponentPattern = /\.\w+-\w+\s+\.\w+-\w+/;
-    if (nestedComponentPattern.test(css)) {
-      this.warnings.push(
-        `Style "${styleId}" may contain nested components. Each component should have its own style object.`
-      );
-    }
+    // Validate ACSS variables and utility classes
+    this.validateAcssUsage(css, styleId);
 
     // Check for hardcoded values where ACSS variables should be used
     const hardcodedPatterns = {
@@ -426,7 +397,7 @@ class EtchComponentValidator {
     invalidVarPatterns.forEach(pattern => {
       if (pattern.test(css)) {
         this.warnings.push(
-          `Style "${styleId}" may contain invalid ACSS variable name. Verify against documentation.`
+          `Style "${styleId}" may contain invalid ACSS variable name. Verify against ACSS index.`
         );
       }
     });
@@ -536,6 +507,111 @@ class EtchComponentValidator {
     }
   }
 
+  loadAcssIndex() {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+
+      // Look for .etch-acss-index.toon in current directory and parent directories
+      let currentDir = process.cwd();
+      let index = null;
+
+      while (currentDir !== path.dirname(currentDir)) {
+        const indexPath = path.join(currentDir, '.etch-acss-index.toon');
+        if (fs.existsSync(indexPath)) {
+          const content = fs.readFileSync(indexPath, 'utf8');
+          index = this.parseToonIndex(content);
+          break;
+        }
+        currentDir = path.dirname(currentDir);
+      }
+
+      return index;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  parseToonIndex(content) {
+    // Parse TOON format (key-value pairs separated by space or colon)
+    const variables = {};
+    const classes = [];
+
+    const lines = content.split('\n');
+    let currentSection = null;
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+
+      // Skip empty lines and comments
+      if (!trimmed || trimmed.startsWith('#')) continue;
+
+      // Detect sections
+      if (trimmed.startsWith('@variables')) {
+        currentSection = 'variables';
+        continue;
+      } else if (trimmed.startsWith('@classes')) {
+        currentSection = 'classes';
+        continue;
+      }
+
+      // Parse variables: --name: value or --name value
+      if (currentSection === 'variables') {
+        const match = trimmed.match(/^--([\w-]+)\s*:\s*(.+)$/);
+        if (match) {
+          variables[`--${match[1]}`] = match[2];
+        }
+      }
+
+      // Parse classes: .class-name or @utility
+      if (currentSection === 'classes') {
+        const classMatch = trimmed.match(/^\.([\w-]+)/);
+        if (classMatch) {
+          classes.push(classMatch[1]);
+        }
+      }
+    }
+
+    return { variables, classes };
+  }
+
+  validateAcssUsage(css, styleId) {
+    if (!this.acssIndex) {
+      return; // Skip validation if ACSS index not available
+    }
+
+    // Extract var() usage
+    const varPattern = /var\(--[\w-]+/g;
+    const foundVars = css.match(varPattern) || [];
+
+    for (const varRef of foundVars) {
+      const varName = varRef; // Already includes "var(--"
+      if (!this.acssIndex.variables[varName]) {
+        this.warnings.push(
+          `Style "${styleId}" uses unknown ACSS variable "${varName}". Check .etch-acss-index.toon for available variables.`
+        );
+      }
+    }
+
+    // Extract utility classes (simple class names in @apply or similar)
+    // Note: This is basic validation - complex class detection may need enhancement
+    const utilityPattern = /@apply\s+\.([\w-]+)/g;
+    const foundUtilities = [];
+    let match;
+
+    while ((match = utilityPattern.exec(css)) !== null) {
+      foundUtilities.push(match[1]);
+    }
+
+    for (const utilClass of foundUtilities) {
+      if (!this.acssIndex.classes.includes(utilClass)) {
+        this.warnings.push(
+          `Style "${styleId}" uses unknown utility class ".${utilClass}". Check .etch-acss-index.toon for available classes.`
+        );
+      }
+    }
+  }
+
   validateComponents(components) {
     Object.entries(components).forEach(([id, component]) => {
       if (component.id !== parseInt(id)) {
@@ -641,10 +717,11 @@ if (require.main === module) {
     console.log('Usage: node validate-component.js <file.json>');
     console.log('\nValidates Etch WP component JSON files for common issues:');
     console.log('  • JSON format detection (API component vs paste/layout)');
+    console.log('  • Style ID format (7 random alphanumeric chars)');
     console.log('  • Base64 validity (no line breaks, valid characters)');
-    console.log('  • JavaScript syntax and common typos');
-    console.log('  • Quote consistency');
-    console.log('  • Brace/parenthesis matching');
+    console.log('  • ACSS variable and utility class validation');
+    console.log('  • BEM naming conventions');
+    console.log('  • Accessibility checks (WCAG)');
     process.exit(1);
   }
 
