@@ -22,6 +22,8 @@ class EtchComponentValidator {
     this.projectConfig = this.loadProjectConfig();
     this.projectPrefix = this.projectConfig?.prefix || null;
     this.acssIndex = this.loadAcssIndex();
+    this.usedStyleIds = new Set();
+    this.definedStyleIds = new Set();
   }
 
   /**
@@ -93,6 +95,9 @@ class EtchComponentValidator {
       if (data.loops) {
         this.validateLoops(data.loops);
       }
+
+      // Cross-reference style IDs
+      this.validateStyleReferences();
 
       this.reportResults();
       return this.errors.length === 0;
@@ -309,6 +314,9 @@ class EtchComponentValidator {
   }
 
   validateStyleId(styleId, path) {
+    // Track used style IDs
+    this.usedStyleIds.add(styleId);
+
     // Check style ID format (7 random alphanumeric chars) or etch- prefixed system styles
     if (!EtchComponentValidator.STYLE_ID_PATTERN.test(styleId) && !styleId.startsWith('etch-')) {
       this.errors.push(
@@ -338,6 +346,9 @@ class EtchComponentValidator {
 
   validateStyles(styles) {
     Object.entries(styles).forEach(([id, style]) => {
+      // Track defined style IDs
+      this.definedStyleIds.add(id);
+
       // Check style ID format (7 random alphanumeric chars) or etch- prefixed system styles
       if (!EtchComponentValidator.STYLE_ID_PATTERN.test(id) && !id.startsWith('etch-')) {
         this.errors.push(
@@ -671,6 +682,26 @@ class EtchComponentValidator {
         );
       }
     });
+  }
+
+  validateStyleReferences() {
+    // Check for used styles that are not defined
+    for (const usedId of this.usedStyleIds) {
+      if (!this.definedStyleIds.has(usedId) && !usedId.startsWith('etch-')) {
+        this.errors.push(
+          `Style ID "${usedId}" is used in blocks but not defined in the styles object`
+        );
+      }
+    }
+
+    // Check for defined styles that are not used (warning)
+    for (const definedId of this.definedStyleIds) {
+      if (!this.usedStyleIds.has(definedId)) {
+        this.warnings.push(
+          `Style "${definedId}" is defined but not used in any block`
+        );
+      }
+    }
   }
 
   reportResults() {
