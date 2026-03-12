@@ -440,12 +440,13 @@ class EtchComponentValidator {
   }
 
   parseToonIndex(content) {
-    // Parse TOON format (key-value pairs separated by space or colon)
+    // Parse TOON format (sections with @vars and @classes)
     const variables = {};
     const classes = [];
 
     const lines = content.split('\n');
-    let currentSection = null;
+    let inVarsSection = false;
+    let inClassesSection = false;
 
     for (const line of lines) {
       const trimmed = line.trim();
@@ -454,25 +455,36 @@ class EtchComponentValidator {
       if (!trimmed || trimmed.startsWith('#')) continue;
 
       // Detect sections
-      if (trimmed.startsWith('@variables')) {
-        currentSection = 'variables';
+      if (trimmed === '@vars') {
+        inVarsSection = true;
+        inClassesSection = false;
         continue;
-      } else if (trimmed.startsWith('@classes')) {
-        currentSection = 'classes';
+      } else if (trimmed === '@classes') {
+        inVarsSection = false;
+        inClassesSection = true;
+        continue;
+      } else if (trimmed.startsWith('@')) {
+        // Other sections like @meta, @summary - exit current section
+        inVarsSection = false;
+        inClassesSection = false;
         continue;
       }
 
-      // Parse variables: --name: value or --name value
-      if (currentSection === 'variables') {
-        const match = trimmed.match(/^--([\w-]+)\s*:\s*(.+)$/);
-        if (match) {
-          variables[`--${match[1]}`] = match[2];
-        }
+      // Skip subsection markers like [other], [buttons]
+      if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+        continue;
       }
 
-      // Parse classes: .class-name or @utility
-      if (currentSection === 'classes') {
-        const classMatch = trimmed.match(/^\.([\w-]+)/);
+      // Parse variables: --name (just the name, no value needed)
+      if (inVarsSection && trimmed.startsWith('--')) {
+        const varName = trimmed; // Keep the -- prefix
+        variables[varName] = true; // Just mark as existing
+      }
+
+      // Parse classes: .class-name or class patterns like btn--{s,m,l}
+      if (inClassesSection) {
+        // Match simple class names
+        const classMatch = trimmed.match(/^\.([\w-{}]+)/);
         if (classMatch) {
           classes.push(classMatch[1]);
         }

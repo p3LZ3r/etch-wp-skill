@@ -4,7 +4,7 @@ description: Expert knowledge for Etch WP - a Unified Visual Development Environ
 license: CC BY-NC-SA 4.0
 metadata:
   author: Torsten Linnecke
-  version: 3.0.10
+  version: 3.0.11
   created: 2025-12-20
   updated: 2026-03-10
   category: wordpress
