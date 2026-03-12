@@ -41,15 +41,15 @@ class EtchComponentValidator {
       // Validate root structure based on what fields are present
       this.validateRootStructure(data);
 
-      // Validate blocks - support both gutenbergBlock and blocks[]
-      if (data.gutenbergBlock) {
-        this.validateBlock(data.gutenbergBlock, 'gutenbergBlock');
+      // If root structure is invalid, stop here
+      if (this.errors.length > 0) {
+        this.reportResults();
+        return false;
       }
 
-      if (data.blocks && Array.isArray(data.blocks)) {
-        data.blocks.forEach((block, index) => {
-          this.validateBlock(block, `blocks[${index}]`);
-        });
+      // Validate blocks - only gutenbergBlock is valid (blocks[] is old format, rejected above)
+      if (data.gutenbergBlock) {
+        this.validateBlock(data.gutenbergBlock, 'gutenbergBlock');
       }
 
       if (data.styles && typeof data.styles === 'object') {
@@ -81,28 +81,17 @@ class EtchComponentValidator {
 
   detectContentType(data) {
     // Detect if this is a component-based file or a layout/section
-    // Component files either:
-    // 1. Have name + key fields (component definition)
-    // 2. Contain etch/component references (uses other components)
+    // Component files contain etch/component references
 
-    // Case 1: Component definition (has name, key, blocks)
-    if (data.name && data.key && data.blocks && Array.isArray(data.blocks)) {
-      return 'component';
-    }
+    // Note: Files with name/key/blocks are INVALID - they use old wrong format
+    // Valid files must have: type, gutenbergBlock, styles
 
-    // Case 2: Uses etch/component blocks
     if (data.gutenbergBlock) {
       if (this.hasComponentReferences(data.gutenbergBlock)) {
         return 'component';
       }
     }
-    if (data.blocks && Array.isArray(data.blocks)) {
-      for (const block of data.blocks) {
-        if (this.hasComponentReferences(block)) {
-          return 'component';
-        }
-      }
-    }
+
     return 'layout';
   }
 
@@ -122,66 +111,54 @@ class EtchComponentValidator {
   }
 
   validateRootStructure(data) {
-    // Check required root-level fields based on what structure is present
+    // CRITICAL: Reject old invalid structures
+    // Files with name/key/blocks are using the WRONG format
+    if (data.name !== undefined || data.key !== undefined) {
+      this.errors.push(
+        'INVALID STRUCTURE: Using old "name"/"key"/"blocks" format. ' +
+        'Required fields: "type" (must be "block"), "gutenbergBlock", "styles"'
+      );
+      // Don't validate further - the structure is fundamentally wrong
+      return;
+    }
 
-    // Case 1: Paste/Layout format (has type, gutenbergBlock)
-    if (data.type !== undefined || data.gutenbergBlock !== undefined) {
-      // Must have type: "block"
-      if (data.type !== 'block') {
-        if (data.type === undefined) {
-          this.errors.push('Missing required root field: "type" (must be "block")');
-        } else {
-          this.errors.push(`Invalid root field "type": "${data.type}" (must be "block")`);
-        }
-      }
+    // Check required root-level fields for the CORRECT format
 
-      // Must have gutenbergBlock
-      if (!data.gutenbergBlock) {
-        this.errors.push('Missing required root field: "gutenbergBlock"');
-      } else if (typeof data.gutenbergBlock !== 'object') {
-        this.errors.push('Invalid "gutenbergBlock": must be an object');
-      }
-
-      // Must have styles
-      if (!data.styles) {
-        this.errors.push('Missing required root field: "styles"');
-      } else if (typeof data.styles !== 'object') {
-        this.errors.push('Invalid "styles": must be an object');
-      }
-
-      // Components required if content type is component
-      if (this.contentType === 'component') {
-        if (!data.components) {
-          this.errors.push(
-            'Missing required root field: "components" (required when using etch/component blocks)'
-          );
-        } else if (typeof data.components !== 'object') {
-          this.errors.push('Invalid "components": must be an object');
-        } else if (Object.keys(data.components).length === 0) {
-          this.errors.push(
-            'Invalid "components": must contain at least one component definition'
-          );
-        }
+    // Must have type: "block"
+    if (data.type !== 'block') {
+      if (data.type === undefined) {
+        this.errors.push('Missing required root field: "type" (must be "block")');
+      } else {
+        this.errors.push(`Invalid root field "type": "${data.type}" (must be "block")`);
       }
     }
 
-    // Case 2: Component definition format (has name, key)
-    if (data.name !== undefined || data.key !== undefined) {
-      // Must have blocks array
-      if (!data.blocks || !Array.isArray(data.blocks)) {
-        this.errors.push('Missing or invalid "blocks" array (required for component definitions)');
-      }
+    // Must have gutenbergBlock
+    if (!data.gutenbergBlock) {
+      this.errors.push('Missing required root field: "gutenbergBlock"');
+    } else if (typeof data.gutenbergBlock !== 'object') {
+      this.errors.push('Invalid "gutenbergBlock": must be an object');
+    }
 
-      // Should have name
-      if (!data.name) {
-        this.errors.push('Missing required field: "name"');
-      }
+    // Must have styles
+    if (!data.styles) {
+      this.errors.push('Missing required root field: "styles"');
+    } else if (typeof data.styles !== 'object') {
+      this.errors.push('Invalid "styles": must be an object');
+    }
 
-      // Should have key
-      if (!data.key) {
-        this.errors.push('Missing required field: "key"');
-      } else if (data.key && !/^[A-Z][a-zA-Z0-9]*$/.test(data.key)) {
-        this.warnings.push(`Component key "${data.key}" should be PascalCase`);
+    // Components required if content type is component
+    if (this.contentType === 'component') {
+      if (!data.components) {
+        this.errors.push(
+          'Missing required root field: "components" (required when using etch/component blocks)'
+        );
+      } else if (typeof data.components !== 'object') {
+        this.errors.push('Invalid "components": must be an object');
+      } else if (Object.keys(data.components).length === 0) {
+        this.errors.push(
+          'Invalid "components": must contain at least one component definition'
+        );
       }
     }
   }
