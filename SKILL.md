@@ -4,9 +4,9 @@ description: Expert knowledge for Etch WP - a Unified Visual Development Environ
 license: CC BY-NC-SA 4.0
 metadata:
   author: Torsten Linnecke
-  version: 3.0.11
+  version: 3.0.12
   created: 2025-12-20
-  updated: 2026-03-10
+  updated: 2026-03-12
   category: wordpress
   tags: wordpress, gutenberg, etch-wp, acss, component-generator
   license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/

@@ -41,7 +41,7 @@ This applies to all endpoints including but not limited to:
 
 ## Components API (`/components`)
 
-Components are reusable blocks with properties (props) that can be referenced via `etch_component('key')` in PHP templates.
+Components are reusable blocks with properties (props).
 
 ### GET /components
 Returns all components with full details.
@@ -120,7 +120,7 @@ Deletes a component.
 
 ## Patterns API (`/patterns`)
 
-Patterns are standard wp_block posts (synced or unsynced) WITHOUT the `etch_component_html_key` meta. They are used in the editor but cannot be referenced via `etch_component()`.
+Patterns are standard wp_block posts (synced or unsynced).
 
 ### GET /patterns
 Returns all patterns.
@@ -232,7 +232,7 @@ curl -u "user:pass" \
   "https://site.com/wp-json/etch-api/components"
 ```
 
-**Done!** The component is created with style IDs referencing existing styles stored in WordPress options (`etch_styles`).
+**Done!** The component is created with style IDs referencing existing styles.
 
 ---
 
@@ -333,8 +333,6 @@ curl -u "username:application-password" \
 | Aspect | Component | Pattern |
 |--------|-----------|---------|
 | Endpoint | `/components` | `/patterns` |
-| PHP Usage | `etch_component('Key')` | Not available |
-| Meta Key | `etch_component_html_key` | None |
 | Purpose | Template-renderable blocks | Editor-only reusable blocks |
 | Properties | Yes | No |
 | Key Field | Required (PascalCase) | N/A |

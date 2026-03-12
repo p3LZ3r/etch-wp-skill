@@ -24,6 +24,8 @@ class EtchComponentValidator {
     this.acssIndex = this.loadAcssIndex();
     this.usedStyleIds = new Set();
     this.definedStyleIds = new Set();
+    this.componentRefs = new Set();
+    this.contentType = null; // 'component' or 'layout'
   }
 
   validateFile(filePath) {
@@ -33,15 +35,21 @@ class EtchComponentValidator {
       const content = fs.readFileSync(filePath, 'utf8');
       const data = JSON.parse(content);
 
-      // Validate all possible structures (single format, multiple entry points)
+      // Detect content type (component vs layout)
+      this.contentType = this.detectContentType(data);
+
+      // Validate root structure based on what fields are present
+      this.validateRootStructure(data);
+
+      // Validate blocks - support both gutenbergBlock and blocks[]
+      if (data.gutenbergBlock) {
+        this.validateBlock(data.gutenbergBlock, 'gutenbergBlock');
+      }
+
       if (data.blocks && Array.isArray(data.blocks)) {
         data.blocks.forEach((block, index) => {
           this.validateBlock(block, `blocks[${index}]`);
         });
-      }
-
-      if (data.gutenbergBlock) {
-        this.validateBlock(data.gutenbergBlock, 'gutenbergBlock');
       }
 
       if (data.styles && typeof data.styles === 'object') {
@@ -59,12 +67,130 @@ class EtchComponentValidator {
       // Cross-reference style IDs
       this.validateStyleReferences();
 
+      // Cross-reference component refs
+      this.validateComponentReferences(data);
+
       this.reportResults();
       return this.errors.length === 0;
 
     } catch (error) {
       console.error(`❌ FATAL ERROR: ${error.message}`);
       return false;
+    }
+  }
+
+  detectContentType(data) {
+    // Detect if this is a component-based file or a layout/section
+    // Component files contain etch/component references
+    if (data.gutenbergBlock) {
+      if (this.hasComponentReferences(data.gutenbergBlock)) {
+        return 'component';
+      }
+    }
+    if (data.blocks && Array.isArray(data.blocks)) {
+      for (const block of data.blocks) {
+        if (this.hasComponentReferences(block)) {
+          return 'component';
+        }
+      }
+    }
+    return 'layout';
+  }
+
+  hasComponentReferences(block) {
+    // Recursively check if block or any nested block is etch/component
+    if (block.blockName === 'etch/component') {
+      return true;
+    }
+    if (block.innerBlocks && Array.isArray(block.innerBlocks)) {
+      for (const innerBlock of block.innerBlocks) {
+        if (this.hasComponentReferences(innerBlock)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  validateRootStructure(data) {
+    // Check required root-level fields based on what structure is present
+
+    // Case 1: Paste/Layout format (has type, gutenbergBlock)
+    if (data.type !== undefined || data.gutenbergBlock !== undefined) {
+      // Must have type: "block"
+      if (data.type !== 'block') {
+        if (data.type === undefined) {
+          this.errors.push('Missing required root field: "type" (must be "block")');
+        } else {
+          this.errors.push(`Invalid root field "type": "${data.type}" (must be "block")`);
+        }
+      }
+
+      // Must have gutenbergBlock
+      if (!data.gutenbergBlock) {
+        this.errors.push('Missing required root field: "gutenbergBlock"');
+      } else if (typeof data.gutenbergBlock !== 'object') {
+        this.errors.push('Invalid "gutenbergBlock": must be an object');
+      }
+
+      // Must have styles
+      if (!data.styles) {
+        this.errors.push('Missing required root field: "styles"');
+      } else if (typeof data.styles !== 'object') {
+        this.errors.push('Invalid "styles": must be an object');
+      }
+
+      // Components required if content type is component
+      if (this.contentType === 'component') {
+        if (!data.components) {
+          this.errors.push(
+            'Missing required root field: "components" (required when using etch/component blocks)'
+          );
+        } else if (typeof data.components !== 'object') {
+          this.errors.push('Invalid "components": must be an object');
+        } else if (Object.keys(data.components).length === 0) {
+          this.errors.push(
+            'Invalid "components": must contain at least one component definition'
+          );
+        }
+      }
+    }
+
+    // Case 2: Component definition format (has name, key)
+    if (data.name !== undefined || data.key !== undefined) {
+      // Must have blocks array
+      if (!data.blocks || !Array.isArray(data.blocks)) {
+        this.errors.push('Missing or invalid "blocks" array (required for component definitions)');
+      }
+
+      // Should have name
+      if (!data.name) {
+        this.errors.push('Missing required field: "name"');
+      }
+
+      // Should have key
+      if (!data.key) {
+        this.errors.push('Missing required field: "key"');
+      } else if (data.key && !/^[A-Z][a-zA-Z0-9]*$/.test(data.key)) {
+        this.warnings.push(`Component key "${data.key}" should be PascalCase`);
+      }
+    }
+  }
+
+  validateComponentReferences(data) {
+    // Check that all referenced component IDs exist in the components object
+    if (this.componentRefs.size === 0) {
+      return;
+    }
+
+    const availableComponents = data.components || {};
+
+    for (const refId of this.componentRefs) {
+      if (!availableComponents[refId]) {
+        this.errors.push(
+          `Component reference "ref": ${refId} points to non-existent component in "components" object`
+        );
+      }
     }
   }
 
@@ -226,6 +352,10 @@ class EtchComponentValidator {
 
     if (!attrs.ref) {
       this.errors.push(`Missing "ref" attribute for etch/component at ${blockPath}`);
+    } else {
+      // Track component reference for cross-validation
+      const refId = String(attrs.ref);
+      this.componentRefs.add(refId);
     }
 
     // Check boolean prop format
@@ -616,6 +746,12 @@ class EtchComponentValidator {
   reportResults() {
     let hasIssues = false;
 
+    // Show content type
+    if (this.contentType) {
+      const typeLabel = this.contentType === 'component' ? '🔧 Component' : '📄 Layout/Section';
+      console.log(`${typeLabel}\n`);
+    }
+
     // Show project config info
     if (this.projectConfig) {
       console.log(`📁 Project: ${this.projectConfig.name} (prefix: ${this.projectConfig.prefix})\n`);
@@ -656,8 +792,11 @@ if (require.main === module) {
   if (process.argv.length < 3) {
     console.log('Usage: node validate-component.js <file.json>');
     console.log('\nValidates Etch WP component JSON files for common issues:');
-    console.log('  • JSON format detection (API component vs paste/layout)');
+    console.log('  • Root structure (type, gutenbergBlock, styles, components)');
+    console.log('  • Component vs Layout detection and validation');
+    console.log('  • Component reference cross-validation');
     console.log('  • Style ID format (7 random alphanumeric chars)');
+    console.log('  • Style ID cross-references (used vs defined)');
     console.log('  • Base64 validity (no line breaks, valid characters)');
     console.log('  • ACSS variable and utility class validation');
     console.log('  • BEM naming conventions');

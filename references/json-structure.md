@@ -58,7 +58,7 @@ Always `"block"` for Etch elements
 Main content structure - contains the actual element/component
 
 ### styles
-Object containing all CSS class definitions referenced in the structure. Stored in WordPress options (`etch_styles`).
+Object containing all CSS class definitions referenced in the structure.
 
 ### components
 Object containing all component definitions referenced by `ref` in etch/component blocks
@@ -197,30 +197,18 @@ Array mixing strings and nulls:
 
 ### Style Object Format
 
-```json
-"styles": {
-  "pzfpn8v": {
-    "type": "class",
-    "selector": ".class-name",
-    "collection": "default",
-    "css": "display: flex;\n  gap: 1em;",
-    "readonly": false
-  }
-}
-```
+Styles are stored with this structure:
 
-Styles are stored in WordPress options (`etch_styles`) with this structure:
-
-```json
-{
-  "style-id-123": {
-    "type": "class",
-    "selector": ".class-name",
-    "collection": "default|custom",
-    "css": "property: value;",
-    "readonly": false|true
+```json   
+  "styles": {
+    "pzfpn8v": {
+      "type": "class",
+      "selector": ".class-name",
+      "collection": "default|custom",
+      "css": "property: value;",
+      "readonly": false|true
+    }
   }
-}
 ```
 
 ### Style Fields
