@@ -81,7 +81,16 @@ class EtchComponentValidator {
 
   detectContentType(data) {
     // Detect if this is a component-based file or a layout/section
-    // Component files contain etch/component references
+    // Component files either:
+    // 1. Have name + key fields (component definition)
+    // 2. Contain etch/component references (uses other components)
+
+    // Case 1: Component definition (has name, key, blocks)
+    if (data.name && data.key && data.blocks && Array.isArray(data.blocks)) {
+      return 'component';
+    }
+
+    // Case 2: Uses etch/component blocks
     if (data.gutenbergBlock) {
       if (this.hasComponentReferences(data.gutenbergBlock)) {
         return 'component';
