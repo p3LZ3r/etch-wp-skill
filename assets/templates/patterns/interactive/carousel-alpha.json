@@ -62,7 +62,8 @@
       "\n"
     ]
   },
-  "version": 2,
+  "version": 2.1,
+  "timestamp": "2026-02-17T12:00:51.473Z",
   "styles": {
     "q9nt4tm": {
       "type": "class",
@@ -83,6 +84,13 @@
       "selector": ".carousel-alpha__viewport-container",
       "collection": "default",
       "css": "display: flex;\n  flex-direction: row;\n  align-items: var(--alignment);\n  list-style: none;\n  :where(&) {\n    margin: 0;\n    padding: 0;\n  } \n  > * {\n    flex: 0 0 var(--slide-width);\n    min-inline-size: 0;\n    max-inline-size: 100%;\n    display: flex;\n    flex-direction: column;\n    aspect-ratio: var(--slide-aspect-ratio);\n    position: relative;\n    margin-inline-end: var(--slide-gap);\n    > * {\n      width: 100%;\n      height: 100%;\n    }\n    img {\n      object-fit: cover;\n      width: 100%;\n      height: 100%;\n    }\n  }",
+      "readonly": false
+    },
+    "s4gkacs": {
+      "type": "custom",
+      "selector": "body figure",
+      "collection": "default",
+      "css": "margin: 0;",
       "readonly": false
     },
     "y8n3skl": {
@@ -145,8 +153,134 @@
   "components": {
     "2022": {
       "id": 2022,
+      "legacyId": "",
       "name": "Carousel Alpha",
       "key": "CarouselAlpha",
+      "properties": [
+        {
+          "name": "Carousel ID",
+          "key": "carouselID",
+          "keyTouched": true,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "default"
+        },
+        {
+          "name": "Aria Label",
+          "key": "ariaLabel",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "Carousel"
+        },
+        {
+          "name": "Container Tag",
+          "key": "containerTag",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "ul",
+          "selectOptionsString": "ul\ndiv"
+        },
+        {
+          "name": "Carousel Width",
+          "key": "carouselWidth",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "var(--content-width, 1366px)"
+        },
+        {
+          "name": "Slide Count",
+          "key": "slideCount",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "3"
+        },
+        {
+          "name": "Slide Gap",
+          "key": "slideGap",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "1em"
+        },
+        {
+          "name": "Starting Slide",
+          "key": "startingSlide",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "0"
+        },
+        {
+          "name": "Justification",
+          "key": "justification",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "start",
+          "selectOptionsString": "Start : start\nCenter : center\nEnd : end"
+        },
+        {
+          "name": "Alignment",
+          "key": "alignment",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "stretch",
+          "selectOptionsString": "Stretch : stretch\nStart : flex-start\nCenter : center\nEnd : end"
+        },
+        {
+          "name": "Slide Overflow (%)",
+          "key": "slideOverflow",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "0"
+        },
+        {
+          "name": "Custom Carousel Classes",
+          "key": "customCarouselClasses",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          }
+        },
+        {
+          "name": "Is Draggable",
+          "key": "isDraggable",
+          "keyTouched": false,
+          "type": {
+            "primitive": "boolean"
+          },
+          "default": true
+        },
+        {
+          "name": "Infinite Loop",
+          "key": "infiniteLoop",
+          "keyTouched": false,
+          "type": {
+            "primitive": "boolean"
+          },
+          "default": true
+        }
+      ],
+      "description": "",
       "blocks": [
         {
           "blockName": "etch/element",
@@ -156,7 +290,7 @@
             },
             "script": {
               "code": "KGZ1bmN0aW9uKCkgewogIGZ1bmN0aW9uIGluaXQoKSB7CiAgICBjb25zdCBwcmVmZXJzUmVkdWNlZE1vdGlvbiA9IHdpbmRvdy5tYXRjaE1lZGlhKCcocHJlZmVycy1yZWR1Y2VkLW1vdGlvbjogcmVkdWNlKScpLm1hdGNoZXMKICAgIGNvbnN0IGNhcm91c2VscyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoJ1tkYXRhLWNhcm91c2VsLWFscGhhXScpCiAgICAKICAgIGNhcm91c2Vscy5mb3JFYWNoKGZ1bmN0aW9uKGVtYmxhTm9kZSkgewogICAgICBjb25zdCBpZCA9IGVtYmxhTm9kZS5kYXRhc2V0LmNhcm91c2VsQWxwaGEKICAgICAgY29uc3Qgdmlld3BvcnROb2RlID0gZW1ibGFOb2RlLnF1ZXJ5U2VsZWN0b3IoJ1tkYXRhLWNhcm91c2VsLWFscGhhLXZpZXdwb3J0XScpCiAgICAgIGNvbnN0IGNvbnRyb2xzTm9kZSA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYFtkYXRhLWNhcm91c2VsLWFscGhhLXRhcmdldD0iJHtpZH0iXWApCiAgICAgIGNvbnN0IHByZXZCdG5Ob2RlID0gY29udHJvbHNOb2RlLnF1ZXJ5U2VsZWN0b3IoJ1tkYXRhLWJ0bi1wcmV2XScpCiAgICAgIGNvbnN0IG5leHRCdG5Ob2RlID0gY29udHJvbHNOb2RlLnF1ZXJ5U2VsZWN0b3IoJ1tkYXRhLWJ0bi1uZXh0XScpCiAgICAgIGNvbnN0IHNsaWRlcyA9IHZpZXdwb3J0Tm9kZS5xdWVyeVNlbGVjdG9yQWxsKCc6c2NvcGUgPiAqID4gKicpCiAgICAgIAogICAgICBlbWJsYU5vZGUuc3R5bGUuc2V0UHJvcGVydHkoJy0tc3RhcnRpbmctc2xpZGUtY291bnQnLCBlbWJsYU5vZGUuZGF0YXNldC5zbGlkZUNvdW50IHx8IDEpCiAgICAgIGVtYmxhTm9kZS5zdHlsZS5zZXRQcm9wZXJ0eSgnLS1zdGFydGluZy1zbGlkZS1vdmVyZmxvdycsIGVtYmxhTm9kZS5kYXRhc2V0LnNsaWRlT3ZlcmZsb3cgfHwgMCkKICAgICAgCiAgICAgIGNvbnN0IE9QVElPTlMgPSB7CiAgICAgICAgYWxpZ246IGVtYmxhTm9kZS5kYXRhc2V0Lmp1c3RpZnkgfHwgJ3N0YXJ0JywKICAgICAgICBkcmFnZ2FibGU6IGVtYmxhTm9kZS5kYXRhc2V0LmRyYWdnYWJsZSAhPT0gJ2ZhbHNlJywKICAgICAgICBzdGFydEluZGV4OiBwYXJzZUludChlbWJsYU5vZGUuZGF0YXNldC5zdGFydEluZGV4KSB8fCAwLAogICAgICAgIGxvb3A6IGVtYmxhTm9kZS5kYXRhc2V0Lmxvb3AgPT09ICd0cnVlJywKICAgICAgICBkdXJhdGlvbjogcHJlZmVyc1JlZHVjZWRNb3Rpb24gPyAwIDogMjAKICAgICAgfQogICAgICAKICAgICAgY29uc3QgZW1ibGFBcGkgPSBFbWJsYUNhcm91c2VsKHZpZXdwb3J0Tm9kZSwgT1BUSU9OUykKICAgICAgCiAgICAgIGZ1bmN0aW9uIHVwZGF0ZVNsaWRlTGFiZWxzKCkgewogICAgICAgIGNvbnN0IHRvdGFsID0gZW1ibGFBcGkuc2Nyb2xsU25hcExpc3QoKS5sZW5ndGgKICAgICAgICBzbGlkZXMuZm9yRWFjaCgoc2xpZGUsIGluZGV4KSA9PiB7CiAgICAgICAgICBzbGlkZS5zZXRBdHRyaWJ1dGUoJ2FyaWEtbGFiZWwnLCBgU2xpZGUgJHtpbmRleCArIDF9IG9mICR7dG90YWx9YCkKICAgICAgICB9KQogICAgICB9CiAgICAgIAogICAgICB1cGRhdGVTbGlkZUxhYmVscygpCiAgICAgIAogICAgICBwcmV2QnRuTm9kZS5hZGRFdmVudExpc3RlbmVyKCdjbGljaycsICgpID0+IGVtYmxhQXBpLnNjcm9sbFByZXYoKSkKICAgICAgbmV4dEJ0bk5vZGUuYWRkRXZlbnRMaXN0ZW5lcignY2xpY2snLCAoKSA9PiBlbWJsYUFwaS5zY3JvbGxOZXh0KCkpCiAgICAgIAogICAgICB2aWV3cG9ydE5vZGUuYWRkRXZlbnRMaXN0ZW5lcigna2V5ZG93bicsIChlKSA9PiB7CiAgICAgICAgaWYgKGUua2V5ID09PSAnQXJyb3dMZWZ0JykgZW1ibGFBcGkuc2Nyb2xsUHJldigpCiAgICAgICAgaWYgKGUua2V5ID09PSAnQXJyb3dSaWdodCcpIGVtYmxhQXBpLnNjcm9sbE5leHQoKQogICAgICB9KQogICAgfSkKICB9CgogIGlmICh0eXBlb2YgRW1ibGFDYXJvdXNlbCAhPT0gJ3VuZGVmaW5lZCcpIHsKICAgIHJlcXVlc3RBbmltYXRpb25GcmFtZShpbml0KQogIH0gZWxzZSB7CiAgICBkb2N1bWVudC5hZGRFdmVudExpc3RlbmVyKCdET01Db250ZW50TG9hZGVkJywgKCkgPT4gcmVxdWVzdEFuaW1hdGlvbkZyYW1lKGluaXQpKQogIH0KfSkoKQ==",
-              "id": "rstgns6"
+              "id": "w5k6d1q"
             },
             "tag": "div",
             "attributes": {
@@ -169,7 +303,8 @@
               "role": "group",
               "aria-label": "{props.ariaLabel}",
               "data-slide-count": "{props.slideCount}",
-              "class": "carousel-alpha {props.customCarouselClasses}"
+              "class": "carousel-alpha {props.customCarouselClasses}",
+              "data-slide-overflow": "{props.slideOverflow}"
             },
             "styles": [
               "q9nt4tm"
@@ -684,136 +819,11 @@
             "\n"
           ]
         }
-      ],
-      "properties": [
-        {
-          "key": "carouselID",
-          "name": "Carousel ID",
-          "keyTouched": true,
-          "type": {
-            "primitive": "string"
-          },
-          "default": "default"
-        },
-        {
-          "key": "ariaLabel",
-          "name": "Aria Label",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string"
-          },
-          "default": "Carousel"
-        },
-        {
-          "key": "containerTag",
-          "name": "Container Tag",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string",
-            "specialized": "select"
-          },
-          "default": "ul",
-          "selectOptionsString": "ul\ndiv"
-        },
-        {
-          "key": "carouselWidth",
-          "name": "Carousel Width",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string"
-          },
-          "default": "var(--content-width, 1366px)"
-        },
-        {
-          "key": "slideCount",
-          "name": "Slide Count",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string"
-          },
-          "default": "3"
-        },
-        {
-          "key": "slideGap",
-          "name": "Slide Gap",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string"
-          },
-          "default": "1em"
-        },
-        {
-          "key": "startingSlide",
-          "name": "Starting Slide",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string"
-          },
-          "default": "0"
-        },
-        {
-          "key": "justification",
-          "name": "Justification",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string",
-            "specialized": "select"
-          },
-          "default": "start",
-          "selectOptionsString": "Start : start\nCenter : center\nEnd : end"
-        },
-        {
-          "key": "alignment",
-          "name": "Alignment",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string",
-            "specialized": "select"
-          },
-          "default": "stretch",
-          "selectOptionsString": "Stretch : stretch\nStart : flex-start\nCenter : center\nEnd : end"
-        },
-        {
-          "key": "slideOverflow",
-          "name": "Slide Overflow (%)",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string"
-          },
-          "default": "0"
-        },
-        {
-          "key": "customCarouselClasses",
-          "name": "Custom Carousel Classes",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string"
-          }
-        },
-        {
-          "key": "isDraggable",
-          "name": "Is Draggable",
-          "keyTouched": false,
-          "type": {
-            "primitive": "boolean"
-          },
-          "default": true
-        },
-        {
-          "key": "infiniteLoop",
-          "name": "Infinite Loop",
-          "keyTouched": false,
-          "type": {
-            "primitive": "boolean"
-          },
-          "default": true
-        }
-      ],
-      "description": "",
-      "legacyId": ""
+      ]
     },
     "2025": {
       "id": 2025,
+      "legacyId": "",
       "name": "Carousel Controls",
       "key": "CarouselControls",
       "blocks": [
@@ -1109,8 +1119,8 @@
       ],
       "properties": [
         {
-          "key": "carouselTargetId",
           "name": "Carousel Target (ID)",
+          "key": "carouselTargetId",
           "keyTouched": false,
           "type": {
             "primitive": "string"
@@ -1118,8 +1128,8 @@
           "default": "default"
         },
         {
-          "key": "buttonLayout",
           "name": "Button Layout",
+          "key": "buttonLayout",
           "keyTouched": false,
           "type": {
             "primitive": "string",
@@ -1129,8 +1139,8 @@
           "selectOptionsString": "Icon Only\nLabel and Icon\nLabel Only"
         },
         {
-          "key": "buttonAlignment",
           "name": "Button Alignment",
+          "key": "buttonAlignment",
           "keyTouched": false,
           "type": {
             "primitive": "string",
@@ -1140,8 +1150,8 @@
           "selectOptionsString": "Left : flex-start\nRight : flex-end\nCenter : center\nApart : space-between"
         },
         {
-          "key": "marginBlock",
           "name": "Margin Block",
+          "key": "marginBlock",
           "keyTouched": false,
           "type": {
             "primitive": "string"
@@ -1149,8 +1159,8 @@
           "default": "1em 1em"
         },
         {
-          "key": "buttonGap",
           "name": "Button Gap",
+          "key": "buttonGap",
           "keyTouched": false,
           "type": {
             "primitive": "string"
@@ -1158,8 +1168,8 @@
           "default": "1em"
         },
         {
-          "key": "position",
           "name": "Position",
+          "key": "position",
           "keyTouched": false,
           "type": {
             "primitive": "string",
@@ -1169,16 +1179,15 @@
           "selectOptionsString": "Below : 0\nAbove : -1"
         },
         {
-          "key": "customControlsClasses",
           "name": "Custom Controls Classes",
+          "key": "customControlsClasses",
           "keyTouched": false,
           "type": {
             "primitive": "string"
           }
         }
       ],
-      "description": "",
-      "legacyId": ""
+      "description": ""
     }
   },
   "_metadata": {
@@ -1187,7 +1196,7 @@
     "title": "Carousel Alpha",
     "family": "interactive",
     "link": "https://patterns.etchwp.com/layouts/carousel-alpha/",
-    "modified": "2026-01-10T20:00:06",
-    "collected": "2026-01-31T17:07:52.091Z"
+    "modified": "2026-02-17T12:00:58",
+    "collected": "2026-03-14T11:29:51.493Z"
   }
 }

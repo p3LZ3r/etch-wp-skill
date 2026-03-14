@@ -1,6 +1,19 @@
 # Etch WP JSON Structure Reference
 
-## Complete Structure Overview
+## Format Overview
+
+There are **two distinct JSON formats**:
+
+1. **Paste Format** - For copying into the Etch WP editor (layouts, sections, component instances)
+2. **Inline Component Format** - For defining reusable components with properties (used within paste format's `components` object)
+
+---
+
+## Paste Format
+
+Used for layouts, sections, and component instances.
+
+### Complete Structure
 
 ```json
 {
@@ -29,6 +42,8 @@
     "innerHTML": "\n\n",
     "innerContent": ["\n", null, "\n"]
   },
+  "version": 2.1,
+  "timestamp": "2026-03-12T11:02:38.449Z",
   "styles": {
     "random-7-digit-style-id": {
       "type": "class",
@@ -49,21 +64,120 @@
 }
 ```
 
-## Root Level Fields
+### Root Level Fields
 
-### type
+#### type
 Always `"block"` for Etch elements
 
-### gutenbergBlock
+#### gutenbergBlock
 Main content structure - contains the actual element/component
 
-### styles
+#### version
+Format version: `2.1` (numeric, not string)
+
+#### timestamp
+ISO 8601 timestamp (auto-generated)
+
+#### styles
 Object containing all CSS class definitions referenced in the structure.
 
-### components
-Object containing all component definitions referenced by `ref` in etch/component blocks
+#### components
+Object containing component definitions referenced by `ref` in etch/component blocks
 
-## Block Types
+---
+
+## Inline Component Format
+
+Used for defining reusable components with properties. These are stored in the `components` object of the paste format, not uploaded separately.
+
+### Complete Structure
+
+```json
+{
+  "name": "Event Card",
+  "key": "KaliEventCard",
+  "version": 2.1,
+  "description": "Extended event card with date, title, metadata and category badge",
+  "properties": [
+    {
+      "name": "Event Title",
+      "key": "title",
+      "keyTouched": true,
+      "type": { "primitive": "string" },
+      "default": "Jazz im Park"
+    },
+    {
+      "name": "Day",
+      "key": "day",
+      "keyTouched": true,
+      "type": { "primitive": "string" },
+      "default": "15"
+    }
+  ],
+  "blocks": [
+    {
+      "blockName": "etch/element",
+      "attrs": {
+        "metadata": { "name": "Event Card" },
+        "tag": "div",
+        "attributes": { "class": "kali-event-card" },
+        "styles": ["f6g0r9y"]
+      },
+      "innerBlocks": [ ... ],
+      "innerHTML": "\n\n",
+      "innerContent": ["\n", null, "\n"]
+    }
+  ],
+  "styles": {
+    "f6g0r9y": {
+      "type": "class",
+      "selector": ".kali-event-card",
+      "collection": "default",
+      "css": "display: flex;\n  justify-content: space-between; ...",
+      "readonly": false
+    }
+  }
+}
+```
+
+### Fields
+
+#### name
+Display name of the component (e.g., "Event Card")
+
+#### key
+PascalCase identifier (e.g., "KaliEventCard")
+
+#### version
+**REQUIRED** - Format version: `2.1` (numeric, not string)
+
+#### description
+Optional component description
+
+#### properties
+Array of property definitions:
+
+```json
+{
+  "name": "Property Display Name",
+  "key": "propertyKey",
+  "keyTouched": true,
+  "type": { "primitive": "string" },
+  "default": "Default value"
+}
+```
+
+**CRITICAL:** Every property MUST have `keyTouched: true` (or `false` if optional).
+
+#### blocks
+Array of block structures (same format as `gutenbergBlock.innerBlocks` in paste format)
+
+#### styles
+Object containing all CSS class definitions (same format as paste format)
+
+---
+
+## Common Block Types (Both Formats)
 
 ### Block Name → PHP Class Mapping
 
@@ -328,7 +442,7 @@ Styles are stored with this structure:
   "name": "Icon",
   "type": {
     "primitive": "string",
-    "specialized": "image"
+    "specialized": "mediaId"
   }
 }
 ```

@@ -31,7 +31,8 @@
       "\n"
     ]
   },
-  "version": 2,
+  "version": 2.1,
+  "timestamp": "2026-03-06T15:15:17.746Z",
   "styles": {
     "5tktqrf": {
       "type": "class",
@@ -44,7 +45,7 @@
       "type": "class",
       "selector": ".logo-carousel-alpha__track",
       "collection": "default",
-      "css": "display: flex;\n  flex-direction: row;\n  align-items: center;\n  animation: logoCarouselAlpha var(--speed, 20s) linear infinite;\n  inline-size: fit-content;\n  will-change: transform;\n\n  [data-color*='grayscale' i] & {\n    filter: grayscale(1);\n  }\n\n  > * {\n    inline-size: var(--logo-width, 10rem);\n    flex-shrink: 0;\n    margin-inline-end: var(--gap, 2rem);\n  }",
+      "css": "display: flex;\n  flex-direction: row;\n  align-items: center;\n  animation: logoCarouselAlpha var(--speed, 2s) linear infinite;\n  inline-size: fit-content;\n  will-change: transform;\n\n  [data-color*='grayscale' i] & {\n    filter: grayscale(1);\n  }\n\n  > * {\n    inline-size: var(--logo-width, 10rem);\n    flex-shrink: 0;\n    margin-inline-end: var(--gap, 2rem);\n  }\n  > *:last-child {\n    margin-inline-end: var(--gap, 2rem);\n  }",
       "readonly": false
     },
     "3aynbux": {
@@ -291,8 +292,8 @@
           "default": "20"
         },
         {
-          "key": "color",
           "name": "Color",
+          "key": "color",
           "keyTouched": false,
           "type": {
             "primitive": "string",
@@ -357,7 +358,7 @@
                 },
                 "tag": "div",
                 "attributes": {
-                  "style": "--speed: {props.speed}s; --logoWidth: {props.logoWidth};",
+                  "style": "--speed: {props.speed}s; --logo-width: {props.logoWidth};",
                   "data-color": "{props.color.toLowercase()}",
                   "class": "logo-carousel-alpha__track"
                 },
@@ -574,11 +575,116 @@
                         "\n",
                         "\n"
                       ]
+                    },
+                    {
+                      "blockName": "etch/svg",
+                      "attrs": {
+                        "metadata": {
+                          "name": "SVG"
+                        },
+                        "tag": "svg",
+                        "attributes": {
+                          "src": "https://patterns.etchwp.com/wp-content/uploads/logoipsum-418.svg",
+                          "stripColors": "true"
+                        }
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        "\n"
+                      ]
+                    },
+                    {
+                      "blockName": "etch/svg",
+                      "attrs": {
+                        "metadata": {
+                          "name": "SVG"
+                        },
+                        "tag": "svg",
+                        "attributes": {
+                          "src": "https://patterns.etchwp.com/wp-content/uploads/logoipsum-418.svg",
+                          "stripColors": "true"
+                        }
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        "\n"
+                      ]
+                    },
+                    {
+                      "blockName": "etch/svg",
+                      "attrs": {
+                        "metadata": {
+                          "name": "SVG"
+                        },
+                        "tag": "svg",
+                        "attributes": {
+                          "src": "https://patterns.etchwp.com/wp-content/uploads/logoipsum-418.svg",
+                          "stripColors": "true"
+                        }
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        "\n"
+                      ]
+                    },
+                    {
+                      "blockName": "etch/svg",
+                      "attrs": {
+                        "metadata": {
+                          "name": "SVG"
+                        },
+                        "tag": "svg",
+                        "attributes": {
+                          "src": "https://patterns.etchwp.com/wp-content/uploads/logoipsum-418.svg",
+                          "stripColors": "true"
+                        }
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        "\n"
+                      ]
+                    },
+                    {
+                      "blockName": "etch/svg",
+                      "attrs": {
+                        "metadata": {
+                          "name": "SVG"
+                        },
+                        "tag": "svg",
+                        "attributes": {
+                          "src": "https://patterns.etchwp.com/wp-content/uploads/logoipsum-418.svg",
+                          "stripColors": "true"
+                        }
+                      },
+                      "innerBlocks": [],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        "\n"
+                      ]
                     }
                   ],
-                  "innerHTML": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+                  "innerHTML": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
                   "innerContent": [
                     "\n",
+                    null,
+                    "\n\n",
+                    null,
+                    "\n\n",
+                    null,
+                    "\n\n",
+                    null,
+                    "\n\n",
+                    null,
+                    "\n\n",
                     null,
                     "\n\n",
                     null,
@@ -682,7 +788,7 @@
                         "metadata": {
                           "name": "Text"
                         },
-                        "content": "Additionally, you need to right click and copy this animation and paste it into a global stylesheet:"
+                        "content": "Additionally, you need to right click and copy this animation and paste it into a global stylesheet. If you're seeing any sort of \"snapping\" or delayed loading/gap, it likely means you need to add more logos to your slot."
                       },
                       "innerBlocks": [],
                       "innerHTML": "",
@@ -842,7 +948,7 @@
     "title": "Logo Carousel Alpha",
     "family": "interactive",
     "link": "https://patterns.etchwp.com/layouts/logo-carousel-alpha/",
-    "modified": "2026-02-04T13:07:58",
-    "collected": "2026-02-04T14:27:21.194Z"
+    "modified": "2026-03-06T15:15:24",
+    "collected": "2026-03-14T11:29:50.363Z"
   }
 }

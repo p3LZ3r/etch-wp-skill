@@ -1,7 +1,7 @@
 # Etch WP Pattern Templates
 
 Source: https://patterns.etchwp.com/
-Last updated: 2026-02-04T14:27:23.584Z
+Last updated: 2026-03-14T11:29:54.835Z
 
 These patterns contain the full block JSON and can be directly imported into Etch WP.
 
@@ -23,6 +23,10 @@ These patterns contain the full block JSON and can be directly imported into Etc
 - **[Content Section Quebec](https://patterns.etchwp.com/layouts/content-section-quebec/)** `content/content-section-quebec.json`
 - **[Content Section Victor](https://patterns.etchwp.com/layouts/content-section-victor/)** `content/content-section-victor.json`
 - **[Content Section Tango](https://patterns.etchwp.com/layouts/content-section-tango/)** `content/content-section-tango.json`
+
+## Ctas (1)
+
+- **[CTA Section Hotel](https://patterns.etchwp.com/layouts/cta-section-hotel/)** `ctas/cta-section-hotel.json`
 
 ## Features (5)
 
@@ -53,8 +57,9 @@ These patterns contain the full block JSON and can be directly imported into Etc
 - **[Hero Bravo](https://patterns.etchwp.com/layouts/hero-bravo/)** `hero/hero-bravo.json`
 - **[Hero Alpha](https://patterns.etchwp.com/layouts/hero-alpha/)** `hero/hero-alpha.json`
 
-## Interactive (22)
+## Interactive (23)
 
+- **[Animated Fill Text](https://patterns.etchwp.com/layouts/animated-fill-text/)** `interactive/animated-fill-text.json`
 - **[Background Video](https://patterns.etchwp.com/layouts/background-video/)** `interactive/background-video.json`
 - **[Scheme Switch Bravo](https://patterns.etchwp.com/layouts/scheme-switch-bravo/)** `interactive/scheme-switch-bravo.json`
 - **[Scheme Switch Alpha](https://patterns.etchwp.com/layouts/scheme-switch/)** `interactive/scheme-switch.json`

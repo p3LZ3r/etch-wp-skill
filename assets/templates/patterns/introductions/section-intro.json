@@ -15,13 +15,14 @@
       "\n"
     ]
   },
-  "version": 2,
+  "version": 2.1,
+  "timestamp": "2026-02-14T21:39:14.938Z",
   "styles": {
     "etch-container-style": {
       "type": "element",
       "selector": ":where([data-etch-element=\"container\"])",
       "collection": "default",
-      "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;\n  max-width: var(--content-width, 1366px);\n  align-self: center; margin-inline: auto;",
+      "css": "inline-size: 100%;\n  display: flex;\n  flex-direction: column;\n  max-inline-size: var(--content-width, 1366px);\n  align-self: center; margin-inline: auto;",
       "readonly": true
     },
     "vcsar64": {
@@ -42,7 +43,7 @@
       "type": "class",
       "selector": ".section-intro__content-wrapper",
       "collection": "default",
-      "css": "display: flex;\n  gap: var(--content-gap, 1em);\n  max-inline-size: 60ch;",
+      "css": "display: flex;\n  gap: var(--content-gap, 1em);\n  max-inline-size: 70ch;",
       "readonly": false
     },
     "xq4u8jj": {
@@ -91,6 +92,7 @@
   "components": {
     "89": {
       "id": 89,
+      "legacyId": "",
       "name": "Section Intro",
       "key": "SectionIntro",
       "blocks": [
@@ -104,7 +106,8 @@
             "attributes": {
               "data-etch-element": "container",
               "data-intro-style": "{props.style}",
-              "class": "section-intro"
+              "class": "section-intro",
+              "data-etch-note": "Aligns left at 700px via container query"
             },
             "styles": [
               "etch-container-style",
@@ -146,11 +149,8 @@
                   },
                   "innerBlocks": [
                     {
-                      "blockName": "etch/text",
+                      "blockName": "etch/raw-html",
                       "attrs": {
-                        "metadata": {
-                          "name": "Text"
-                        },
                         "content": "{props.sectionHeading}"
                       },
                       "innerBlocks": [],
@@ -448,19 +448,19 @@
       ],
       "properties": [
         {
-          "key": "style",
           "name": "Style",
+          "key": "style",
           "keyTouched": false,
           "type": {
             "primitive": "string",
             "specialized": "select"
           },
-          "selectOptionsString": "Left\nCenter\nTwo Column",
-          "default": "Left"
+          "default": "Left",
+          "selectOptionsString": "Left\nCenter\nTwo Column"
         },
         {
-          "key": "sectionHeading",
           "name": "Section Heading",
+          "key": "sectionHeading",
           "keyTouched": false,
           "type": {
             "primitive": "string"
@@ -468,8 +468,8 @@
           "default": "Section Heading"
         },
         {
-          "key": "headingLevel",
           "name": "Heading Level",
+          "key": "headingLevel",
           "keyTouched": false,
           "type": {
             "primitive": "string",
@@ -479,8 +479,8 @@
           "selectOptionsString": "h2\nh1"
         },
         {
-          "key": "sectionHeadline",
           "name": "Section Headline",
+          "key": "sectionHeadline",
           "keyTouched": false,
           "type": {
             "primitive": "string"
@@ -488,8 +488,8 @@
           "default": "Write a compelling headline."
         },
         {
-          "key": "lede",
           "name": "Lede",
+          "key": "lede",
           "keyTouched": false,
           "type": {
             "primitive": "string"
@@ -497,8 +497,8 @@
           "default": "This is just placeholder text. Don’t be alarmed, this is just here to fill up space since your finalized copy isn’t ready yet."
         },
         {
-          "key": "showLede",
           "name": "Show Lede",
+          "key": "showLede",
           "keyTouched": false,
           "type": {
             "primitive": "boolean"
@@ -506,8 +506,8 @@
           "default": true
         },
         {
-          "key": "primaryCtaText",
           "name": "Primary CTA Text",
+          "key": "primaryCtaText",
           "keyTouched": false,
           "type": {
             "primitive": "string"
@@ -515,8 +515,8 @@
           "default": "Primary CTA"
         },
         {
-          "key": "primaryCtaUrl",
           "name": "Primary CTA URL",
+          "key": "primaryCtaUrl",
           "keyTouched": false,
           "type": {
             "primitive": "string"
@@ -524,8 +524,8 @@
           "default": "#"
         },
         {
-          "key": "showPrimaryCta",
           "name": "Show Primary CTA",
+          "key": "showPrimaryCta",
           "keyTouched": false,
           "type": {
             "primitive": "boolean"
@@ -533,8 +533,8 @@
           "default": true
         },
         {
-          "key": "secondaryCtaText",
           "name": "Secondary CTA Text",
+          "key": "secondaryCtaText",
           "keyTouched": false,
           "type": {
             "primitive": "string"
@@ -542,8 +542,8 @@
           "default": "Secondary CTA"
         },
         {
-          "key": "secondaryCtaUrl",
           "name": "Secondary CTA URL",
+          "key": "secondaryCtaUrl",
           "keyTouched": false,
           "type": {
             "primitive": "string"
@@ -551,8 +551,8 @@
           "default": "#"
         },
         {
-          "key": "showSecondaryCta",
           "name": "Show Secondary CTA",
+          "key": "showSecondaryCta",
           "keyTouched": false,
           "type": {
             "primitive": "boolean"
@@ -560,8 +560,7 @@
           "default": true
         }
       ],
-      "description": "",
-      "legacyId": ""
+      "description": ""
     }
   },
   "_metadata": {
@@ -570,7 +569,7 @@
     "title": "Section Intro",
     "family": "introductions",
     "link": "https://patterns.etchwp.com/layouts/section-intro/",
-    "modified": "2026-01-28T16:15:29",
-    "collected": "2026-01-31T17:08:00.206Z"
+    "modified": "2026-02-14T21:39:25",
+    "collected": "2026-03-14T11:29:54.333Z"
   }
 }

@@ -4,9 +4,9 @@ description: Expert knowledge for Etch WP - a Unified Visual Development Environ
 license: CC BY-NC-SA 4.0
 metadata:
   author: Torsten Linnecke
-  version: 3.0.12
+  version: 3.2.0
   created: 2025-12-20
-  updated: 2026-03-12
+  updated: 2026-03-14
   category: wordpress
   tags: wordpress, gutenberg, etch-wp, acss, component-generator
   license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/
@@ -19,7 +19,7 @@ metadata:
 Etch WP is a visual development environment for WordPress that uses Gutenberg blocks in a specific JSON format. This skill generates complete JSON structures using Automatic.css (ACSS) v4 variables.
 
 **Output:**
-- Complete JSON for Etch WP editor (paste) or REST API (push)
+- Complete JSON for Etch WP editor (paste format only)
 
 ## Project Initialization (REQUIRED)
 
@@ -51,12 +51,35 @@ Once project is initialized:
 
 1. **Check Official Patterns FIRST** - See if [https://patterns.etchwp.com/](https://patterns.etchwp.com/) has what the user needs
    - If yes → Recommend the official pattern (faster, tested, maintained)
-   - If no or needs heavy customization → Generate custom
+   - If no or needs heavy customization → Continue to step 1b
 
-2. **Check the Target Site** - Audit the specific website being built
-   - Use Etch REST endpoints (`/wp-json/etch-api`) before building new JSON
-   - Start with `components/list`, then check specific components via `/components/{id}` if they can be reused
-   - For structure-aware generation, also check `loops`, `queries`, `post-types`, `taxonomies`
+1b. **Search Local Patterns** — Check `assets/templates/patterns/` BEFORE generating
+
+   **CRITICAL**: Always search local patterns first. This saves tokens and ensures consistency.
+
+   ```bash
+   # View pattern index
+   read "assets/templates/patterns/INDEX.md"
+
+   # Search by category
+   glob "assets/templates/patterns/hero/*.json"
+   glob "assets/templates/patterns/features/*.json"
+   ```
+
+   **Categories**: `hero`, `footer`, `headers`, `features`, `content`, `blog`, `ctas`, `interactive`, `avatars`, `introductions`
+
+   **If match found**:
+   - Read the JSON file
+   - Adapt content/props to user needs
+   - Return adapted JSON (faster than building new)
+
+2. **Check the Target Site for Reusable Components** — If user provides a site URL
+
+   - Discover: `GET /components/list`
+   - Match: Look for component names/keys matching user need
+   - Reuse: `etch/component` block with `ref` attribute
+
+   **See:** `references/resource-reuse.md` for curl examples and property mapping
 
 3. **Read references** - Consult relevant reference files before generating
 
@@ -69,23 +92,74 @@ Once project is initialized:
    | Automatic CSS | `/websites/automaticcss` | ACSS v4 variables, color system, spacing, typography |
    | Etch WP | `/websites/etchwp` | Block types, loops, components, native elements |
 
+### Decision Framework: Reuse vs Build New
+
+**ALWAYS follow this order**: Official patterns → Local patterns → Site components → Build new
+
+**CRITICAL**: Reuse saves tokens, ensures consistency, and reduces validation errors. ALWAYS check existing resources first.
+
+**See:** `references/resource-reuse.md` for complete decision flowchart and reuse instructions
+
 6. **Generate JSON** - Create complete, valid JSON structure
 
 7. **Deliver via correct method** — see Output Formats below
 
 8. **Validate** - Run validation script automatically after generation
 
-### Output Formats
+### Output Format
 
-Components and patterns use the same JSON structure. Delivery method depends on target:
+There are **two formats** depending on use case:
 
-| Target | Delivery |
-|--------|----------|
-| **Components** (reusable blocks) | `POST /wp-json/etch-api/components` |
-| **Layouts / Sections / Pages** | Copy-paste into Etch frontend editor |
+#### 1. Paste Format (for Etch WP Editor)
+
+Used when generating layouts, sections, or component instances to paste into the editor.
+
+```json
+{
+  "type": "block",
+  "gutenbergBlock": { ... },
+  "version": 2.1,
+  "timestamp": "2026-03-12T11:02:38.449Z",
+  "styles": { ... },
+  "components": { ... }
+}
+```
 
 - Save as `.json` file
-- The validator handles all formats
+- Copy the JSON
+- Paste into Etch WP editor
+
+#### 2. Inline Component Format (embedded in components object)
+
+Used when defining a reusable component with properties. Stored in the `components` object of paste format.
+
+```json
+{
+  "name": "Component Name",
+  "key": "ComponentKey",
+  "version": 2.1,
+  "description": "Optional description",
+  "properties": [
+    {
+      "key": "title",
+      "name": "Title",
+      "keyTouched": true,
+      "type": {"primitive": "string"},
+      "default": "Default Value"
+    }
+  ],
+  "blocks": [ ... ],
+  "styles": { ... }
+}
+```
+
+**Required fields:**
+- `name` - Display name
+- `key` - PascalCase identifier
+- `version` - Format version: `2.1` (numeric)
+- `properties` - Array with `keyTouched` on each property
+- `blocks` - Component content structure
+- `styles` - CSS definitions
 
 ### Post-Generation Validation
 
@@ -101,7 +175,13 @@ node ~/.claude/skills/etch-wp/scripts/validate-component.js <filename>.json
 node %USERPROFILE%\.claude\skills\etch-wp\scripts\validate-component.js <filename>.json
 ```
 
-The validator auto-detects the format and includes Base64 encoding checks and JavaScript syntax validation.
+The validator auto-detects the format and validates:
+- Root structure (paste format vs inline component)
+- Component reference validation (`ref` exists in `components`)
+- **Property matching**: Attributes passed to `etch/component` must match defined properties
+- Style ID format and cross-references
+- Base64 encoding and JavaScript syntax
+- ACSS variable usage and BEM naming
 
 ## Core Rules
 
@@ -149,6 +229,18 @@ When referencing component properties, ALWAYS use the `props.` prefix:
 
 **See:** `references/css-architecture-rules.md` → "Naming Conventions"
 
+### 6. Resource Reuse — ALWAYS Check Existing Resources First
+
+**CRITICAL**: Before building ANY component:
+
+1. Check `assets/templates/patterns/INDEX.md` for matching patterns
+2. If site URL provided, check `/wp-json/etch-api/components/list`
+3. Reuse existing resources when 80%+ match
+
+This saves tokens, ensures consistency, and reduces validation errors.
+
+**See:** `references/resource-reuse.md` for complete reuse guide
+
 ---
 
 ## Critical Pitfalls
@@ -177,6 +269,7 @@ When referencing component properties, ALWAYS use the `props.` prefix:
 | `references/api-endpoints.md` | REST API endpoints with curl examples |
 | `references/native-components.md` | Native component documentation |
 | `references/official-patterns.md` | Official patterns library guide |
+| `references/resource-reuse.md` | How to reuse local patterns and site components |
 
 ---
 
@@ -195,8 +288,8 @@ Working JSON examples are available in: `references/examples/`
 
 When generating code, always provide:
 
-1. **Complete, valid JSON** — Ready to paste into Etch WP
+1. **Complete, valid JSON** — Ready to paste into Etch WP editor
 2. **Explanation** — Brief description of what was generated
-3. **API command** — Optional curl command if using API format
+3. **Validation** — Run the validator and report results
 
-For components, include both the JSON and the curl command for API push.
+**No API commands** — The Etch API does not support creating components with inline styles. Always use the paste format.

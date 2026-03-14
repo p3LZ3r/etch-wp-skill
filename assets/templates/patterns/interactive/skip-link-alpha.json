@@ -7,7 +7,10 @@
         "name": "Alpha"
       },
       "ref": 3020,
-      "attributes": {}
+      "attributes": {
+        "preview": "{false}",
+        "skipJS": "{false}"
+      }
     },
     "innerBlocks": [],
     "innerHTML": "\n\n",
@@ -16,13 +19,14 @@
       "\n"
     ]
   },
-  "version": 2,
+  "version": 2.1,
+  "timestamp": "2026-03-12T17:42:37.916Z",
   "styles": {
-    "vdgercu": {
+    "er2eome": {
       "type": "class",
-      "selector": ".skip-link-alpha",
+      "selector": ".skip-link",
       "collection": "default",
-      "css": "&amp;:not(.etch-builder-block[data-preview=\"true\"]) {\n      /* Skip Link */\n    position: absolute !important;\n    inset-block-start: 1rem !important;\n    inset-inline-start: 1rem !important;\n    transform: translateY(-250%) !important;\n    z-index: 100 !important;\n    &amp;:focus-visible {\n      transform: translateY(0) !important;\n    }\n    /* End Skip Link */\n  }",
+      "css": "",
       "readonly": false
     }
   },
@@ -52,14 +56,6 @@
           "default": "main"
         },
         {
-          "key": "classes",
-          "name": "Classes",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string"
-          }
-        },
-        {
           "name": "Preview in Builder",
           "key": "preview",
           "keyTouched": true,
@@ -67,6 +63,15 @@
             "primitive": "boolean"
           },
           "default": true
+        },
+        {
+          "name": "Use JS (Skip to Footer)",
+          "key": "skipJS",
+          "keyTouched": true,
+          "type": {
+            "primitive": "boolean"
+          },
+          "default": false
         }
       ],
       "description": "",
@@ -77,14 +82,19 @@
             "metadata": {
               "name": "Skip Link Alpha"
             },
+            "script": {
+              "code": "Y29uc3Qgc2tpcFRvRm9vdGVyID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcignW2RhdGEtc2tpcC1qcz0idHJ1ZSJdJyk7CgppZiAoc2tpcFRvRm9vdGVyKSB7CiAgc2tpcFRvRm9vdGVyLmFkZEV2ZW50TGlzdGVuZXIoJ2NsaWNrJywgKGUpID0+IHsKICAgIGUucHJldmVudERlZmF1bHQoKTsKICAgIHdpbmRvdy5zY3JvbGxUbyh7IHRvcDogZG9jdW1lbnQuYm9keS5zY3JvbGxIZWlnaHQsIGJlaGF2aW9yOiAnc21vb3RoJyB9KTsKCiAgICBjb25zdCBmb290ZXIgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKCcjZm9vdGVyJykgfHwgZG9jdW1lbnQucXVlcnlTZWxlY3RvcignZm9vdGVyJyk7CiAgICBpZiAoZm9vdGVyKSB7CiAgICAgIGNvbnN0IGZvY3VzYWJsZSA9IGZvb3Rlci5xdWVyeVNlbGVjdG9yQWxsKCdhW2hyZWZdLCBidXR0b24sIGlucHV0LCBzZWxlY3QsIHRleHRhcmVhLCBbdGFiaW5kZXhdOm5vdChbdGFiaW5kZXg9Ii0xIl0pJyk7CiAgICAgIGlmIChmb2N1c2FibGUubGVuZ3RoKSB7CiAgICAgICAgZm9jdXNhYmxlWzBdLmZvY3VzKCk7CiAgICAgIH0gZWxzZSB7CiAgICAgICAgLy8gRmFsbGJhY2sgaWYgbm8gZm9jdXNhYmxlIGNoaWxkcmVuCiAgICAgICAgZm9vdGVyLnNldEF0dHJpYnV0ZSgndGFiaW5kZXgnLCAnLTEnKTsKICAgICAgICBmb290ZXIuZm9jdXMoKTsKICAgICAgfQogICAgfQogIH0pOwp9",
+              "id": "vd9uznu"
+            },
             "tag": "a",
             "attributes": {
               "href": "#{props.anchor}",
+              "class": "skip-link",
               "data-preview": "{props.preview}",
-              "class": "skip-link-alpha {props.classes}"
+              "data-skip-js": "{props.skipJS}"
             },
             "styles": [
-              "vdgercu"
+              "er2eome"
             ]
           },
           "innerBlocks": [
@@ -117,7 +127,7 @@
     "title": "Skip Link Alpha",
     "family": "interactive",
     "link": "https://patterns.etchwp.com/layouts/skip-link-alpha/",
-    "modified": "2026-01-28T22:24:08",
-    "collected": "2026-01-31T17:07:48.588Z"
+    "modified": "2026-03-12T17:42:46",
+    "collected": "2026-03-14T11:29:49.811Z"
   }
 }

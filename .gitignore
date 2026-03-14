@@ -69,3 +69,6 @@ etch/
 
 # ACSS index (auto-generated)
 .etch-acss-index.toon
+
+# Eval workspace (temporary iteration results)
+eval-workspace/

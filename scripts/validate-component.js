@@ -25,6 +25,7 @@ class EtchComponentValidator {
     this.usedStyleIds = new Set();
     this.definedStyleIds = new Set();
     this.componentRefs = new Set();
+    this.componentAttributes = new Map(); // ref -> Set of attribute keys passed
     this.contentType = null; // 'component' or 'layout'
   }
 
@@ -35,11 +36,18 @@ class EtchComponentValidator {
       const content = fs.readFileSync(filePath, 'utf8');
       const data = JSON.parse(content);
 
-      // Detect content type (component vs layout)
+      // Detect content type (component vs layout vs component-definition)
       this.contentType = this.detectContentType(data);
 
       // Validate root structure based on what fields are present
       this.validateRootStructure(data);
+
+      // If component definition format, validation is done in validateComponentDefinition
+      if (this.contentType === 'component-definition') {
+        this.validateStyleReferences();
+        this.reportResults();
+        return this.errors.length === 0;
+      }
 
       // If root structure is invalid, stop here
       if (this.errors.length > 0) {
@@ -79,6 +87,62 @@ class EtchComponentValidator {
     }
   }
 
+  validateComponentDefinition(data) {
+    // Validate Component Definition Format (inline component with properties)
+    // Structure: { name, key, description, version, properties, blocks, styles }
+
+    // Required fields
+    if (!data.name) {
+      this.errors.push('Missing required field: "name" (component display name)');
+    }
+
+    if (!data.key) {
+      this.errors.push('Missing required field: "key" (PascalCase component key)');
+    }
+
+    if (!data.version) {
+      this.errors.push('Missing required field: "version" (should be 2.1)');
+    }
+
+    if (!data.blocks || !Array.isArray(data.blocks)) {
+      this.errors.push('Missing or invalid field: "blocks" (must be array)');
+    }
+
+    if (!data.styles || typeof data.styles !== 'object') {
+      this.errors.push('Missing or invalid field: "styles" (must be object)');
+    }
+
+    // Validate properties if present
+    if (data.properties && Array.isArray(data.properties)) {
+      data.properties.forEach((prop, index) => {
+        if (!prop.key) {
+          this.errors.push(`Property ${index}: Missing "key"`);
+        }
+        if (!prop.name) {
+          this.errors.push(`Property ${index}: Missing "name"`);
+        }
+        if (prop.keyTouched === undefined) {
+          this.errors.push(`Property "${prop.key || index}": Missing "keyTouched" (must be true or false)`);
+        }
+        if (!prop.type || !prop.type.primitive) {
+          this.errors.push(`Property "${prop.key || index}": Invalid or missing "type.primitive"`);
+        }
+      });
+    }
+
+    // Validate blocks (they are gutenbergBlock format without the wrapper)
+    if (data.blocks && Array.isArray(data.blocks)) {
+      data.blocks.forEach((block, index) => {
+        this.validateBlock(block, `blocks[${index}]`);
+      });
+    }
+
+    // Validate styles
+    if (data.styles && typeof data.styles === 'object') {
+      this.validateStyles(data.styles);
+    }
+  }
+
   detectContentType(data) {
     // Detect if this is a component-based file or a layout/section
     // Component files contain etch/component references
@@ -111,18 +175,18 @@ class EtchComponentValidator {
   }
 
   validateRootStructure(data) {
-    // CRITICAL: Reject old invalid structures
-    // Files with name/key/blocks are using the WRONG format
-    if (data.name !== undefined || data.key !== undefined) {
-      this.errors.push(
-        'INVALID STRUCTURE: Using old "name"/"key"/"blocks" format. ' +
-        'Required fields: "type" (must be "block"), "gutenbergBlock", "styles"'
-      );
-      // Don't validate further - the structure is fundamentally wrong
+    // Detect format type: Paste Format vs Component Definition Format
+    const hasPasteFields = data.type !== undefined || data.gutenbergBlock !== undefined;
+    const hasComponentDefFields = data.name !== undefined || data.key !== undefined || data.blocks !== undefined;
+
+    // If it has component definition fields but not paste fields, it's an API component definition
+    if (hasComponentDefFields && !hasPasteFields) {
+      this.contentType = 'component-definition';
+      this.validateComponentDefinition(data);
       return;
     }
 
-    // Check required root-level fields for the CORRECT format
+    // Check required root-level fields for the PASTE format
 
     // Must have type: "block"
     if (data.type !== 'block') {
@@ -175,6 +239,36 @@ class EtchComponentValidator {
       if (!availableComponents[refId]) {
         this.errors.push(
           `Component reference "ref": ${refId} points to non-existent component in "components" object`
+        );
+      } else {
+        // Validate that attributes match component properties
+        this.validateComponentPropertyMatch(refId, availableComponents[refId]);
+      }
+    }
+  }
+
+  validateComponentPropertyMatch(refId, component) {
+    // Check that attributes passed to component match its defined properties
+    const passedAttrs = this.componentAttributes.get(refId);
+    if (!passedAttrs || passedAttrs.size === 0) {
+      return; // No attributes passed, nothing to validate
+    }
+
+    const definedProps = new Set();
+    if (component.properties && Array.isArray(component.properties)) {
+      component.properties.forEach(prop => {
+        if (prop.key) {
+          definedProps.add(prop.key);
+        }
+      });
+    }
+
+    // Check for attributes that don't have corresponding properties
+    for (const attrKey of passedAttrs) {
+      if (!definedProps.has(attrKey)) {
+        this.errors.push(
+          `Component "${component.name || refId}": Attribute "${attrKey}" is passed but not defined in component properties. ` +
+          `Defined properties: ${Array.from(definedProps).join(', ') || 'none'}`
         );
       }
     }
@@ -342,6 +436,15 @@ class EtchComponentValidator {
       // Track component reference for cross-validation
       const refId = String(attrs.ref);
       this.componentRefs.add(refId);
+
+      // Track attributes passed to this component
+      if (attrs.attributes) {
+        const attrKeys = new Set(Object.keys(attrs.attributes));
+        if (!this.componentAttributes.has(refId)) {
+          this.componentAttributes.set(refId, new Set());
+        }
+        attrKeys.forEach(key => this.componentAttributes.get(refId).add(key));
+      }
     }
 
     // Check boolean prop format
@@ -369,8 +472,8 @@ class EtchComponentValidator {
       }
 
       // Check required fields
-      if (!style.type || !['class', 'element'].includes(style.type)) {
-        this.errors.push(`Invalid style.type for "${id}" (must be "class" or "element")`);
+      if (!style.type || !['class', 'element', 'id'].includes(style.type)) {
+        this.errors.push(`Invalid style.type for "${id}" (must be "class", "element", or "id")`);
       }
 
       if (!style.selector) {
@@ -734,8 +837,12 @@ class EtchComponentValidator {
 
     // Show content type
     if (this.contentType) {
-      const typeLabel = this.contentType === 'component' ? '🔧 Component' : '📄 Layout/Section';
-      console.log(`${typeLabel}\n`);
+      const typeLabels = {
+        'component': '🔧 Component (Paste Format)',
+        'layout': '📄 Layout/Section (Paste Format)',
+        'component-definition': '📦 Inline Component'
+      };
+      console.log(`${typeLabels[this.contentType] || this.contentType}\n`);
     }
 
     // Show project config info

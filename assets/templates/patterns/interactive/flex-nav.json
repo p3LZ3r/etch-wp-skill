@@ -40,7 +40,9 @@
                 "previewInEtch": "{false}",
                 "label": "About Us",
                 "dropdownTag": "ul",
-                "panelAlignment": "Center"
+                "panelAlignment": "Center",
+                "flexDirection": "Column",
+                "dropdownFlow": "Column"
               }
             },
             "innerBlocks": [
@@ -56,7 +58,9 @@
                       "ref": 2181,
                       "attributes": {
                         "itemLabel": "Our Team",
-                        "itemLink": "/"
+                        "itemLink": "/",
+                        "itemDescription": "Meet the team.",
+                        "itemAlignment": "start"
                       }
                     },
                     "innerBlocks": [],
@@ -72,7 +76,9 @@
                       "ref": 2181,
                       "attributes": {
                         "itemLabel": "Our Company",
-                        "itemLink": "/"
+                        "itemLink": "/",
+                        "itemDescription": "This is an optional description.",
+                        "itemAlignment": "start"
                       }
                     },
                     "innerBlocks": [],
@@ -88,7 +94,9 @@
                       "ref": 2181,
                       "attributes": {
                         "itemLabel": "Our History",
-                        "itemLink": "/"
+                        "itemLink": "/",
+                        "itemDescription": "You can put anything here.",
+                        "itemAlignment": "start"
                       }
                     },
                     "innerBlocks": [],
@@ -143,7 +151,8 @@
                 "label": "Mega Dropdown",
                 "dropdownTag": "ul",
                 "dropdownStyle": "Mega",
-                "panelAlignment": "Right"
+                "panelAlignment": "Right",
+                "panelWidthMega": "800px"
               }
             },
             "innerBlocks": [
@@ -244,7 +253,8 @@
       "\n"
     ]
   },
-  "version": 2,
+  "version": 2.1,
+  "timestamp": "2026-02-10T13:13:55.960Z",
   "styles": {
     "5wf7uwp": {
       "type": "class",
@@ -285,7 +295,7 @@
       "type": "class",
       "selector": ".flex-nav__list-item",
       "collection": "default",
-      "css": "display: flex;\n  flex-direction: var(--nav-direction, row);\n  align-items: var(--nav-item-alignment, center);\n  justify-content: start;\n  &[data-has-dropdown-style='standard' i] {\n    position: relative;\n  }\n  [data-flex-nav-status='mobile'] & {\n    --nav-item-alignment: start;\n  }",
+      "css": "display: flex;\n  flex-direction: var(--nav-direction, row);\n  align-items: var(--nav-item-alignment, center);\n  justify-content: start;\n  &[data-has-dropdown-style='standard' i],\n  &[data-panel-alignment*='parent' i] {\n    position: relative;\n  }\n  [data-flex-nav-status='mobile'] & {\n    --nav-item-alignment: start;\n  }\n  .flex-nav__dropdown[data-dropdown-flow='column'] a {\n    display: flex;\n    flex-direction: column;\n    line-height: 1.5;\n  }\n  .flex-nav__dropdown[data-dropdown-alignment='start'] a {\n    align-items: start;\n  }",
       "readonly": false
     },
     "fp5g9w9": {
@@ -300,6 +310,13 @@
       "selector": ".flex-nav__link",
       "collection": "default",
       "css": "line-height: 1.2;\n  color: inherit;\n  text-decoration: inherit;",
+      "readonly": false
+    },
+    "hiijtv1": {
+      "type": "class",
+      "selector": ".flex-nav__list-item-description",
+      "collection": "default",
+      "css": "font-size: var(--text-s, .8rem);\n  color: var(--text-dark-muted, #555);",
       "readonly": false
     },
     "pg0be3v": {
@@ -320,7 +337,7 @@
       "type": "class",
       "selector": ".flex-nav__dropdown",
       "collection": "default",
-      "css": "--panel-block-padding: 1em;\n  --panel-inline-padding: 1em;\n  position: var(--panel-position, absolute);\n  interpolate-size: allow-keywords;\n  top: 100%;\n  display: flex;\n  visibility: hidden;\n  /* Is Standard */\n  &[data-dropdown-style='standard' i] {\n    width: auto;\n    inline-size: max-content;\n    max-inline-size: 300px;\n    min-inline-size: 200px;\n    left: 0;\n    right: auto;\n  }\n  /* Positions */\n  &[data-panel-alignment='right' i] {\n    left: auto;\n    right: 0;\n  }\n  [data-flex-nav-status='desktop' i] &[data-panel-alignment='center' i] {\n    left: 50%;\n    translate: -50% 0;\n  }\n  [data-flex-nav-status='desktop' i] &[data-panel-alignment='full' i] {\n    left: 0;\n    top: 100%;\n    inline-size: 100dvw;\n    max-inline-size: 100dvw;\n    min-inline-size: 100dvw;\n    [data-flex-nav-inner] {\n      border-radius: 0;\n    }\n  }\n  /* End Positions */\n  width: 100%;\n  max-inline-size: var(--panel-width);\n  flex-direction: column;\n  /* Preview in Builder */\n  &[data-preview='true'].etch-builder-block {\n    block-size: auto !important;\n    visibiliy: visible !important;\n    opacity: 1 !important;\n    [data-flex-nav-inner] {\n      visibility: visible !important;\n      opacity: 1 !important;\n      block-size: auto !important;\n    }\n  }\n  /* End Preview in Builder */\n  [data-flex-nav-status='mobile'] & {\n    --panel-inline-padding: 1em 0;\n    --panel-offset-block: 0;\n    display: grid;\n    grid-template-rows: 0fr;\n    min-block-size: 0;\n    block-size: 0;\n    transition:\n      grid-template-rows 0.2s ease,\n      block-size 0.2s ease;\n  }\n  [data-flex-nav-status='mobile'] &[data-open='true'] {\n    grid-template-rows: 1fr;\n    block-size: auto;\n  }\n  &[data-open=\"true\"] {\n    visibility: visible;\n  }",
+      "css": "--panel-block-padding: 1em;\n  --panel-inline-padding: 1em;\n  position: var(--panel-position, absolute);\n  interpolate-size: allow-keywords;\n  top: 100%;\n  display: flex;\n  visibility: hidden;\n  /* Is Standard */\n  &[data-dropdown-style='standard' i] {\n    width: auto;\n    inline-size: max-content;\n    max-inline-size: 300px;\n    min-inline-size: 200px;\n    left: 0;\n    right: auto;\n  }\n  /* Positions */\n  [data-panel-alignment='right' i] & {\n    left: auto;\n    right: 0;\n  }\n  [data-flex-nav-status='desktop' i] [data-panel-alignment*='container' i] & {\n  left: 50%;\n  --panel-translate-x: -50%;\n  translate: calc(var(--panel-nudge, 0px) + var(--panel-translate-x, 0px)) 0;\n}\n\n[data-flex-nav-status='desktop' i] [data-panel-alignment*='parent' i] & {\n  width: var(--panel-width);\n  left: 50%;\n  --panel-translate-x: -50%;\n  translate: calc(var(--panel-nudge, 0px) + var(--panel-translate-x, 0px)) 0;\n}\n  [data-flex-nav-status='desktop' i] [data-panel-alignment='full' i] & {\n    left: 0;\n    top: 100%;\n    inline-size: 100dvw;\n    max-inline-size: 100dvw;\n    min-inline-size: 100dvw;\n    [data-flex-nav-inner] {\n      border-radius: 0;\n    }\n  }\n  /* End Positions */\n  width: 100%;\n  max-inline-size: var(--panel-width);\n  flex-direction: column;\n  /* Preview in Builder */\n  &[data-preview='true'].etch-builder-block {\n    block-size: auto !important;\n    visibiliy: visible !important;\n    opacity: 1 !important;\n    [data-flex-nav-inner] {\n      visibility: visible !important;\n      opacity: 1 !important;\n      block-size: auto !important;\n    }\n  }\n  /* End Preview in Builder */\n  [data-flex-nav-status='mobile'] & {\n    --panel-inline-padding: 1em 0;\n    --panel-offset-block: 0;\n    display: grid;\n    grid-template-rows: 0fr;\n    min-block-size: 0;\n    block-size: 0;\n    transition:\n      grid-template-rows 0.2s ease,\n      block-size 0.2s ease;\n  }\n  [data-flex-nav-status='mobile'] &[data-open='true'] {\n    grid-template-rows: 1fr;\n    block-size: auto;\n  }\n  &[data-open='true'] {\n    visibility: visible;\n  }",
       "readonly": false
     },
     "wc1hhym": {
@@ -344,89 +361,6 @@
       "legacyId": "",
       "name": "Flex Nav Dropdown",
       "key": "FlexNavDropdown",
-      "properties": [
-        {
-          "name": "Preview in Etch",
-          "key": "previewInEtch",
-          "keyTouched": false,
-          "type": {
-            "primitive": "boolean"
-          },
-          "default": false
-        },
-        {
-          "name": "Label",
-          "key": "label",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string"
-          },
-          "default": "Dropdown"
-        },
-        {
-          "name": "Dropdown Style",
-          "key": "dropdownStyle",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string",
-            "specialized": "select"
-          },
-          "default": "Standard",
-          "selectOptionsString": "Standard\nMega"
-        },
-        {
-          "name": "Panel Width (Mega)",
-          "key": "panelWidthMega",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string"
-          },
-          "default": "100vw"
-        },
-        {
-          "name": "Panel Alignment",
-          "key": "panelAlignment",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string",
-            "specialized": "select"
-          },
-          "default": "Left",
-          "selectOptionsString": "Left\nRight\nCenter\nFull"
-        },
-        {
-          "name": "Dropdown Tag",
-          "key": "dropdownTag",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string",
-            "specialized": "select"
-          },
-          "default": "ul",
-          "selectOptionsString": "ul\ndiv"
-        },
-        {
-          "name": "Panel Content Gap",
-          "key": "panelContentGap",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string"
-          },
-          "default": "1em"
-        },
-        {
-          "name": "Display On",
-          "key": "displayOn",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string",
-            "specialized": "select"
-          },
-          "default": "Always",
-          "selectOptionsString": "Always\nDesktop\nMobile"
-        }
-      ],
-      "description": "",
       "blocks": [
         {
           "blockName": "etch/element",
@@ -436,9 +370,10 @@
             },
             "tag": "li",
             "attributes": {
-              "class": "flex-nav__list-item flex-nav-item--custom",
               "data-has-dropdown-style": "{props.dropdownStyle}",
-              "data-display-item-on": "{props.displayOn}"
+              "data-display-item-on": "{props.displayOn}",
+              "data-panel-alignment": "{props.panelAlignment}",
+              "class": "flex-nav__list-item flex-nav-item--custom"
             },
             "styles": [
               "udmsc0h",
@@ -454,10 +389,10 @@
                 },
                 "tag": "button",
                 "attributes": {
-                  "class": "flex-nav__dropdown-trigger",
                   "data-dropdown-trigger": "",
                   "aria-expanded": "false",
-                  "aria-haspopup": "true"
+                  "aria-haspopup": "true",
+                  "class": "flex-nav__dropdown-trigger"
                 },
                 "styles": [
                   "pg0be3v"
@@ -468,7 +403,7 @@
                   "blockName": "etch/text",
                   "attrs": {
                     "metadata": {
-                      "name": "Label"
+                      "name": "Text"
                     },
                     "content": "{props.label}"
                   },
@@ -518,7 +453,8 @@
                   "data-dropdown-style": "{props.dropdownStyle}",
                   "style": "--panel-width: {props.panelWidthMega}; --panel-content-gap: {props.panelContentGap};",
                   "data-preview": "{props.previewInEtch}",
-                  "data-panel-alignment": "{props.panelAlignment}",
+                  "data-dropdown-flow": "{props.dropdownFlow.toLowercase()}",
+                  "data-dropdown-alignment": "{props.dropdownAlignment.toLowercase()}",
                   "class": "flex-nav-dropdown--custom flex-nav__dropdown"
                 },
                 "styles": [
@@ -582,13 +518,159 @@
             "\n"
           ]
         }
-      ]
+      ],
+      "properties": [
+        {
+          "name": "Preview in Etch",
+          "key": "previewInEtch",
+          "keyTouched": false,
+          "type": {
+            "primitive": "boolean"
+          },
+          "default": false
+        },
+        {
+          "name": "Label",
+          "key": "label",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "Dropdown"
+        },
+        {
+          "name": "Dropdown Style",
+          "key": "dropdownStyle",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "Standard",
+          "selectOptionsString": "Standard\nMega"
+        },
+        {
+          "name": "Dropdown Flow",
+          "key": "dropdownFlow",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "Column",
+          "selectOptionsString": "Column\nRow"
+        },
+        {
+          "name": "Dropdown Alignment",
+          "key": "dropdownAlignment",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "Start",
+          "selectOptionsString": "Start\nCenter\nEnd"
+        },
+        {
+          "name": "Panel Width (Mega)",
+          "key": "panelWidthMega",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "100vw"
+        },
+        {
+          "name": "Panel Alignment",
+          "key": "panelAlignment",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "Left",
+          "selectOptionsString": "Left\nRight\nCenter (Parent)\nCenter (Container)\nFull"
+        },
+        {
+          "name": "Dropdown Tag",
+          "key": "dropdownTag",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "ul",
+          "selectOptionsString": "ul\ndiv"
+        },
+        {
+          "name": "Panel Content Gap",
+          "key": "panelContentGap",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "1em"
+        },
+        {
+          "name": "Display On",
+          "key": "displayOn",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "Always",
+          "selectOptionsString": "Always\nDesktop\nMobile"
+        }
+      ],
+      "description": ""
     },
     "2171": {
       "id": 2171,
       "legacyId": "",
       "name": "Flex Nav",
       "key": "FlexNav",
+      "properties": [
+        {
+          "name": "Nav Name",
+          "key": "navName",
+          "keyTouched": true,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "Primary"
+        },
+        {
+          "name": "Panel Offset (Block)",
+          "key": "panelOffsetBlock",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": ".5em"
+        },
+        {
+          "name": "Mobile Breakpoint",
+          "key": "mobileBreakpoint",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          },
+          "default": "900px"
+        },
+        {
+          "name": "Dropdown Behavior",
+          "key": "dropdownBehavior",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string",
+            "specialized": "select"
+          },
+          "default": "Click",
+          "selectOptionsString": "Click\nHover"
+        }
+      ],
+      "description": "",
       "blocks": [
         {
           "blockName": "etch/element",
@@ -681,13 +763,13 @@
               "name": "Flex Nav"
             },
             "script": {
-              "code": "Y2xhc3MgTW9kdWxhck5hdiB7CiAgY29uc3RydWN0b3IobmF2KSB7CiAgICB0aGlzLm5hdiA9IG5hdjsKICAgIHRoaXMubmF2SWQgPSBuYXYuZGF0YXNldC5mbGV4TmF2OwogICAgdGhpcy5icmVha3BvaW50ID0gbmF2LmRhdGFzZXQubmF2QnJlYWtwb2ludDsKICAgIHRoaXMuYmVoYXZpb3IgPSBuYXYuZGF0YXNldC5kcm9wZG93bkJlaGF2aW9yPy50b0xvd2VyQ2FzZSgpIHx8ICdob3Zlcic7CiAgICB0aGlzLm5hdlRyaWdnZXIgPSB0aGlzLm5hdklkID8gZG9jdW1lbnQucXVlcnlTZWxlY3RvcihgW2RhdGEtZmxleC1uYXYtdHJpZ2dlcj0iJHt0aGlzLm5hdklkfSJdYCkgOiBudWxsOwogICAgdGhpcy5vcGVuUGFuZWwgPSBudWxsOwogICAgdGhpcy5vcGVuVHJpZ2dlciA9IG51bGw7CiAgICB0aGlzLmlzTW9iaWxlID0gZmFsc2U7CiAgICAKICAgIHRoaXMuZGV0ZWN0SGVhZGVyUG9zaXRpb24oKTsKICAgIAogICAgaWYgKHRoaXMuYnJlYWtwb2ludCkgewogICAgICB0aGlzLm1lZGlhUXVlcnkgPSB3aW5kb3cubWF0Y2hNZWRpYShgKG1heC13aWR0aDogJHt0aGlzLmJyZWFrcG9pbnR9KWApOwogICAgICB0aGlzLmhhbmRsZVJlc2l6ZSgpOwogICAgICB0aGlzLm1lZGlhUXVlcnkuYWRkRXZlbnRMaXN0ZW5lcignY2hhbmdlJywgKCkgPT4gdGhpcy5oYW5kbGVSZXNpemUoKSk7CiAgICB9CgogICAgaWYgKHRoaXMubmF2VHJpZ2dlcikgewogICAgICB0aGlzLm5hdlRyaWdnZXIuYWRkRXZlbnRMaXN0ZW5lcignY2xpY2snLCAoKSA9PiB0aGlzLnRvZ2dsZU1lbnUoKSk7CiAgICB9CiAgICAKICAgIG5hdi5xdWVyeVNlbGVjdG9yQWxsKCdbZGF0YS1kcm9wZG93bi10cmlnZ2VyXScpLmZvckVhY2goKHRyaWdnZXIsIGluZGV4KSA9PiB7CiAgICAgIGNvbnN0IHBhcmVudCA9IHRyaWdnZXIucGFyZW50RWxlbWVudDsKICAgICAgY29uc3QgcGFuZWwgPSBwYXJlbnQucXVlcnlTZWxlY3RvcignW2RhdGEtZHJvcGRvd24tcGFuZWxdJyk7CiAgICAgIAogICAgICBpZiAoIXBhbmVsKSByZXR1cm47CgogICAgICBjb25zdCBpZCA9IGBkcm9wZG93bi1wYW5lbC0ke0RhdGUubm93KCl9LSR7aW5kZXh9YDsKICAgICAgcGFuZWwuaWQgPSBpZDsKICAgICAgdHJpZ2dlci5zZXRBdHRyaWJ1dGUoJ2FyaWEtY29udHJvbHMnLCBpZCk7CgogICAgICBwYXJlbnQuYWRkRXZlbnRMaXN0ZW5lcignbW91c2VlbnRlcicsICgpID0+IHsKICAgICAgICBpZiAoIXRoaXMuaXNNb2JpbGUgJiYgdGhpcy5iZWhhdmlvciA9PT0gJ2hvdmVyJykgdGhpcy5vcGVuKHRyaWdnZXIsIHBhbmVsKTsKICAgICAgfSk7CiAgICAgIHBhcmVudC5hZGRFdmVudExpc3RlbmVyKCdtb3VzZWxlYXZlJywgKCkgPT4gewogICAgICAgIGlmICghdGhpcy5pc01vYmlsZSAmJiB0aGlzLmJlaGF2aW9yID09PSAnaG92ZXInKSB0aGlzLmNsb3NlKHRyaWdnZXIsIHBhbmVsKTsKICAgICAgfSk7CiAgICAgIAogICAgICB0cmlnZ2VyLmFkZEV2ZW50TGlzdGVuZXIoJ2NsaWNrJywgKCkgPT4gdGhpcy50b2dnbGUodHJpZ2dlciwgcGFuZWwpKTsKICAgICAgdHJpZ2dlci5hZGRFdmVudExpc3RlbmVyKCdrZXlkb3duJywgZSA9PiB0aGlzLmhhbmRsZVRyaWdnZXJLZXlkb3duKGUsIHRyaWdnZXIsIHBhbmVsKSk7CiAgICAgIHBhbmVsLmFkZEV2ZW50TGlzdGVuZXIoJ2tleWRvd24nLCBlID0+IHRoaXMuaGFuZGxlUGFuZWxLZXlkb3duKGUsIHRyaWdnZXIsIHBhbmVsKSk7CiAgICB9KTsKCiAgICBkb2N1bWVudC5hZGRFdmVudExpc3RlbmVyKCdjbGljaycsIGUgPT4gdGhpcy5oYW5kbGVDbGlja091dHNpZGUoZSkpOwogIH0KCiAgZGV0ZWN0SGVhZGVyUG9zaXRpb24oKSB7CiAgICBjb25zdCBoZWFkZXIgPSB0aGlzLm5hdi5jbG9zZXN0KCdoZWFkZXInKTsKICAgIGlmIChoZWFkZXIpIHsKICAgICAgY29uc3QgcG9zaXRpb24gPSBnZXRDb21wdXRlZFN0eWxlKGhlYWRlcikucG9zaXRpb247CiAgICAgIGlmIChwb3NpdGlvbiA9PT0gJ3N0YXRpYycpIHsKICAgICAgICBoZWFkZXIuZGF0YXNldC5oZWFkZXJEZXRlY3RlZFBvc2l0aW9uID0gJ3N0YXRpYyc7CiAgICAgIH0KICAgIH0KICB9CgogIGhhbmRsZVJlc2l6ZSgpIHsKICAgIHRoaXMuaXNNb2JpbGUgPSB0aGlzLm1lZGlhUXVlcnkubWF0Y2hlczsKICAgIAogICAgaWYgKHRoaXMuaXNNb2JpbGUpIHsKICAgICAgdGhpcy5uYXYuZGF0YXNldC5mbGV4TmF2U3RhdHVzID0gJ21vYmlsZSc7CiAgICAgIHRoaXMubmF2VHJpZ2dlcj8uc3R5bGUuc2V0UHJvcGVydHkoJy0tZmxleC1uYXYtdHJpZ2dlci1kaXNwbGF5JywgJ2ZsZXgnKTsKICAgICAgdGhpcy5uYXYuc3R5bGUuc2V0UHJvcGVydHkoJy0tbmF2LWRpc3BsYXknLCAnbm9uZScpOwogICAgICB0aGlzLm5hdi5zdHlsZS5zZXRQcm9wZXJ0eSgnLS1wYW5lbC1wb3NpdGlvbicsICdyZWxhdGl2ZScpOwogICAgICB0aGlzLm5hdi5zdHlsZS5zZXRQcm9wZXJ0eSgnLS1mbGV4LW5hdi1kaXJlY3Rpb24nLCAnY29sdW1uJyk7CiAgICAgIHRoaXMubmF2VHJpZ2dlcj8uc2V0QXR0cmlidXRlKCdhcmlhLWV4cGFuZGVkJywgJ2ZhbHNlJyk7CiAgICB9IGVsc2UgewogICAgICB0aGlzLm5hdi5kYXRhc2V0LmZsZXhOYXZTdGF0dXMgPSAnZGVza3RvcCc7CiAgICAgIHRoaXMubmF2VHJpZ2dlcj8uc3R5bGUuc2V0UHJvcGVydHkoJy0tZmxleC1uYXYtdHJpZ2dlci1kaXNwbGF5JywgJ25vbmUnKTsKICAgICAgdGhpcy5uYXYuc3R5bGUuc2V0UHJvcGVydHkoJy0tbmF2LWRpc3BsYXknLCAnYmxvY2snKTsKICAgICAgdGhpcy5uYXYuc3R5bGUuc2V0UHJvcGVydHkoJy0tcGFuZWwtcG9zaXRpb24nLCAnYWJzb2x1dGUnKTsKICAgICAgdGhpcy5uYXYuc3R5bGUuc2V0UHJvcGVydHkoJy0tZmxleC1uYXYtZGlyZWN0aW9uJywgJ3JvdycpOwogICAgICB0aGlzLmNsb3NlTWVudSgpOwogICAgfQogIH0KCiAgdG9nZ2xlTWVudSgpIHsKICAgIGNvbnN0IGlzT3BlbiA9IHRoaXMubmF2VHJpZ2dlci5nZXRBdHRyaWJ1dGUoJ2FyaWEtZXhwYW5kZWQnKSA9PT0gJ3RydWUnOwogICAgaXNPcGVuID8gdGhpcy5jbG9zZU1lbnUoKSA6IHRoaXMub3Blbk1lbnUoKTsKICB9CgogIG9wZW5NZW51KCkgewogICAgdGhpcy5uYXZUcmlnZ2VyLnNldEF0dHJpYnV0ZSgnYXJpYS1leHBhbmRlZCcsICd0cnVlJyk7CiAgICB0aGlzLm5hdi5zdHlsZS5zZXRQcm9wZXJ0eSgnLS1uYXYtZGlzcGxheScsICdibG9jaycpOwogIH0KCiAgY2xvc2VNZW51KCkgewogICAgdGhpcy5uYXZUcmlnZ2VyPy5zZXRBdHRyaWJ1dGUoJ2FyaWEtZXhwYW5kZWQnLCAnZmFsc2UnKTsKICAgIGlmICh0aGlzLmlzTW9iaWxlKSB7CiAgICAgIHRoaXMubmF2LnN0eWxlLnNldFByb3BlcnR5KCctLW5hdi1kaXNwbGF5JywgJ25vbmUnKTsKICAgIH0KICB9CgogIG9wZW4odHJpZ2dlciwgcGFuZWwpIHsKICAgIGlmICh0aGlzLm9wZW5QYW5lbCAmJiB0aGlzLm9wZW5QYW5lbCAhPT0gcGFuZWwpIHsKICAgICAgdGhpcy5jbG9zZSh0aGlzLm9wZW5UcmlnZ2VyLCB0aGlzLm9wZW5QYW5lbCk7CiAgICB9CiAgICAKICAgIHRyaWdnZXIuc2V0QXR0cmlidXRlKCdhcmlhLWV4cGFuZGVkJywgJ3RydWUnKTsKICAgIHBhbmVsLmRhdGFzZXQub3BlbiA9ICd0cnVlJzsKICAgIHRoaXMub3BlblBhbmVsID0gcGFuZWw7CiAgICB0aGlzLm9wZW5UcmlnZ2VyID0gdHJpZ2dlcjsKICB9CgogIGNsb3NlKHRyaWdnZXIsIHBhbmVsKSB7CiAgICB0cmlnZ2VyLnNldEF0dHJpYnV0ZSgnYXJpYS1leHBhbmRlZCcsICdmYWxzZScpOwogICAgZGVsZXRlIHBhbmVsLmRhdGFzZXQub3BlbjsKICAgIAogICAgaWYgKHRoaXMub3BlblBhbmVsID09PSBwYW5lbCkgewogICAgICB0aGlzLm9wZW5QYW5lbCA9IG51bGw7CiAgICAgIHRoaXMub3BlblRyaWdnZXIgPSBudWxsOwogICAgfQogIH0KCiAgdG9nZ2xlKHRyaWdnZXIsIHBhbmVsKSB7CiAgICBjb25zdCBpc09wZW4gPSB0cmlnZ2VyLmdldEF0dHJpYnV0ZSgnYXJpYS1leHBhbmRlZCcpID09PSAndHJ1ZSc7CiAgICBpc09wZW4gPyB0aGlzLmNsb3NlKHRyaWdnZXIsIHBhbmVsKSA6IHRoaXMub3Blbih0cmlnZ2VyLCBwYW5lbCk7CiAgfQoKICBoYW5kbGVDbGlja091dHNpZGUoZSkgewogICAgaWYgKCF0aGlzLm9wZW5QYW5lbCkgcmV0dXJuOwogICAgCiAgICBjb25zdCBpc0luUGFuZWwgPSB0aGlzLm9wZW5QYW5lbC5jb250YWlucyhlLnRhcmdldCk7CiAgICBjb25zdCBpc0luVHJpZ2dlciA9IHRoaXMub3BlblRyaWdnZXIuY29udGFpbnMoZS50YXJnZXQpOwogICAgCiAgICBpZiAoIWlzSW5QYW5lbCAmJiAhaXNJblRyaWdnZXIpIHsKICAgICAgdGhpcy5jbG9zZSh0aGlzLm9wZW5UcmlnZ2VyLCB0aGlzLm9wZW5QYW5lbCk7CiAgICB9CiAgfQoKICBoYW5kbGVUcmlnZ2VyS2V5ZG93bihlLCB0cmlnZ2VyLCBwYW5lbCkgewogICAgaWYgKGUua2V5ID09PSAnRW50ZXInIHx8IGUua2V5ID09PSAnICcpIHsKICAgICAgZS5wcmV2ZW50RGVmYXVsdCgpOwogICAgICB0aGlzLm9wZW4odHJpZ2dlciwgcGFuZWwpOwogICAgICB0aGlzLmZvY3VzRmlyc3RFbGVtZW50KHBhbmVsKTsKICAgIH0KICAgIAogICAgaWYgKGUua2V5ID09PSAnRXNjYXBlJykgewogICAgICB0aGlzLmNsb3NlKHRyaWdnZXIsIHBhbmVsKTsKICAgIH0KICB9CgogIGhhbmRsZVBhbmVsS2V5ZG93bihlLCB0cmlnZ2VyLCBwYW5lbCkgewogICAgaWYgKGUua2V5ID09PSAnRXNjYXBlJykgewogICAgICB0aGlzLmNsb3NlKHRyaWdnZXIsIHBhbmVsKTsKICAgICAgdHJpZ2dlci5mb2N1cygpOwogICAgfQoKICAgIGlmIChlLmtleSA9PT0gJ1RhYicpIHsKICAgICAgY29uc3QgZm9jdXNhYmxlID0gcGFuZWwucXVlcnlTZWxlY3RvckFsbCgnYSwgYnV0dG9uLCBpbnB1dCwgW3RhYmluZGV4XTpub3QoW3RhYmluZGV4PSItMSJdKScpOwogICAgICBjb25zdCBsYXN0ID0gZm9jdXNhYmxlW2ZvY3VzYWJsZS5sZW5ndGggLSAxXTsKICAgICAgY29uc3QgZmlyc3QgPSBmb2N1c2FibGVbMF07CgogICAgICBpZiAoZS5zaGlmdEtleSAmJiBkb2N1bWVudC5hY3RpdmVFbGVtZW50ID09PSBmaXJzdCkgewogICAgICAgIHRoaXMuY2xvc2UodHJpZ2dlciwgcGFuZWwpOwogICAgICB9IGVsc2UgaWYgKCFlLnNoaWZ0S2V5ICYmIGRvY3VtZW50LmFjdGl2ZUVsZW1lbnQgPT09IGxhc3QpIHsKICAgICAgICB0aGlzLmNsb3NlKHRyaWdnZXIsIHBhbmVsKTsKICAgICAgfQogICAgfQogIH0KCiAgZm9jdXNGaXJzdEVsZW1lbnQocGFuZWwpIHsKICAgIGNvbnN0IGZvY3VzYWJsZSA9IHBhbmVsLnF1ZXJ5U2VsZWN0b3IoJ2EsIGJ1dHRvbiwgaW5wdXQsIFt0YWJpbmRleF06bm90KFt0YWJpbmRleD0iLTEiXSknKTsKICAgIGlmIChmb2N1c2FibGUpIGZvY3VzYWJsZS5mb2N1cygpOwogIH0KfQoKZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbCgnW2RhdGEtZmxleC1uYXZdJykuZm9yRWFjaChuYXYgPT4gbmV3IE1vZHVsYXJOYXYobmF2KSk7",
-              "id": "ml4sqhy"
+              "code": "Y2xhc3MgTW9kdWxhck5hdiB7CiAgY29uc3RydWN0b3IobmF2KSB7CiAgICB0aGlzLm5hdiA9IG5hdjsKICAgIHRoaXMubmF2SWQgPSBuYXYuZGF0YXNldC5mbGV4TmF2OwogICAgdGhpcy5icmVha3BvaW50ID0gbmF2LmRhdGFzZXQubmF2QnJlYWtwb2ludDsKICAgIHRoaXMuYmVoYXZpb3IgPSBuYXYuZGF0YXNldC5kcm9wZG93bkJlaGF2aW9yPy50b0xvd2VyQ2FzZSgpIHx8ICdob3Zlcic7CiAgICB0aGlzLm5hdlRyaWdnZXIgPSB0aGlzLm5hdklkID8gZG9jdW1lbnQucXVlcnlTZWxlY3RvcihgW2RhdGEtZmxleC1uYXYtdHJpZ2dlcj0iJHt0aGlzLm5hdklkfSJdYCkgOiBudWxsOwogICAgdGhpcy5vcGVuUGFuZWwgPSBudWxsOwogICAgdGhpcy5vcGVuVHJpZ2dlciA9IG51bGw7CiAgICB0aGlzLmlzTW9iaWxlID0gZmFsc2U7CiAgICAKICAgIHRoaXMuZGV0ZWN0SGVhZGVyUG9zaXRpb24oKTsKICAgIAogICAgaWYgKHRoaXMuYnJlYWtwb2ludCkgewogICAgICB0aGlzLm1lZGlhUXVlcnkgPSB3aW5kb3cubWF0Y2hNZWRpYShgKG1heC13aWR0aDogJHt0aGlzLmJyZWFrcG9pbnR9KWApOwogICAgICB0aGlzLmhhbmRsZVJlc2l6ZSgpOwogICAgICB0aGlzLm1lZGlhUXVlcnkuYWRkRXZlbnRMaXN0ZW5lcignY2hhbmdlJywgKCkgPT4gdGhpcy5oYW5kbGVSZXNpemUoKSk7CiAgICB9CgogICAgaWYgKHRoaXMubmF2VHJpZ2dlcikgewogICAgICB0aGlzLm5hdlRyaWdnZXIuYWRkRXZlbnRMaXN0ZW5lcignY2xpY2snLCAoKSA9PiB0aGlzLnRvZ2dsZU1lbnUoKSk7CiAgICB9CiAgICAKICAgIG5hdi5xdWVyeVNlbGVjdG9yQWxsKCdbZGF0YS1kcm9wZG93bi10cmlnZ2VyXScpLmZvckVhY2goKHRyaWdnZXIsIGluZGV4KSA9PiB7CiAgICAgIGNvbnN0IHBhcmVudCA9IHRyaWdnZXIucGFyZW50RWxlbWVudDsKICAgICAgY29uc3QgcGFuZWwgPSBwYXJlbnQucXVlcnlTZWxlY3RvcignW2RhdGEtZHJvcGRvd24tcGFuZWxdJyk7CiAgICAgIAogICAgICBpZiAoIXBhbmVsKSByZXR1cm47CgogICAgICBjb25zdCBpZCA9IGBkcm9wZG93bi1wYW5lbC0ke0RhdGUubm93KCl9LSR7aW5kZXh9YDsKICAgICAgcGFuZWwuaWQgPSBpZDsKICAgICAgdHJpZ2dlci5zZXRBdHRyaWJ1dGUoJ2FyaWEtY29udHJvbHMnLCBpZCk7CgogICAgICBwYXJlbnQuYWRkRXZlbnRMaXN0ZW5lcignbW91c2VlbnRlcicsICgpID0+IHsKICAgICAgICBpZiAoIXRoaXMuaXNNb2JpbGUgJiYgdGhpcy5iZWhhdmlvciA9PT0gJ2hvdmVyJykgdGhpcy5vcGVuKHRyaWdnZXIsIHBhbmVsKTsKICAgICAgfSk7CiAgICAgIHBhcmVudC5hZGRFdmVudExpc3RlbmVyKCdtb3VzZWxlYXZlJywgKCkgPT4gewogICAgICAgIGlmICghdGhpcy5pc01vYmlsZSAmJiB0aGlzLmJlaGF2aW9yID09PSAnaG92ZXInKSB0aGlzLmNsb3NlKHRyaWdnZXIsIHBhbmVsKTsKICAgICAgfSk7CiAgICAgIAogICAgICB0cmlnZ2VyLmFkZEV2ZW50TGlzdGVuZXIoJ2NsaWNrJywgKCkgPT4gdGhpcy50b2dnbGUodHJpZ2dlciwgcGFuZWwpKTsKICAgICAgdHJpZ2dlci5hZGRFdmVudExpc3RlbmVyKCdrZXlkb3duJywgZSA9PiB0aGlzLmhhbmRsZVRyaWdnZXJLZXlkb3duKGUsIHRyaWdnZXIsIHBhbmVsKSk7CiAgICAgIHBhbmVsLmFkZEV2ZW50TGlzdGVuZXIoJ2tleWRvd24nLCBlID0+IHRoaXMuaGFuZGxlUGFuZWxLZXlkb3duKGUsIHRyaWdnZXIsIHBhbmVsKSk7CiAgICB9KTsKCiAgICBkb2N1bWVudC5hZGRFdmVudExpc3RlbmVyKCdjbGljaycsIGUgPT4gdGhpcy5oYW5kbGVDbGlja091dHNpZGUoZSkpOwogIH0KCiAgZGV0ZWN0SGVhZGVyUG9zaXRpb24oKSB7CiAgICBjb25zdCBoZWFkZXIgPSB0aGlzLm5hdi5jbG9zZXN0KCdoZWFkZXInKTsKICAgIGlmIChoZWFkZXIpIHsKICAgICAgY29uc3QgcG9zaXRpb24gPSBnZXRDb21wdXRlZFN0eWxlKGhlYWRlcikucG9zaXRpb247CiAgICAgIGlmIChwb3NpdGlvbiA9PT0gJ3N0YXRpYycpIHsKICAgICAgICBoZWFkZXIuZGF0YXNldC5oZWFkZXJEZXRlY3RlZFBvc2l0aW9uID0gJ3N0YXRpYyc7CiAgICAgIH0KICAgIH0KICB9CgogIGhhbmRsZVJlc2l6ZSgpIHsKICAgIHRoaXMuaXNNb2JpbGUgPSB0aGlzLm1lZGlhUXVlcnkubWF0Y2hlczsKICAgIAogICAgaWYgKHRoaXMuaXNNb2JpbGUpIHsKICAgICAgdGhpcy5uYXYuZGF0YXNldC5mbGV4TmF2U3RhdHVzID0gJ21vYmlsZSc7CiAgICAgIHRoaXMubmF2VHJpZ2dlcj8uc3R5bGUuc2V0UHJvcGVydHkoJy0tZmxleC1uYXYtdHJpZ2dlci1kaXNwbGF5JywgJ2ZsZXgnKTsKICAgICAgdGhpcy5uYXYuc3R5bGUuc2V0UHJvcGVydHkoJy0tbmF2LWRpc3BsYXknLCAnbm9uZScpOwogICAgICB0aGlzLm5hdi5zdHlsZS5zZXRQcm9wZXJ0eSgnLS1wYW5lbC1wb3NpdGlvbicsICdyZWxhdGl2ZScpOwogICAgICB0aGlzLm5hdi5zdHlsZS5zZXRQcm9wZXJ0eSgnLS1mbGV4LW5hdi1kaXJlY3Rpb24nLCAnY29sdW1uJyk7CiAgICAgIHRoaXMubmF2VHJpZ2dlcj8uc2V0QXR0cmlidXRlKCdhcmlhLWV4cGFuZGVkJywgJ2ZhbHNlJyk7CiAgICAgIHRoaXMubmF2VHJpZ2dlcj8uc2V0QXR0cmlidXRlKCdhcmlhLWxhYmVsJywgJ09wZW4gbWVudScpOwogICAgfSBlbHNlIHsKICAgICAgdGhpcy5uYXYuZGF0YXNldC5mbGV4TmF2U3RhdHVzID0gJ2Rlc2t0b3AnOwogICAgICB0aGlzLm5hdlRyaWdnZXI/LnN0eWxlLnNldFByb3BlcnR5KCctLWZsZXgtbmF2LXRyaWdnZXItZGlzcGxheScsICdub25lJyk7CiAgICAgIHRoaXMubmF2LnN0eWxlLnNldFByb3BlcnR5KCctLW5hdi1kaXNwbGF5JywgJ2Jsb2NrJyk7CiAgICAgIHRoaXMubmF2LnN0eWxlLnNldFByb3BlcnR5KCctLXBhbmVsLXBvc2l0aW9uJywgJ2Fic29sdXRlJyk7CiAgICAgIHRoaXMubmF2LnN0eWxlLnNldFByb3BlcnR5KCctLWZsZXgtbmF2LWRpcmVjdGlvbicsICdyb3cnKTsKICAgICAgdGhpcy5jbG9zZU1lbnUoKTsKICAgIH0KICB9CgogIHRvZ2dsZU1lbnUoKSB7CiAgICBjb25zdCBpc09wZW4gPSB0aGlzLm5hdlRyaWdnZXIuZ2V0QXR0cmlidXRlKCdhcmlhLWV4cGFuZGVkJykgPT09ICd0cnVlJzsKICAgIGlzT3BlbiA/IHRoaXMuY2xvc2VNZW51KCkgOiB0aGlzLm9wZW5NZW51KCk7CiAgfQoKICBvcGVuTWVudSgpIHsKICAgIHRoaXMubmF2VHJpZ2dlci5zZXRBdHRyaWJ1dGUoJ2FyaWEtZXhwYW5kZWQnLCAndHJ1ZScpOwogICAgdGhpcy5uYXZUcmlnZ2VyLnNldEF0dHJpYnV0ZSgnYXJpYS1sYWJlbCcsICdDbG9zZSBtZW51Jyk7CiAgICB0aGlzLm5hdi5zdHlsZS5zZXRQcm9wZXJ0eSgnLS1uYXYtZGlzcGxheScsICdibG9jaycpOwogIH0KCiAgY2xvc2VNZW51KCkgewogICAgdGhpcy5uYXZUcmlnZ2VyPy5zZXRBdHRyaWJ1dGUoJ2FyaWEtZXhwYW5kZWQnLCAnZmFsc2UnKTsKICAgIHRoaXMubmF2VHJpZ2dlcj8uc2V0QXR0cmlidXRlKCdhcmlhLWxhYmVsJywgJ09wZW4gbWVudScpOwogICAgaWYgKHRoaXMuaXNNb2JpbGUpIHsKICAgICAgdGhpcy5uYXYuc3R5bGUuc2V0UHJvcGVydHkoJy0tbmF2LWRpc3BsYXknLCAnbm9uZScpOwogICAgfQogIH0KCiAgb3Blbih0cmlnZ2VyLCBwYW5lbCkgewogICAgaWYgKHRoaXMub3BlblBhbmVsICYmIHRoaXMub3BlblBhbmVsICE9PSBwYW5lbCkgewogICAgICB0aGlzLmNsb3NlKHRoaXMub3BlblRyaWdnZXIsIHRoaXMub3BlblBhbmVsKTsKICAgIH0KICAgIAogICAgdHJpZ2dlci5zZXRBdHRyaWJ1dGUoJ2FyaWEtZXhwYW5kZWQnLCAndHJ1ZScpOwogICAgcGFuZWwuZGF0YXNldC5vcGVuID0gJ3RydWUnOwogICAgCiAgICBpZiAoIXRoaXMuaXNNb2JpbGUpIHsKICAgICAgdGhpcy5hZGp1c3RQYW5lbFBvc2l0aW9uKHBhbmVsKTsKICAgIH0KICAgIAogICAgdGhpcy5vcGVuUGFuZWwgPSBwYW5lbDsKICAgIHRoaXMub3BlblRyaWdnZXIgPSB0cmlnZ2VyOwogIH0KCiAgY2xvc2UodHJpZ2dlciwgcGFuZWwpIHsKICAgIHRyaWdnZXIuc2V0QXR0cmlidXRlKCdhcmlhLWV4cGFuZGVkJywgJ2ZhbHNlJyk7CiAgICBkZWxldGUgcGFuZWwuZGF0YXNldC5vcGVuOwogICAgCiAgICBjb25zdCBpbm5lciA9IHBhbmVsLnF1ZXJ5U2VsZWN0b3IoJ1tkYXRhLWZsZXgtbmF2LWlubmVyXScpOwogICAgaW5uZXI/LmFkZEV2ZW50TGlzdGVuZXIoJ3RyYW5zaXRpb25lbmQnLCAoKSA9PiB7CiAgICAgIHBhbmVsLnN0eWxlLnJlbW92ZVByb3BlcnR5KCctLXBhbmVsLW51ZGdlJyk7CiAgICB9LCB7IG9uY2U6IHRydWUgfSk7CiAgICAKICAgIGlmICh0aGlzLm9wZW5QYW5lbCA9PT0gcGFuZWwpIHsKICAgICAgdGhpcy5vcGVuUGFuZWwgPSBudWxsOwogICAgICB0aGlzLm9wZW5UcmlnZ2VyID0gbnVsbDsKICAgIH0KICB9CgogIGFkanVzdFBhbmVsUG9zaXRpb24ocGFuZWwpIHsKICAgIHBhbmVsLnN0eWxlLnJlbW92ZVByb3BlcnR5KCctLXBhbmVsLW51ZGdlJyk7CiAgICAKICAgIHJlcXVlc3RBbmltYXRpb25GcmFtZSgoKSA9PiB7CiAgICAgIGNvbnN0IHJlY3QgPSBwYW5lbC5nZXRCb3VuZGluZ0NsaWVudFJlY3QoKTsKICAgICAgY29uc3Qgdmlld3BvcnRXaWR0aCA9IHdpbmRvdy5pbm5lcldpZHRoOwogICAgICAKICAgICAgY29uc3QgZ3V0dGVyU3R5bGUgPSBnZXRDb21wdXRlZFN0eWxlKGRvY3VtZW50LmRvY3VtZW50RWxlbWVudCkuZ2V0UHJvcGVydHlWYWx1ZSgnLS1ndXR0ZXInKTsKICAgICAgY29uc3QgdGVtcCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpOwogICAgICB0ZW1wLnN0eWxlLnBvc2l0aW9uID0gJ2ZpeGVkJzsKICAgICAgdGVtcC5zdHlsZS5sZWZ0ID0gJzAnOwogICAgICB0ZW1wLnN0eWxlLndpZHRoID0gZ3V0dGVyU3R5bGU7CiAgICAgIHRlbXAuc3R5bGUudmlzaWJpbGl0eSA9ICdoaWRkZW4nOwogICAgICB0ZW1wLnN0eWxlLnBvaW50ZXJFdmVudHMgPSAnbm9uZSc7CiAgICAgIGRvY3VtZW50LmJvZHkuYXBwZW5kQ2hpbGQodGVtcCk7CiAgICAgIGNvbnN0IGd1dHRlciA9IHRlbXAub2Zmc2V0V2lkdGg7CiAgICAgIHRlbXAucmVtb3ZlKCk7CiAgICAgIAogICAgICBsZXQgbnVkZ2UgPSAwOwogICAgICAKICAgICAgaWYgKHJlY3QucmlnaHQgPiB2aWV3cG9ydFdpZHRoIC0gZ3V0dGVyKSB7CiAgICAgICAgbnVkZ2UgPSB2aWV3cG9ydFdpZHRoIC0gcmVjdC5yaWdodCAtIGd1dHRlcjsKICAgICAgfQogICAgICAKICAgICAgaWYgKHJlY3QubGVmdCA8IGd1dHRlcikgewogICAgICAgIG51ZGdlID0gZ3V0dGVyIC0gcmVjdC5sZWZ0OwogICAgICB9CiAgICAgIAogICAgICBpZiAobnVkZ2UgIT09IDApIHsKICAgICAgICBwYW5lbC5zdHlsZS5zZXRQcm9wZXJ0eSgnLS1wYW5lbC1udWRnZScsIGAke251ZGdlfXB4YCk7CiAgICAgIH0KICAgIH0pOwogIH0KCiAgdG9nZ2xlKHRyaWdnZXIsIHBhbmVsKSB7CiAgICBjb25zdCBpc09wZW4gPSB0cmlnZ2VyLmdldEF0dHJpYnV0ZSgnYXJpYS1leHBhbmRlZCcpID09PSAndHJ1ZSc7CiAgICBpc09wZW4gPyB0aGlzLmNsb3NlKHRyaWdnZXIsIHBhbmVsKSA6IHRoaXMub3Blbih0cmlnZ2VyLCBwYW5lbCk7CiAgfQoKICBoYW5kbGVDbGlja091dHNpZGUoZSkgewogICAgaWYgKCF0aGlzLm9wZW5QYW5lbCkgcmV0dXJuOwogICAgCiAgICBjb25zdCBpc0luUGFuZWwgPSB0aGlzLm9wZW5QYW5lbC5jb250YWlucyhlLnRhcmdldCk7CiAgICBjb25zdCBpc0luVHJpZ2dlciA9IHRoaXMub3BlblRyaWdnZXIuY29udGFpbnMoZS50YXJnZXQpOwogICAgCiAgICBpZiAoIWlzSW5QYW5lbCAmJiAhaXNJblRyaWdnZXIpIHsKICAgICAgdGhpcy5jbG9zZSh0aGlzLm9wZW5UcmlnZ2VyLCB0aGlzLm9wZW5QYW5lbCk7CiAgICB9CiAgfQoKICBoYW5kbGVUcmlnZ2VyS2V5ZG93bihlLCB0cmlnZ2VyLCBwYW5lbCkgewogICAgaWYgKGUua2V5ID09PSAnRW50ZXInIHx8IGUua2V5ID09PSAnICcpIHsKICAgICAgZS5wcmV2ZW50RGVmYXVsdCgpOwogICAgICB0aGlzLm9wZW4odHJpZ2dlciwgcGFuZWwpOwogICAgICB0aGlzLmZvY3VzRmlyc3RFbGVtZW50KHBhbmVsKTsKICAgIH0KICAgIAogICAgaWYgKGUua2V5ID09PSAnRXNjYXBlJykgewogICAgICB0aGlzLmNsb3NlKHRyaWdnZXIsIHBhbmVsKTsKICAgIH0KICB9CgogIGhhbmRsZVBhbmVsS2V5ZG93bihlLCB0cmlnZ2VyLCBwYW5lbCkgewogICAgaWYgKGUua2V5ID09PSAnRXNjYXBlJykgewogICAgICB0aGlzLmNsb3NlKHRyaWdnZXIsIHBhbmVsKTsKICAgICAgdHJpZ2dlci5mb2N1cygpOwogICAgfQoKICAgIGlmIChlLmtleSA9PT0gJ1RhYicpIHsKICAgICAgY29uc3QgZm9jdXNhYmxlID0gcGFuZWwucXVlcnlTZWxlY3RvckFsbCgnYSwgYnV0dG9uLCBpbnB1dCwgW3RhYmluZGV4XTpub3QoW3RhYmluZGV4PSItMSJdKScpOwogICAgICBjb25zdCBsYXN0ID0gZm9jdXNhYmxlW2ZvY3VzYWJsZS5sZW5ndGggLSAxXTsKICAgICAgY29uc3QgZmlyc3QgPSBmb2N1c2FibGVbMF07CgogICAgICBpZiAoZS5zaGlmdEtleSAmJiBkb2N1bWVudC5hY3RpdmVFbGVtZW50ID09PSBmaXJzdCkgewogICAgICAgIHRoaXMuY2xvc2UodHJpZ2dlciwgcGFuZWwpOwogICAgICB9IGVsc2UgaWYgKCFlLnNoaWZ0S2V5ICYmIGRvY3VtZW50LmFjdGl2ZUVsZW1lbnQgPT09IGxhc3QpIHsKICAgICAgICB0aGlzLmNsb3NlKHRyaWdnZXIsIHBhbmVsKTsKICAgICAgfQogICAgfQogIH0KCiAgZm9jdXNGaXJzdEVsZW1lbnQocGFuZWwpIHsKICAgIGNvbnN0IGZvY3VzYWJsZSA9IHBhbmVsLnF1ZXJ5U2VsZWN0b3IoJ2EsIGJ1dHRvbiwgaW5wdXQsIFt0YWJpbmRleF06bm90KFt0YWJpbmRleD0iLTEiXSknKTsKICAgIGlmIChmb2N1c2FibGUpIGZvY3VzYWJsZS5mb2N1cygpOwogIH0KfQoKZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbCgnW2RhdGEtZmxleC1uYXZdJykuZm9yRWFjaChuYXYgPT4gbmV3IE1vZHVsYXJOYXYobmF2KSk7",
+              "id": "oe1eawa"
             },
             "tag": "nav",
             "attributes": {
               "data-flex-nav": "{props.navName}",
-              "aria-label": "{props.ariaLabel}",
+              "aria-label": "{props.navName}",
               "style": "--panel-offset-block: {props.panelOffsetBlock};",
               "data-nav-breakpoint": "{props.mobileBreakpoint}",
               "data-dropdown-behavior": "{props.dropdownBehavior}",
@@ -743,48 +825,7 @@
             "\n"
           ]
         }
-      ],
-      "properties": [
-        {
-          "name": "Nav Name",
-          "key": "navName",
-          "keyTouched": true,
-          "type": {
-            "primitive": "string"
-          },
-          "default": "Primary"
-        },
-        {
-          "name": "Panel Offset (Block)",
-          "key": "panelOffsetBlock",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string"
-          },
-          "default": ".5em"
-        },
-        {
-          "name": "Mobile Breakpoint",
-          "key": "mobileBreakpoint",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string"
-          },
-          "default": "900px"
-        },
-        {
-          "name": "Dropdown Behavior",
-          "key": "dropdownBehavior",
-          "keyTouched": false,
-          "type": {
-            "primitive": "string",
-            "specialized": "select"
-          },
-          "default": "Click",
-          "selectOptionsString": "Click\nHover"
-        }
-      ],
-      "description": ""
+      ]
     },
     "2181": {
       "id": 2181,
@@ -831,16 +872,73 @@
                     "metadata": {
                       "name": "Text"
                     },
-                    "content": "{props.itemLabel}"
+                    "content": "{props.itemLabel} "
                   },
                   "innerBlocks": [],
                   "innerHTML": "",
                   "innerContent": []
+                },
+                {
+                  "blockName": "etch/condition",
+                  "attrs": {
+                    "metadata": {
+                      "name": "Has Descriptiion"
+                    },
+                    "condition": {
+                      "leftHand": "props.itemDescription",
+                      "operator": "isTruthy",
+                      "rightHand": null
+                    },
+                    "conditionString": "props.itemDescription"
+                  },
+                  "innerBlocks": [
+                    {
+                      "blockName": "etch/element",
+                      "attrs": {
+                        "metadata": {
+                          "name": "Description"
+                        },
+                        "tag": "span",
+                        "attributes": {
+                          "flex-nav-item-description": "",
+                          "class": "flex-nav__list-item-description"
+                        },
+                        "styles": [
+                          "hiijtv1"
+                        ]
+                      },
+                      "innerBlocks": [
+                        {
+                          "blockName": "etch/raw-html",
+                          "attrs": {
+                            "content": "{props.itemDescription}"
+                          },
+                          "innerBlocks": [],
+                          "innerHTML": "",
+                          "innerContent": []
+                        }
+                      ],
+                      "innerHTML": "\n\n",
+                      "innerContent": [
+                        "\n",
+                        null,
+                        "\n"
+                      ]
+                    }
+                  ],
+                  "innerHTML": "\n\n",
+                  "innerContent": [
+                    "\n",
+                    null,
+                    "\n"
+                  ]
                 }
               ],
-              "innerHTML": "\n\n",
+              "innerHTML": "\n\n\n\n",
               "innerContent": [
                 "\n",
+                null,
+                "\n\n",
                 null,
                 "\n"
               ]
@@ -863,6 +961,14 @@
             "primitive": "string"
           },
           "default": "Click me"
+        },
+        {
+          "name": "Item Description",
+          "key": "itemDescription",
+          "keyTouched": false,
+          "type": {
+            "primitive": "string"
+          }
         },
         {
           "name": "Item Link",
@@ -902,7 +1008,7 @@
     "title": "Flex Nav",
     "family": "interactive",
     "link": "https://patterns.etchwp.com/layouts/flex-nav/",
-    "modified": "2026-02-02T16:05:27",
-    "collected": "2026-02-04T14:27:21.792Z"
+    "modified": "2026-02-10T13:14:05",
+    "collected": "2026-03-14T11:29:50.943Z"
   }
 }

@@ -4,7 +4,10 @@
     "blockName": "etch/component",
     "attrs": {
       "ref": 593,
-      "attributes": {}
+      "attributes": {
+        "icon": "https://patterns.etchwp.com/wp-content/uploads/squares.svg",
+        "iconLayout": "Stacked"
+      }
     },
     "innerBlocks": [],
     "innerHTML": "\n\n",
@@ -13,7 +16,8 @@
       "\n"
     ]
   },
-  "version": 2,
+  "version": 2.1,
+  "timestamp": "2026-02-27T20:32:00.380Z",
   "styles": {
     "etch-flex-div-style": {
       "type": "element",
@@ -40,7 +44,7 @@
       "type": "class",
       "selector": ".feature-card-alpha__icon",
       "collection": "default",
-      "css": "inline-size: var(--icon-size, 38px);",
+      "css": "inline-size: var(--icon-size, 38px);\n  color: currentColor;",
       "readonly": false
     },
     "yafaqwj": {
@@ -61,12 +65,13 @@
   "components": {
     "593": {
       "id": 593,
+      "legacyId": "",
       "name": "Feature Card Alpha",
       "key": "FeatureCardAlpha",
       "properties": [
         {
-          "key": "icon",
           "name": "Icon\n",
+          "key": "icon",
           "keyTouched": false,
           "type": {
             "primitive": "string",
@@ -75,8 +80,8 @@
           "default": "https://patterns.etchwp.com/wp-content/uploads/copy-01-solid-standard.svg"
         },
         {
-          "key": "iconSize",
           "name": "Icon Size",
+          "key": "iconSize",
           "keyTouched": false,
           "type": {
             "primitive": "string"
@@ -84,8 +89,8 @@
           "default": "2rem"
         },
         {
-          "key": "iconLayout",
           "name": "Icon Layout",
+          "key": "iconLayout",
           "keyTouched": false,
           "type": {
             "primitive": "string",
@@ -95,8 +100,8 @@
           "selectOptionsString": "Stacked\nInline\nAdjacent\nNone"
         },
         {
-          "key": "heading",
           "name": "Heading",
+          "key": "heading",
           "keyTouched": false,
           "type": {
             "primitive": "string"
@@ -104,17 +109,64 @@
           "default": "Feature heading"
         },
         {
-          "key": "description",
           "name": "Description",
+          "key": "description",
           "keyTouched": false,
           "type": {
             "primitive": "string"
           },
           "default": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Error autem corporis incidunt harum obcaecati excepturi."
+        },
+        {
+          "name": "Card Classes",
+          "key": "cardClasses",
+          "keyTouched": false,
+          "type": {
+            "primitive": "array",
+            "specialized": "class"
+          },
+          "default": [
+            "y2j63ot"
+          ]
+        },
+        {
+          "name": "Header Wrapper Classes",
+          "key": "headerWrapperClasses",
+          "keyTouched": false,
+          "type": {
+            "primitive": "array",
+            "specialized": "class"
+          },
+          "default": [
+            "rbi8pn6"
+          ]
+        },
+        {
+          "name": "Heading Classes",
+          "key": "headingClasses",
+          "keyTouched": false,
+          "type": {
+            "primitive": "array",
+            "specialized": "class"
+          },
+          "default": [
+            "ovhesyv"
+          ]
+        },
+        {
+          "name": "Description Classes",
+          "key": "descriptionClasses",
+          "keyTouched": false,
+          "type": {
+            "primitive": "array",
+            "specialized": "class"
+          },
+          "default": [
+            "3o4sir0"
+          ]
         }
       ],
       "description": "",
-      "legacyId": "",
       "blocks": [
         {
           "blockName": "etch/element",
@@ -125,8 +177,8 @@
             "tag": "article",
             "attributes": {
               "data-etch-element": "flex-div",
-              "class": "feature-card-alpha",
-              "data-icon-layout": "{props.iconLayout}"
+              "data-icon-layout": "{props.iconLayout}",
+              "class": "feature-card-alpha {props.cardClasses}"
             },
             "styles": [
               "etch-flex-div-style",
@@ -143,7 +195,7 @@
                 "tag": "div",
                 "attributes": {
                   "style": "--icon-size: {props.iconSize};",
-                  "class": "feature-card-alpha__heading-wrapper"
+                  "class": "feature-card-alpha__heading-wrapper {props.headerWrapperClasses}"
                 },
                 "styles": [
                   "6wfg4yh"
@@ -174,7 +226,8 @@
                         "attributes": {
                           "aria-hidden": "true",
                           "src": "{props.icon}",
-                          "class": "feature-card-alpha__icon"
+                          "class": "feature-card-alpha__icon",
+                          "stripColors": "true"
                         },
                         "styles": [
                           "vdz15sz"
@@ -203,7 +256,7 @@
                     },
                     "tag": "h2",
                     "attributes": {
-                      "class": "feature-card-alpha__heading"
+                      "class": "feature-card-alpha__heading {props.headingClasses}"
                     },
                     "styles": [
                       "yafaqwj"
@@ -248,7 +301,7 @@
                 },
                 "tag": "p",
                 "attributes": {
-                  "class": "feature-card-alpha__description"
+                  "class": "feature-card-alpha__description {props.descriptionClasses}"
                 },
                 "styles": [
                   "3sawohi"
@@ -294,7 +347,7 @@
     "title": "Feature Card Alpha",
     "family": "features",
     "link": "https://patterns.etchwp.com/layouts/feature-card-alpha/",
-    "modified": "2026-01-17T21:59:44",
-    "collected": "2026-01-31T17:07:36.910Z"
+    "modified": "2026-02-27T20:32:07",
+    "collected": "2026-03-14T11:29:45.356Z"
   }
 }
